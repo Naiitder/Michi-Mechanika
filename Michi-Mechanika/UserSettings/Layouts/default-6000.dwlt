@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 37
+  controlID: 104
   draggingID: 0
 --- !u!114 &3
 MonoBehaviour:
@@ -69,8 +69,8 @@ MonoBehaviour:
     y: 0
     width: 454
     height: 941
-  m_MinSize: {x: 276, y: 76}
-  m_MaxSize: {x: 4001, y: 4026}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GameView
+  m_Name: SceneView
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -273,14 +273,14 @@ MonoBehaviour:
     height: 630
   m_MinSize: {x: 202, y: 226}
   m_MaxSize: {x: 4002, y: 4026}
-  m_ActualView: {fileID: 18}
+  m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
   - {fileID: 18}
   - {fileID: 13}
   - {fileID: 12}
-  m_Selected: 1
-  m_LastSelected: 2
+  m_Selected: 0
+  m_LastSelected: 1
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -319,7 +319,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -8994
+  m_LastSelectedObjectID: -7330
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -414,7 +414,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 654
+    y: 709
     width: 1465
     height: 285
   m_SerializedDataModeController:
@@ -451,14 +451,14 @@ MonoBehaviour:
   m_LastFolders:
   - Assets
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: D:\0_MyGames\SwampKing2\SwampKing
+  m_LastProjectPath: D:\0_MyGames\Michi-Mechanika\Michi-Mechanika
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: e8a40000
-    m_LastClickedID: 42216
-    m_ExpandedIDs: 
+    m_SelectedIDs: dea70000
+    m_LastClickedID: 42974
+    m_ExpandedIDs: 00000000dea7000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -566,8 +566,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1467
-    y: 24
+    x: 1466
+    y: 79
     width: 453
     height: 915
   m_SerializedDataModeController:
@@ -616,7 +616,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 24
+    y: 79
     width: 214
     height: 604
   m_SerializedDataModeController:
@@ -635,7 +635,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: dedcffff20fbffff
+      m_ExpandedIDs: 1ef2ffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -652,7 +652,7 @@ MonoBehaviour:
         m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_TrimLeadingAndTrailingWhitespace: 0
-        m_ClientGUIView: {fileID: 0}
+        m_ClientGUIView: {fileID: 4}
       m_SearchString: 
     m_ExpandedScenes: []
     m_CurrenRootInstanceID: 0
@@ -1239,9 +1239,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 0, y: 0, z: 0}
+    m_Target: {x: -2, y: 6.0270004, z: 2.6049995}
     speed: 2
-    m_Value: {x: -1.0614204, y: 0, z: -9.381821}
+    m_Value: {x: -2, y: 6.0270004, z: 2.6049995}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1287,13 +1287,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
+    m_Target: {x: 0.15127714, y: 0.2974418, z: -0.047779728, w: 0.94151574}
     speed: 2
-    m_Value: {x: -0.18107437, y: 0.7322627, z: -0.21358953, w: -0.6207922}
+    m_Value: {x: 0.15127026, y: 0.29742828, z: -0.047777552, w: 0.9414729}
   m_Size:
-    m_Target: 10
+    m_Target: 8.634594
     speed: 2
-    m_Value: 2.4164653
+    m_Value: 8.634594
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1348,8 +1348,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Game\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 216
-    y: 24
+    x: 215
+    y: 79
     width: 1249
     height: 604
   m_SerializedDataModeController:
@@ -1396,7 +1396,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
