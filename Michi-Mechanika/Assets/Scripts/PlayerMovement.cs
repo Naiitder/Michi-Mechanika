@@ -8,7 +8,8 @@ public class PlayerMovement : MonoBehaviour
     
     [Header("Movement")]
     private Transform transform;
-    [SerializeField] private float movementSpeed = 7.5f;
+    [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 15f;
     private bool isMoving = false;
     
     [Header("Tiles")]
@@ -67,9 +68,17 @@ public class PlayerMovement : MonoBehaviour
         isMoving = true;
         playerAnimatorController.anim.SetBool(playerAnimatorController.WalkHash, true);
         
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        direction.y = 0f;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
         {
-            transform.LookAt(targetPosition);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                Time.deltaTime * rotationSpeed 
+            );
             
             transform.position = Vector3.MoveTowards(
                 transform.position,
