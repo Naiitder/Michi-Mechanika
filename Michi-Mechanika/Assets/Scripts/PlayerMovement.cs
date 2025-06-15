@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [HideInInspector] private PlayerAnimatorController playerAnimatorController;
+    
     [Header("Movement")]
     private Transform transform;
     [SerializeField] private float movementSpeed = 7.5f;
@@ -12,10 +14,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("Tiles")]
     [SerializeField] private LayerMask tileLayer;
     [SerializeField] private Tile currentTile;
-
+    
     private void Awake()
     {
         transform = GetComponent<Transform>();
+        playerAnimatorController = GetComponent<PlayerAnimatorController>();
+        playerAnimatorController.Initialize();
     }
 
 
@@ -61,9 +65,12 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator MoveSmoothlyTo(Vector3 targetPosition)
     {
         isMoving = true;
-
+        playerAnimatorController.anim.SetBool(playerAnimatorController.WalkHash, true);
+        
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
         {
+            transform.LookAt(targetPosition);
+            
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 targetPosition,
@@ -75,6 +82,8 @@ public class PlayerMovement : MonoBehaviour
         transform.position = targetPosition;
 
         isMoving = false;
+        playerAnimatorController.anim.SetBool(playerAnimatorController.WalkHash, false);
+
     }
     
 }
