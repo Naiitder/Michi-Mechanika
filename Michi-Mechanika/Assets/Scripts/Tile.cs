@@ -11,7 +11,7 @@ public class Tile : MonoBehaviour
     [SerializeField] public Type tileType = Type.Floor;
     
 
-    private void Awake()
+    public void Initialize()
     {
         position = pivotPosition.position;
     }
