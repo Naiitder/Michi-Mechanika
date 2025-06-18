@@ -5,12 +5,8 @@ public class Lever : MonoBehaviour
 {
     public Tile tileWhereLeverIs;
     public bool activated = false;
-
-    public Tile[] tilesToMove;
-    public GameObject[] tilesGameObjects;
     
-    private Transform pivotA; 
-    private Transform pivotB; 
+    public GameObject[] tilesGameObjects;
     
     private void Awake()
     {
