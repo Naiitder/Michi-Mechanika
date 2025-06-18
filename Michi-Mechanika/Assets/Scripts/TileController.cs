@@ -5,10 +5,12 @@ using UnityEngine;
 public class TileController : MonoBehaviour
 {
     private const float horizontalOffset = 3f;
-    private const float verticalOffset = 2.5f;
+    private const float verticalOffset = 3f;
     
     private const float horizontalRoofOffset = 1.41f;
-    private const float verticalRoofOffset = 1.46f;
+    private const float horizontalRoofUpOffset = 1.59f;
+    private const float verticalRoofUpOffset = 2.34f;
+    private const float verticalRoofDownOffset = 0.71f;
 
     Tile[] allTiles;
     
@@ -32,7 +34,7 @@ public class TileController : MonoBehaviour
                 Vector3 diff = other.position - tile.position;
                 
                 bool isHorizontalXNeighbor =
-                    Mathf.Approximately(diff.y, 0f) && Mathf.Approximately(diff.z, 0f) &&
+                    Mathf.Abs(diff.y) < 0.1f && Mathf.Approximately(diff.z, 0f) &&
                     (
                         Mathf.Approximately(Mathf.Abs(diff.x), horizontalOffset) 
                     );
@@ -41,6 +43,7 @@ public class TileController : MonoBehaviour
                     (
                         Mathf.Approximately(Mathf.Abs(diff.z), horizontalOffset)
                         );
+                
                 bool isVerticalNeighbor =                     
                     Mathf.Approximately(diff.z, 0f) &&  Mathf.Approximately(diff.x, 0f) &&
                     (
@@ -50,18 +53,27 @@ public class TileController : MonoBehaviour
                 bool isVerticalXNeighbor =                     
                     Mathf.Abs(Math.Abs(diff.z)) < 0.1f &&
                     (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofOffset) < 0.1f
+                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofDownOffset) < 0.1f
                         && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofOffset) < 0.1f
                     );
                 
                 bool isVerticalZNeighbor =                     
                     Mathf.Abs(Math.Abs(diff.x)) < 0.1f &&
                     (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofOffset) < 0.1f
+                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofDownOffset) < 0.1f
                         && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofOffset) < 0.1f
                     );
                 
-                if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor)
+                bool isVerticalXUpNeighbor =                     
+                    Mathf.Abs(Math.Abs(diff.z)) < 0.1f &&
+                    (
+                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < 0.1f
+                        && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofUpOffset) < 0.1f
+                    );
+                
+                
+                if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor || 
+                    isVerticalXUpNeighbor)
                 {
                     neighbors.Add(other);
                 }
