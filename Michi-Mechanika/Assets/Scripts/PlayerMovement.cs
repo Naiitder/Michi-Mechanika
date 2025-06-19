@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,14 +14,15 @@ public class PlayerMovement : MonoBehaviour
     private bool isMoving = false;
     
     [Header("Tiles")]
-    [SerializeField] private LayerMask tileLayer;
+    [SerializeField] private LayerMask interactiveLayer;
     [SerializeField] private Tile currentTile;
     
-    private void Awake()
+    public void Initialize()
     {
         transform = GetComponent<Transform>();
         playerAnimatorController = GetComponent<PlayerAnimatorController>();
         playerAnimatorController.Initialize();
+        if(TileController.instance != null) currentTile = TileController.instance.GetClosestTile(transform.position);
     }
 
 
@@ -36,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer)){
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, interactiveLayer)){
                 
                 Tile clickedTile = hit.collider.GetComponent<Tile>();
                 

@@ -16,7 +16,7 @@ public class TileController : MonoBehaviour
 
     Tile[] allTiles;
     
-    private void Awake()
+    public void Initialize()
     {
         if (instance == null) instance = this;
         else Destroy(this);
