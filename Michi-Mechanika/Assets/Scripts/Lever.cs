@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Lever : MonoBehaviour
@@ -8,8 +9,8 @@ public class Lever : MonoBehaviour
     
     public GameObject[] tilesGameObjects;
     
-    [SerializeField] private Transform pivotGameObject;
-    [SerializeField] private Quaternion originalRotation;
+    [SerializeField] private Transform pivotGameObject; 
+    private Quaternion originalRotation;
     
     [SerializeField] private Transform pivotA;
     [SerializeField] private Transform pivotB;
@@ -27,16 +28,53 @@ public class Lever : MonoBehaviour
         activated = !activated;
         if (!activated)
         {
-            //Mover los gameObjects al punto A
             pivotGameObject.localRotation = originalRotation;
+            
+            foreach (GameObject go in tilesGameObjects)
+            {
+                StartCoroutine(MoveToPivot(go, pivotA, 0.5f)); 
+            }
 
         }
         else
         {
             pivotGameObject.localRotation =  Quaternion.Euler(0, 0, -70);
-            //Mover los gameObjects al punto B
+            
+            foreach (GameObject go in tilesGameObjects)
+            {
+                StartCoroutine(MoveToPivot(go, pivotB, 0.5f)); 
+            }
         }
         
         if(TileController.instance != null) TileController.instance.ConnectTiles();
     }
+    
+    private IEnumerator MoveToPivot(GameObject go, Transform targetPivot, float duration)
+    {
+        Transform t = go.transform;
+    
+        Vector3 startPos = t.position;
+        Quaternion startRot = t.rotation;
+
+        Vector3 endPos = targetPivot.position;
+        Quaternion endRot = targetPivot.rotation;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float tLerp = Mathf.Clamp01(elapsed / duration);
+        
+            t.position = Vector3.Lerp(startPos, endPos, tLerp);
+            t.rotation = Quaternion.Slerp(startRot, endRot, tLerp);
+        
+            yield return null;
+        }
+        
+        t.position = endPos;
+        t.rotation = endRot;
+        
+    }
+
 }
