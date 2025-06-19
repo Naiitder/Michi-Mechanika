@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] private PlayerAnimatorController playerAnimatorController;
     
     [Header("Movement")]
-    private Transform transform;
+    private new Transform transform;
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float rotationSpeed = 15f;
     private bool isMoving = false;

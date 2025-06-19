@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TileController : MonoBehaviour
 {
+    
+    public static TileController instance;
     private const float horizontalOffset = 3f;
     private const float verticalOffset = 3f;
     
@@ -16,7 +18,10 @@ public class TileController : MonoBehaviour
     
     private void Awake()
     {
-        allTiles = FindObjectsOfType<Tile>();
+        if (instance == null) instance = this;
+        else Destroy(this);
+        
+        allTiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
         foreach (Tile tile in allTiles) tile.Initialize();
         ConnectTiles();
     }
@@ -71,9 +76,15 @@ public class TileController : MonoBehaviour
                         && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofUpOffset) < 0.1f
                     );
                 
+                bool isVerticalZUpNeighbor =                     
+                    Mathf.Abs(Math.Abs(diff.x)) < 0.1f &&
+                    (
+                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < 0.1f
+                        && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofUpOffset) < 0.1f
+                    );
                 
                 if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor || 
-                    isVerticalXUpNeighbor)
+                    isVerticalXUpNeighbor || isVerticalZUpNeighbor)
                 {
                     neighbors.Add(other);
                 }
