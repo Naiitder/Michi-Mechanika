@@ -11,9 +11,9 @@ public class Lever : MonoBehaviour
     [SerializeField] private Transform pivotA;
     [SerializeField] private Transform pivotB;
     
-    private void Awake()
+    private void Initialize()
     {
-        
+        if(TileController.instance != null) tileWhereLeverIs = TileController.instance.GetClosestTile(transform.position);
     }
 
     public void PullLever(Tile tileWherePlayerIs)

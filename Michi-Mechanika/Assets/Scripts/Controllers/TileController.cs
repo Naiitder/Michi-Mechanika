@@ -93,4 +93,22 @@ public class TileController : MonoBehaviour
             tile.connectedTiles = neighbors.ToArray();
         }
     }
+
+    public Tile GetClosestTile(Vector3 position)
+    {
+        Tile closest = null;
+        float minDistance = Mathf.Infinity;
+        
+        foreach (Tile tile in allTiles) 
+        {
+            float dist = Vector3.Distance(tile.position, position);
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                closest = tile;
+            }
+        }
+
+        return closest;
+    }
 }
