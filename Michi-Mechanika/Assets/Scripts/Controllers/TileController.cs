@@ -96,6 +96,16 @@ public class TileController : MonoBehaviour
                 if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor || 
                     isVerticalXUpNeighbor || isVerticalZUpNeighbor)
                 {
+                    Tile.Direction? dir = GetCardinalDirection(tile.position, other.position);
+                    if (dir.HasValue)
+                    {
+                        if (tile.blockedDirections.Contains(dir.Value))
+                            continue;
+                        
+                        Tile.Direction opposite = GetOppositeDirection(dir.Value);
+                        if (other.blockedDirections.Contains(opposite))
+                            continue;
+                    }
                     neighbors.Add(other);
                 }
             }
@@ -121,4 +131,33 @@ public class TileController : MonoBehaviour
 
         return closest;
     }
+    
+    private Tile.Direction? GetCardinalDirection(Vector3 from, Vector3 to)
+    {
+        Vector3 diff = to - from;
+
+        if (diff.x <= horizontalOffset && diff.x > 0)
+            return Tile.Direction.Forward;
+        else if (diff.x >= -horizontalOffset && diff.x < 0)
+            return Tile.Direction.Back;
+        else if (diff.z <= horizontalOffset && diff.z > 0)
+            return Tile.Direction.Left;
+        else if (diff.z >= -horizontalOffset && diff.z < 0)
+            return Tile.Direction.Right;
+
+        return null;
+    }
+    public static  Tile.Direction GetOppositeDirection( Tile.Direction dir)
+    {
+        switch (dir)
+        {
+            case  Tile.Direction.Forward: return Tile.Direction.Back;
+            case  Tile.Direction.Back: return Tile.Direction.Forward;
+            case  Tile.Direction.Left: return Tile.Direction.Right;
+            case  Tile.Direction.Right: return Tile.Direction.Left;
+            default: throw new ArgumentOutOfRangeException();
+        }
+    }
+
+
 }
