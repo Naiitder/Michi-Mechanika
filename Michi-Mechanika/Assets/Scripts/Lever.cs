@@ -26,6 +26,7 @@ public class Lever : MonoBehaviour
         if (tileWhereLeverIs != tileWherePlayerIs) return;
         
         activated = !activated;
+        if( GameController.instance != null) GameController.instance.canInteract = false;
         if (!activated)
         {
             pivotGameObject.localRotation = originalRotation;
@@ -46,7 +47,6 @@ public class Lever : MonoBehaviour
             }
         }
         
-        if(TileController.instance != null) TileController.instance.ConnectTiles();
     }
     
     private IEnumerator MoveToPivot(GameObject go, Transform targetPivot, float duration)
@@ -74,6 +74,18 @@ public class Lever : MonoBehaviour
         
         t.position = endPos;
         t.rotation = endRot;
+
+        foreach (GameObject tilesGOs in tilesGameObjects)
+        {
+            Tile[] tilesInThisGO = tilesGOs.GetComponentsInChildren<Tile>();
+            foreach (Tile tile in tilesInThisGO)
+            {
+                tile.UpdatePosition();
+            }
+        }
+        
+        if(TileController.instance != null) TileController.instance.ConnectTiles();
+        if(GameController.instance != null)  GameController.instance.canInteract = true;
         
     }
 

@@ -13,7 +13,11 @@ public class Tile : MonoBehaviour
 
     public void Initialize()
     {
+        UpdatePosition();
+    }
+
+    public void UpdatePosition()
+    {
         position = pivotPosition.position;
     }
-    
 }

@@ -26,8 +26,18 @@ public class TileController : MonoBehaviour
         ConnectTiles();
     }
 
+    public void DisconnectTiles()
+    {
+        foreach (Tile tile in allTiles)
+        {
+            tile.connectedTiles = new Tile[0];
+        }
+        
+    }
+
     public void ConnectTiles()
     {
+        DisconnectTiles();
         foreach (Tile tile in allTiles)
         {
             List<Tile> neighbors = new List<Tile>();

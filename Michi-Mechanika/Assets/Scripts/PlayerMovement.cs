@@ -34,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetNextAction()
     {
+        if(GameController.instance == null || !GameController.instance.canInteract) return;
+        
         if (Input.GetMouseButtonDown(0) && !isMoving)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

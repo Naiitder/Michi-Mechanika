@@ -3,8 +3,14 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public static GameController instance;
+    public bool canInteract = true;
+    
     private void Awake()
     {
+        if(instance == null) instance = this;
+        else Destroy(this);
+        
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
 
@@ -16,4 +22,6 @@ public class GameController : MonoBehaviour
         PlayerMovement pm = FindFirstObjectByType<PlayerMovement>();
         pm.Initialize();
     }
+    
+    
 }
