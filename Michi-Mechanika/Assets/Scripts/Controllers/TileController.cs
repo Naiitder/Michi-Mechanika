@@ -102,7 +102,7 @@ public class TileController : MonoBehaviour
                         if (tile.blockedDirections.Contains(dir.Value))
                             continue;
                         
-                        Tile.Direction opposite = GetOppositeDirection(dir.Value);
+                        Tile.Direction opposite = Tile.GetOppositeDirection(dir.Value);
                         if (other.blockedDirections.Contains(opposite))
                             continue;
                     }
@@ -132,7 +132,7 @@ public class TileController : MonoBehaviour
         return closest;
     }
     
-    private Tile.Direction? GetCardinalDirection(Vector3 from, Vector3 to)
+    public Tile.Direction? GetCardinalDirection(Vector3 from, Vector3 to)
     {
         Vector3 diff = to - from;
 
@@ -146,17 +146,6 @@ public class TileController : MonoBehaviour
             return Tile.Direction.Right;
 
         return null;
-    }
-    public static  Tile.Direction GetOppositeDirection( Tile.Direction dir)
-    {
-        switch (dir)
-        {
-            case  Tile.Direction.Forward: return Tile.Direction.Back;
-            case  Tile.Direction.Back: return Tile.Direction.Forward;
-            case  Tile.Direction.Left: return Tile.Direction.Right;
-            case  Tile.Direction.Right: return Tile.Direction.Left;
-            default: throw new ArgumentOutOfRangeException();
-        }
     }
 
 

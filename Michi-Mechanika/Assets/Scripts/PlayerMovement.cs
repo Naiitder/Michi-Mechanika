@@ -17,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask interactiveLayer;
     [SerializeField] private Tile currentTile;
     
+    private Vector2 swipeStart;
+    private bool isSwiping;
+
+    
     public void Initialize()
     {
         transform = GetComponent<Transform>();
@@ -28,7 +32,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        GetNextAction();
+        if (GameController.instance == null || !GameController.instance.canInteract || isMoving) return;
+        HandleInput();
+
     }
 
 
@@ -61,6 +67,71 @@ public class PlayerMovement : MonoBehaviour
         
 
     }
+    
+    private void HandleInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            swipeStart = Input.mousePosition;
+            isSwiping = true;
+        }
+
+        if (Input.GetMouseButtonUp(0) && isSwiping)
+        {
+            Vector2 swipeEnd = Input.mousePosition;
+            Vector2 swipeDelta = swipeEnd - swipeStart;
+            isSwiping = false;
+            
+            if (swipeDelta.magnitude < 50f)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out RaycastHit hit, 100f, interactiveLayer))
+                {
+                    Lever clickedLever = hit.collider.GetComponent<Lever>();
+                    if (clickedLever != null)
+                    {
+                        clickedLever.PullLever(currentTile);
+                        return;
+                    }
+                }
+
+                return;
+            }
+            
+            Vector2 dir = swipeDelta.normalized;
+
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+            {
+                if (dir.x > 0)
+                    TryMoveInDirection(Tile.Direction.Right);
+                else
+                    TryMoveInDirection(Tile.Direction.Left);
+            }
+            else
+            {
+                if (dir.y > 0)
+                    TryMoveInDirection(Tile.Direction.Forward);
+                else
+                    TryMoveInDirection(Tile.Direction.Back);
+            }
+        }
+    }
+    
+    private void TryMoveInDirection(Tile.Direction direction)
+    {
+        foreach (Tile neighbor in currentTile.connectedTiles)
+        {
+            Tile.Direction? dirToNeighbor = TileController.instance.GetCardinalDirection(currentTile.position, neighbor.position);
+            if (dirToNeighbor.HasValue && dirToNeighbor.Value == direction)
+            {
+                MoveToNextPosition(neighbor);
+                return;
+            }
+        }
+        
+    }
+
+
     
     private void MoveToNextPosition(Tile targetTile)
     {

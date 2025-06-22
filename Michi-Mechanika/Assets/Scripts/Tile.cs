@@ -24,4 +24,16 @@ public class Tile : MonoBehaviour
     {
         position = pivotPosition.position;
     }
+    
+    public static  Direction GetOppositeDirection( Direction dir)
+    {
+        switch (dir)
+        {
+            case  Direction.Forward: return Direction.Back;
+            case  Direction.Back: return Direction.Forward;
+            case  Direction.Left: return Direction.Right;
+            case  Direction.Right: return Direction.Left;
+            default: throw new ArgumentOutOfRangeException();
+        }
+    }
 }

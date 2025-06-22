@@ -1136,6 +1136,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 2103998777}
   tileType: 0
+  blockedDirections: 
 --- !u!23 &648373108
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1272,6 +1273,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 1047987211}
   tileType: 1
+  blockedDirections: 
 --- !u!65 &757797506
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1559,6 +1561,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 95033301}
   tileType: 1
+  blockedDirections: 
 --- !u!23 &822293261
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2015,6 +2018,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 1100334805}
   tileType: 0
+  blockedDirections: 
 --- !u!65 &978057447
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2088,6 +2092,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 2099296133}
   tileType: 1
+  blockedDirections: 
 --- !u!23 &1040716950
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2260,6 +2265,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 1787561462}
   tileType: 1
+  blockedDirections: 
 --- !u!65 &1160830733
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2423,6 +2429,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 1335117219}
   tileType: 0
+  blockedDirections: 
 --- !u!23 &1161849521
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2720,6 +2727,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 1848884891}
   tileType: 0
+  blockedDirections: 
 --- !u!23 &1229006620
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2878,6 +2886,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 623658481}
   tileType: 0
+  blockedDirections: 00000000
 --- !u!65 &1254147178
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3132,6 +3141,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 799599724}
   tileType: 0
+  blockedDirections: 
 --- !u!65 &1387638626
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3279,6 +3289,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 670138504}
   tileType: 0
+  blockedDirections: 
 --- !u!23 &1407374188
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3751,6 +3762,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 922428486}
   tileType: 0
+  blockedDirections: 
 --- !u!23 &1538248305
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3861,6 +3873,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1411451e49c1c4da783e231863d0f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canInteract: 1
 --- !u!1 &1569705525
 GameObject:
   m_ObjectHideFlags: 0
@@ -4183,6 +4196,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 170325632}
   tileType: 0
+  blockedDirections: 
 --- !u!23 &1695560310
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4272,6 +4286,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 1220522183}
   tileType: 1
+  blockedDirections: 
 --- !u!65 &1776053949
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4491,6 +4506,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 2107367772}
   tileType: 0
+  blockedDirections: 
 --- !u!65 &2084626705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4996,6 +5012,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 1219065089}
   tileType: 0
+  blockedDirections: 
 --- !u!23 &2141218726
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5122,6 +5139,7 @@ MonoBehaviour:
   connectedTiles: []
   pivotPosition: {fileID: 2086588422}
   tileType: 0
+  blockedDirections: 
 --- !u!23 &2145172479
 MeshRenderer:
   m_ObjectHideFlags: 0
