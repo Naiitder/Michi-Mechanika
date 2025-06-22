@@ -36,37 +36,6 @@ public class PlayerMovement : MonoBehaviour
         HandleInput();
 
     }
-
-
-    private void GetNextAction()
-    {
-        if(GameController.instance == null || !GameController.instance.canInteract) return;
-        
-        if (Input.GetMouseButtonDown(0) && !isMoving)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, interactiveLayer)){
-                
-                Tile clickedTile = hit.collider.GetComponent<Tile>();
-                
-                if (clickedTile != null)
-                {
-                    MoveToNextPosition(clickedTile);
-                }
-                
-                Lever clickedLever = hit.collider.GetComponent<Lever>();
-
-                if (clickedLever != null)
-                {
-                    clickedLever.PullLever(currentTile);
-                }
-            }
-        }
-        
-        
-
-    }
     
     private void HandleInput()
     {

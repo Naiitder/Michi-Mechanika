@@ -11,6 +11,8 @@ public class GameController : MonoBehaviour
         if(instance == null) instance = this;
         else Destroy(this);
         
+        Cursor.visible = false;
+        
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
 

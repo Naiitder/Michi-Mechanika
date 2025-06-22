@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 382}
   m_MaxSize: {x: 10000, y: 10000}
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 67
+  controlID: 103
   draggingID: 0
 --- !u!114 &11
 MonoBehaviour:
@@ -512,7 +512,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 20fbffff42a50000fca500007ca60000
+      m_ExpandedIDs: 20fbfffffca4000054a5000096a50000c8a50000f6a50000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1116,9 +1116,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 6.91, y: 4.25, z: -5.9}
+    m_Target: {x: -6.0420613, y: 1.1952236, z: 0.82059205}
     speed: 2
-    m_Value: {x: 6.91, y: 4.25, z: -5.9}
+    m_Value: {x: -6.0420613, y: 1.1952236, z: 0.82059205}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1164,13 +1164,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.14573355, y: 0.31738442, z: -0.04943432, w: 0.93574995}
+    m_Target: {x: 0.40175024, y: 0.33280382, z: -0.15954952, w: 0.83810943}
     speed: 2
-    m_Value: {x: -0.14573355, y: -0.31738445, z: 0.049434323, w: -0.93574995}
+    m_Value: {x: -0.40175027, y: -0.33280382, z: 0.15954953, w: -0.8381095}
   m_Size:
-    m_Target: 12.754316
+    m_Target: 7.3956933
     speed: 2
-    m_Value: 12.754316
+    m_Value: 7.3956933
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1314,7 +1314,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 42396
+  m_LastSelectedObjectID: 42278
 --- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1362,7 +1362,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Settings
+    - Assets/Scripts
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1372,15 +1372,15 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Settings
+  - Assets/Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\0_MyGames\Michi-Mechanika\Michi-Mechanika
   m_LockTracker:
     m_IsLocked: 1
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 22aa0000
-    m_LastClickedID: 43554
+    m_SelectedIDs: 3eaa0000
+    m_LastClickedID: 43582
     m_ExpandedIDs: 000000004ea80000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1436,8 +1436,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 7a020000
-    m_LastClickedInstanceID: 634
+    m_SelectedInstanceIDs: 0aa50000
+    m_LastClickedInstanceID: 42250
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c623000086ef0000fea60000
     m_RenameOverlay:
@@ -1551,7 +1551,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Settings
+    - Assets/Scripts
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1561,15 +1561,15 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Settings
+  - Assets/Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\0_MyGames\Michi-Mechanika\Michi-Mechanika
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 22aa0000
-    m_LastClickedID: 43554
+    m_SelectedIDs: 3eaa0000
+    m_LastClickedID: 43582
     m_ExpandedIDs: 000000004ea80000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1627,7 +1627,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: 
     m_RenameOverlay:
       m_UserAcceptedRename: 0
