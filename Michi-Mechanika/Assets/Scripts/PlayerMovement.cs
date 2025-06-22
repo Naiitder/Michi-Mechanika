@@ -91,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
                     if (clickedLever != null)
                     {
                         clickedLever.PullLever(currentTile);
-                        return;
                     }
                 }
 
