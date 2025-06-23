@@ -9,10 +9,10 @@ public class TileController : MonoBehaviour
     private const float horizontalOffset = 3f;
     private const float verticalOffset = 3f;
     
-    private const float horizontalRoofOffset = 1.41f;
-    private const float horizontalRoofUpOffset = 1.59f;
-    private const float verticalRoofUpOffset = 2.34f;
-    private const float verticalRoofDownOffset = 0.71f;
+    private const float horizontalRoofOffset = 1.47f;
+    private const float horizontalRoofUpOffset = 1.53f;
+    private const float verticalRoofUpOffset = 1.53f;
+    private const float verticalRoofDownOffset = 1.49f;
 
     Tile[] allTiles;
     
@@ -92,6 +92,8 @@ public class TileController : MonoBehaviour
                         Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < 0.1f
                         && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofUpOffset) < 0.1f
                     );
+                
+                Debug.Log(diff);
                 
                 if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor || 
                     isVerticalXUpNeighbor || isVerticalZUpNeighbor)

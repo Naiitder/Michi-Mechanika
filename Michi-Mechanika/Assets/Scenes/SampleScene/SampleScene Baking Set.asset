@@ -674,4 +674,4 @@ MonoBehaviour:
       bakeScene: 1
       bounds:
         m_Center: {x: 0, y: 0, z: 0}
-        m_Extent: {x: 648, y: 324, z: 648}
+        m_Extent: {x: 324, y: 324, z: 324}

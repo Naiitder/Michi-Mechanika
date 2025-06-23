@@ -22,7 +22,7 @@ public class Tile : MonoBehaviour
 
     public void UpdatePosition()
     {
-        position = pivotPosition.position;
+        position = pivotPosition != null ? pivotPosition.position : transform.position;
     }
     
     public static  Direction GetOppositeDirection( Direction dir)

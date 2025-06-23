@@ -6,16 +6,19 @@ public class GameController : MonoBehaviour
     public static GameController instance;
     public bool canInteract = true;
     
+    
     private void Awake()
     {
         if(instance == null) instance = this;
         else Destroy(this);
         
-        Cursor.visible = false;
-        
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
-
+        
+        Texture2D cursorTexture = Resources.Load<Texture2D>("Steampunk_UI_icon_02");
+        Vector2 hotspot = Vector2.zero;
+        Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
+        
         TileController tc = FindFirstObjectByType<TileController>();
         tc.Initialize();
         Lever[] levers = FindObjectsByType<Lever>(FindObjectsSortMode.None);
