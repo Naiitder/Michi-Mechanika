@@ -14,6 +14,7 @@ public class Lever : MonoBehaviour
     
     [SerializeField] private Transform pivotA;
     [SerializeField] private Transform pivotB;
+    [SerializeField] private float durationTransition = 1f;
     
     public void Initialize()
     {
@@ -27,24 +28,19 @@ public class Lever : MonoBehaviour
         
         activated = !activated;
         if( GameController.instance != null) GameController.instance.canInteract = false;
-        if (!activated)
-        {
-            pivotGameObject.localRotation = originalRotation;
-            
-            foreach (GameObject go in tilesGameObjects)
-            {
-                StartCoroutine(MoveToPivot(go, pivotA, 0.5f)); 
-            }
+        StopAllCoroutines();
+        
+        Quaternion targetRotation = activated
+            ? Quaternion.Euler(0, 0, -45)
+            : originalRotation;
+        
+        StartCoroutine(RotatePivot(pivotGameObject, targetRotation, 0.5f));
 
-        }
-        else
+        Transform pivotTarget = activated ? pivotB : pivotA;
+
+        foreach (GameObject go in tilesGameObjects)
         {
-            pivotGameObject.localRotation =  Quaternion.Euler(0, 0, -45);
-            
-            foreach (GameObject go in tilesGameObjects)
-            {
-                StartCoroutine(MoveToPivot(go, pivotB, 0.5f)); 
-            }
+            StartCoroutine(MoveToPivot(go, pivotTarget, durationTransition));
         }
         
     }
@@ -64,7 +60,9 @@ public class Lever : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float tLerp = Mathf.Clamp01(elapsed / duration);
+            float tRaw = Mathf.Clamp01(elapsed / duration);
+            float tLerp = Mathf.SmoothStep(0f, 1f, tRaw);
+
         
             t.position = Vector3.Lerp(startPos, endPos, tLerp);
             t.rotation = Quaternion.Slerp(startRot, endRot, tLerp);
@@ -87,6 +85,21 @@ public class Lever : MonoBehaviour
         if(TileController.instance != null) TileController.instance.ConnectTiles();
         if(GameController.instance != null)  GameController.instance.canInteract = true;
         
+    }
+    private IEnumerator RotatePivot(Transform target, Quaternion targetRotation, float duration)
+    {
+        Quaternion startRotation = target.localRotation;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+            target.localRotation = Quaternion.Slerp(startRotation, targetRotation, t);
+            yield return null;
+        }
+
+        target.localRotation = targetRotation;
     }
 
 }
