@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     
     [Header("Tiles")]
     [SerializeField] private LayerMask interactiveLayer;
-    [SerializeField] private Tile currentTile;
+    [SerializeField] public Tile currentTile;
     
     private Vector2 swipeStart;
     private bool isSwiping;
@@ -36,38 +36,31 @@ public class PlayerMovement : MonoBehaviour
         HandleInput();
 
     }
-    
+
     private void HandleInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (InputController.instance == null) return;
+
+        if (InputController.instance.HasClicked)
         {
-            swipeStart = Input.mousePosition;
-            isSwiping = true;
+            InputController.instance.HasClicked = false;
+            Vector2 screenPos = InputController.instance.ClickPosition;
+            Ray ray = Camera.main.ScreenPointToRay(screenPos);
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, interactiveLayer))
+            {
+                Lever clickedLever = hit.collider.GetComponentInParent<Lever>();
+                if (clickedLever != null)
+                {
+                    clickedLever.PullLever(currentTile);
+                }
+            }
         }
 
-        if (Input.GetMouseButtonUp(0) && isSwiping)
+        if (InputController.instance.HasDragged)
         {
-            Vector2 swipeEnd = Input.mousePosition;
-            Vector2 swipeDelta = swipeEnd - swipeStart;
-            isSwiping = false;
+            Vector2 dir = InputController.instance.DragDirection;
+            InputController.instance.HasDragged = false;
             
-            if (swipeDelta.magnitude < 50f)
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit, 100f, interactiveLayer))
-                {
-                    Lever clickedLever = hit.collider.GetComponentInParent<Lever>();
-                    if (clickedLever != null)
-                    {
-                        clickedLever.PullLever(currentTile);
-                    }
-                }
-
-                return;
-            }
-            
-            Vector2 dir = swipeDelta.normalized;
-
             if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
             {
                 if (dir.x > 0)
@@ -84,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+    
+
     
     private void TryMoveInDirection(Tile.Direction direction)
     {
@@ -113,6 +108,13 @@ public class PlayerMovement : MonoBehaviour
 
     void MoveSmoothlyTo(Tile targetTile)
     {
+        
+        if(currentTile is TilePression)
+        {
+            TilePression tp = (TilePression)currentTile;
+            tp.CheckForPression(false);
+        }
+        
         if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Floor) StartCoroutine(MoveFromFloorToFloor(targetTile));
         else if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Roof) StartCoroutine(MoveFromFloorToRoof(targetTile));
         else if(currentTile.tileType == Tile.Type.Roof && targetTile.tileType == Tile.Type.Floor) StartCoroutine(MoveFromRoofToFloor(targetTile));
@@ -152,6 +154,12 @@ public class PlayerMovement : MonoBehaviour
         isMoving = false;
         playerAnimatorController.anim.SetBool(playerAnimatorController.WalkHash, false);
         currentTile = targetTile;
+        
+        if(currentTile is TilePression)
+        {
+            TilePression tp = (TilePression)currentTile;
+            tp.CheckForPression(true);
+        }
     }
     
     IEnumerator MoveFromFloorToRoof(Tile targetTile)
@@ -240,6 +248,12 @@ public class PlayerMovement : MonoBehaviour
         }
         
         currentTile = targetTile;
+        
+        if(currentTile is TilePression)
+        {
+            TilePression tp = (TilePression)currentTile;
+            tp.CheckForPression(true);
+        }
     }
     IEnumerator MoveFromRoofToFloor(Tile targetTile)
     {
@@ -298,6 +312,12 @@ public class PlayerMovement : MonoBehaviour
         playerAnimatorController.anim.SetBool(playerAnimatorController.WalkHash, false);
        
         currentTile = targetTile;
+        
+        if(currentTile is TilePression)
+        {
+            TilePression tp = (TilePression)currentTile;
+            tp.CheckForPression(true);
+        }
 
     }
     
@@ -400,6 +420,12 @@ public class PlayerMovement : MonoBehaviour
         }
         
         currentTile = targetTile;
+        
+        if(currentTile is TilePression)
+        {
+            TilePression tp = (TilePression)currentTile;
+            tp.CheckForPression(true);
+        }
 
     }
 }
