@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit, 100f, interactiveLayer))
                 {
-                    Lever clickedLever = hit.collider.GetComponent<Lever>();
+                    Lever clickedLever = hit.collider.GetComponentInParent<Lever>();
                     if (clickedLever != null)
                     {
                         clickedLever.PullLever(currentTile);

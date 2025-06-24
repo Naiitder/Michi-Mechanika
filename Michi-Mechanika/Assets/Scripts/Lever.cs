@@ -39,7 +39,7 @@ public class Lever : MonoBehaviour
         }
         else
         {
-            pivotGameObject.localRotation =  Quaternion.Euler(0, 0, -70);
+            pivotGameObject.localRotation =  Quaternion.Euler(0, 0, -45);
             
             foreach (GameObject go in tilesGameObjects)
             {
