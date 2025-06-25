@@ -156,6 +156,34 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UserActions"",
+            ""id"": ""efaac5ab-7677-4e91-9def-cfc6966eeb56"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""03b5a88c-7642-4e49-80eb-3ae36158af8e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""0e4ee847-97d9-4edd-958b-9d4ba5d19887"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -164,11 +192,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Pointer = asset.FindActionMap("Pointer", throwIfNotFound: true);
         m_Pointer_PointerPosition = m_Pointer.FindAction("PointerPosition", throwIfNotFound: true);
         m_Pointer_PointerClick = m_Pointer.FindAction("PointerClick", throwIfNotFound: true);
+        // UserActions
+        m_UserActions = asset.FindActionMap("UserActions", throwIfNotFound: true);
+        m_UserActions_Pause = m_UserActions.FindAction("Pause", throwIfNotFound: true);
     }
 
     ~@InputActions()
     {
         UnityEngine.Debug.Assert(!m_Pointer.enabled, "This will cause a leak and performance issues, InputActions.Pointer.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_UserActions.enabled, "This will cause a leak and performance issues, InputActions.UserActions.Disable() has not been called.");
     }
 
     /// <summary>
@@ -347,6 +379,102 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PointerActions" /> instance referencing this action map.
     /// </summary>
     public PointerActions @Pointer => new PointerActions(this);
+
+    // UserActions
+    private readonly InputActionMap m_UserActions;
+    private List<IUserActionsActions> m_UserActionsActionsCallbackInterfaces = new List<IUserActionsActions>();
+    private readonly InputAction m_UserActions_Pause;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "UserActions".
+    /// </summary>
+    public struct UserActionsActions
+    {
+        private @InputActions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public UserActionsActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "UserActions/Pause".
+        /// </summary>
+        public InputAction @Pause => m_Wrapper.m_UserActions_Pause;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_UserActions; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="UserActionsActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(UserActionsActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="UserActionsActions" />
+        public void AddCallbacks(IUserActionsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UserActionsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UserActionsActionsCallbackInterfaces.Add(instance);
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="UserActionsActions" />
+        private void UnregisterCallbacks(IUserActionsActions instance)
+        {
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UserActionsActions.UnregisterCallbacks(IUserActionsActions)" />.
+        /// </summary>
+        /// <seealso cref="UserActionsActions.UnregisterCallbacks(IUserActionsActions)" />
+        public void RemoveCallbacks(IUserActionsActions instance)
+        {
+            if (m_Wrapper.m_UserActionsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="UserActionsActions.AddCallbacks(IUserActionsActions)" />
+        /// <seealso cref="UserActionsActions.RemoveCallbacks(IUserActionsActions)" />
+        /// <seealso cref="UserActionsActions.UnregisterCallbacks(IUserActionsActions)" />
+        public void SetCallbacks(IUserActionsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UserActionsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UserActionsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="UserActionsActions" /> instance referencing this action map.
+    /// </summary>
+    public UserActionsActions @UserActions => new UserActionsActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Pointer" which allows adding and removing callbacks.
     /// </summary>
@@ -368,5 +496,20 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPointerClick(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UserActions" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="UserActionsActions.AddCallbacks(IUserActionsActions)" />
+    /// <seealso cref="UserActionsActions.RemoveCallbacks(IUserActionsActions)" />
+    public interface IUserActionsActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPause(InputAction.CallbackContext context);
     }
 }

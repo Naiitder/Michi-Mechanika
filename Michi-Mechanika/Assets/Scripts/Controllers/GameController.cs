@@ -5,7 +5,10 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance;
     public bool canInteract = true;
+    public bool isGamePaused;
     
+    [Header("Canvas")]
+    [SerializeField] private GameObject pauseCanvas;
     
     private void Awake()
     {
@@ -26,7 +29,44 @@ public class GameController : MonoBehaviour
             lever.Initialize();
         PlayerMovement pm = FindFirstObjectByType<PlayerMovement>();
         pm.Initialize();
+        
+        if(pauseCanvas != null) pauseCanvas.SetActive(false);
+    }
+
+    private void Update()
+    {
+        HandlePause();
+    }
+
+    private void HandlePause()
+    {
+        if (InputController.instance != null && InputController.instance.HasPaused)
+        {
+            if (isGamePaused)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                SetPause();
+            }
+            InputController.instance.HasPaused = false;
+        }
     }
     
+    public void ResumeGame()
+    {
+        pauseCanvas.SetActive(false);
+        isGamePaused = false;
+        Time.timeScale = 1;
+        
+    }
+    
+    public void SetPause()
+    {
+        pauseCanvas.SetActive(true);
+        isGamePaused = true;
+        Time.timeScale = 0;
+    }
     
 }

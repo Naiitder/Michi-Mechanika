@@ -1,0 +1,2 @@
+D:\0_MyGames\Michi-Mechanika\Michi-Mechanika\obj\Debug\Assembly-CSharp.csproj.AssemblyReference.cache
+D:\0_MyGames\Michi-Mechanika\Michi-Mechanika\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache

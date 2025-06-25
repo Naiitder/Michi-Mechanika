@@ -14,6 +14,7 @@ public class InputController : MonoBehaviour
     
     private bool hasClicked = false;
     private bool hasDragged = false;
+    private bool hasPaused = false;
 
     public Vector2 ClickPosition { get; private set; }
     public Vector2 DragStart { get; private set; }
@@ -22,6 +23,7 @@ public class InputController : MonoBehaviour
 
     public bool HasClicked {get{ return hasClicked; } set {hasClicked = value;}}
     public bool HasDragged {get{ return hasDragged; } set {hasDragged = value;}}
+    public bool HasPaused {get{ return hasPaused; } set {hasPaused = value;}}
 
     public float dragThreshold = 10f;
     
@@ -39,6 +41,7 @@ public class InputController : MonoBehaviour
             
             inputActions.Pointer.PointerClick.started += OnPointerDown;
             inputActions.Pointer.PointerClick.canceled += OnPointerUp;
+            inputActions.UserActions.Pause.started +=  onPauseInputStart;
         }
         inputActions.Enable();
     }
@@ -75,5 +78,10 @@ public class InputController : MonoBehaviour
         }
 
         isDragging = false;
+    }
+    
+    void onPauseInputStart(InputAction.CallbackContext context)
+    {
+        hasPaused = !hasPaused; 
     }
 }
