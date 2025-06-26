@@ -26,6 +26,12 @@ public class PlayerMovement : CharacterMovement
 
     }
 
+    public void Die()
+    {
+        anim.SetBool(DeadHash, true);
+        LevelManager.instance.RestartScene();
+    }
+
     private void HandleInput()
     {
         if (InputController.instance == null) return;

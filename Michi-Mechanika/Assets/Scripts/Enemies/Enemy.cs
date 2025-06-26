@@ -39,7 +39,10 @@ public class Enemy : CharacterMovement
         {
             if (playerMovement.currentTile == bestCandidate)
             {
+                anim.SetBool(AttackHash,true);
                 MoveSmoothlyTo(bestCandidate);
+
+                playerMovement.Die();
             }
         }
     }
@@ -57,7 +60,9 @@ public class Enemy : CharacterMovement
 
     protected override void CheckTile(Tile targetTile)
     {
+        currentTile.enemyOnTile = null;
         currentTile = targetTile;
+        targetTile.enemyOnTile = this;
         
         if(currentTile is TilePression)
         {

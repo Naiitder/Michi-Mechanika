@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -10,6 +11,7 @@ public class GameController : MonoBehaviour
     
     [Header ("Lists")]
     public Enemy[] enemies;
+    public List<Saw> saws = new List<Saw>();
     
     [Header("Canvas")]
     [SerializeField] private GameObject pauseCanvas;
@@ -41,6 +43,12 @@ public class GameController : MonoBehaviour
         {
             enemy.playerMovement = pm;
             enemy.Initialize();
+        }
+        
+        saws = FindObjectsByType<Saw>(FindObjectsSortMode.None).ToList();
+        foreach (Saw saw in saws)
+        {
+            saw.Initialize();
         }
         
         if(pauseCanvas != null) pauseCanvas.SetActive(false);
@@ -92,6 +100,11 @@ public class GameController : MonoBehaviour
         foreach (Enemy enemy in enemies)
         {
             enemy.Attack();
+        }
+
+        foreach (Saw saw in saws)
+        {
+            saw.UpdatePosition();
         }
     }
 }

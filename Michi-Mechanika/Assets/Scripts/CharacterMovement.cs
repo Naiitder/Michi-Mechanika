@@ -21,7 +21,8 @@ public abstract class CharacterMovement : MonoBehaviour
     [HideInInspector] public int ClimbLeftHash;
     [HideInInspector] public int ClimbRightHash;
     [HideInInspector] public int DeadHash;
-
+    [HideInInspector] public int AttackHash;
+    
     public virtual void Initialize()
     {
         anim = GetComponent<Animator>();
@@ -33,6 +34,7 @@ public abstract class CharacterMovement : MonoBehaviour
         ClimbLeftHash = Animator.StringToHash("climbLeft");
         ClimbRightHash = Animator.StringToHash("climbRight");
         DeadHash = Animator.StringToHash("isDead");
+        AttackHash = Animator.StringToHash("attack");
         
         transform = GetComponent<Transform>();
     }
