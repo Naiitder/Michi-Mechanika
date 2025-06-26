@@ -58,40 +58,49 @@ public class PlayerMovement : CharacterMovement
             camRight.Normalize();
 
             Vector3 worldDir = (camRight * dir.x + camForward * dir.y).normalized;
+            Tile.Direction? desiredDirection = GetDirectionFromWorld(worldDir);
 
-            Vector3 origin = transform.position + Vector3.up * 0.5f;
-            Vector3 targetPos = origin + worldDir * 2f;
-            
-
-            Tile targetTile = TileController.instance.GetClosestTile(targetPos, currentTile);
-
-            if (targetTile != null && currentTile.connectedTiles.Contains(targetTile))
+            if (desiredDirection != null)
             {
-                MoveToNextPosition(targetTile);
-            }
-            else
-            {
-                Vector3 forward = transform.forward;
-                float dot = Vector3.Dot(worldDir, forward);
-                
-                if (dot > 0.5f)
-                    targetPos = new Vector3(transform.position.x,targetPos.y+2,transform.position.z);
-                else if (dot < -0.5f)
-                    targetPos = new Vector3(transform.position.x,targetPos.y-2,transform.position.z);
-                
-                targetTile = TileController.instance.GetClosestTile(targetPos, currentTile);
-                
-                //Debug.DrawLine(origin, targetPos, Color.green, 1f);
+                Tile targetTile = currentTile.GetConnectedTileInDirection(desiredDirection.Value);
 
-                if (targetTile != null && currentTile.connectedTiles.Contains(targetTile))
+                if (targetTile != null)
                 {
                     MoveToNextPosition(targetTile);
                 }
-                
+                else
+                {
+                    Vector3 forward = transform.forward;
+                    float dot = Vector3.Dot(worldDir, forward);
+
+                    Tile verticalTile = null;
+
+                    if (dot > 0.5f)
+                        verticalTile = currentTile.GetConnectedTileAbove();
+                    else if (dot < -0.5f) 
+                        verticalTile = currentTile.GetConnectedTileBelow();
+
+                    if (verticalTile != null)
+                        MoveToNextPosition(verticalTile);
+                }
             }
         }
     }
-    
+
+    Tile.Direction? GetDirectionFromWorld(Vector3 worldDir)
+    {
+        float absX = Mathf.Abs(worldDir.x);
+        float absZ = Mathf.Abs(worldDir.z);
+
+        if (absX > absZ)
+        {
+            return worldDir.x > 0 ? Tile.Direction.Forward : Tile.Direction.Back;
+        }
+        else
+        {
+            return worldDir.z > 0 ? Tile.Direction.Left : Tile.Direction.Right;
+        }
+    }
     
     private void MoveToNextPosition(Tile targetTile)
     {

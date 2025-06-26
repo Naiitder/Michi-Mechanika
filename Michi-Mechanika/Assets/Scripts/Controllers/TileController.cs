@@ -134,7 +134,7 @@ public class TileController : MonoBehaviour
         return closest;
     }
     
-    public Tile.Direction? GetCardinalDirection(Vector3 from, Vector3 to)
+    public static Tile.Direction? GetCardinalDirection(Vector3 from, Vector3 to)
     {
         Vector3 diff = to - from;
 

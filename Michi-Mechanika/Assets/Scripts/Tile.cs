@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -38,4 +39,21 @@ public class Tile : MonoBehaviour
             default: throw new ArgumentOutOfRangeException();
         }
     }
+    
+    public Tile GetConnectedTileInDirection(Direction dir)
+    {
+        return connectedTiles.FirstOrDefault(t => TileController.GetCardinalDirection(position, t.position) == dir);
+    }
+
+    public Tile GetConnectedTileAbove()
+    {
+        return connectedTiles.FirstOrDefault(t => t.position.y > position.y);
+    }
+
+    public Tile GetConnectedTileBelow()
+    {
+        return connectedTiles.FirstOrDefault(t => t.position.y < position.y);
+    }
+
+    
 }
