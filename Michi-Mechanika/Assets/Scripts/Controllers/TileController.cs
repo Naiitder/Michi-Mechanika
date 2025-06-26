@@ -114,13 +114,15 @@ public class TileController : MonoBehaviour
         }
     }
 
-    public Tile GetClosestTile(Vector3 position)
+    public Tile GetClosestTile(Vector3 position, Tile ignoreTile = null)
     {
         Tile closest = null;
         float minDistance = Mathf.Infinity;
         
         foreach (Tile tile in allTiles) 
         {
+            if (tile == ignoreTile) continue; 
+            
             float dist = Vector3.Distance(tile.position, position);
             if (dist < minDistance)
             {

@@ -10,6 +10,8 @@ public class Tile : MonoBehaviour
     [SerializeField] public enum Type { Floor, Roof }
     
     [SerializeField] public Type tileType = Type.Floor;
+
+    public Enemy enemyOnTile;
     
     public enum Direction { Forward, Back, Right, Left }
     [Header("Blocked Directions")]

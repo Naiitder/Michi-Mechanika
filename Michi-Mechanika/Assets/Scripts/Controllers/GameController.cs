@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -6,6 +7,9 @@ public class GameController : MonoBehaviour
     public static GameController instance;
     public bool canInteract = true;
     public bool isGamePaused;
+    
+    [Header ("Lists")]
+    public Enemy[] enemies;
     
     [Header("Canvas")]
     [SerializeField] private GameObject pauseCanvas;
@@ -24,11 +28,20 @@ public class GameController : MonoBehaviour
         
         TileController tc = FindFirstObjectByType<TileController>();
         tc.Initialize();
+        
         Lever[] levers = FindObjectsByType<Lever>(FindObjectsSortMode.None);
         foreach (Lever lever in levers)
             lever.Initialize();
+        
         PlayerMovement pm = FindFirstObjectByType<PlayerMovement>();
         pm.Initialize();
+        
+        enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.playerMovement = pm;
+            enemy.Initialize();
+        }
         
         if(pauseCanvas != null) pauseCanvas.SetActive(false);
     }
@@ -73,5 +86,12 @@ public class GameController : MonoBehaviour
     {
         Application.Quit();
     }
-    
+
+    public void UpdateGameFlow()
+    {
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.Attack();
+        }
+    }
 }
