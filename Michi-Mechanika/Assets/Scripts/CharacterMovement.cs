@@ -136,9 +136,7 @@ public abstract class CharacterMovement : MonoBehaviour
             if(anim != null) anim.SetBool(ClimbUpHash, false);
             if(anim != null) anim.SetBool(ClimbHash, true);
             transform.position = targetPosition;
-
-            isMoving = false;
-
+            
         }
         else
         {
@@ -164,10 +162,10 @@ public abstract class CharacterMovement : MonoBehaviour
             if(anim != null) anim.SetBool(ClimbDownHash, false);
             if(anim != null) anim.SetBool(ClimbHash, true);
             transform.position = targetPosition;
-
-            isMoving = false;
+            
         }
         
+        isMoving = false;
         CheckTile(targetTile);
     }
     IEnumerator MoveFromRoofToFloor(Tile targetTile)
@@ -233,12 +231,12 @@ public abstract class CharacterMovement : MonoBehaviour
     IEnumerator MoveFromRoofToRoof(Tile targetTile)
     {
         Vector3 targetPosition = targetTile.position;
+        isMoving = true;
         
         if (currentTile.position.y == targetPosition.y)
         {
             if (currentTile.position.x > targetPosition.x)
             {
-                isMoving = true;
                 if(anim != null) anim.SetBool(ClimbLeftHash, true);
         
                 Vector3 direction = (targetPosition - transform.position).normalized;
@@ -255,13 +253,11 @@ public abstract class CharacterMovement : MonoBehaviour
                 }
 
                 transform.position = targetPosition;
-
-                isMoving = false;
+                
                 if(anim != null) anim.SetBool(ClimbLeftHash, false);
             }
             else
             {
-                isMoving = true;
                 if(anim != null) anim.SetBool(ClimbRightHash, true);
         
                 Vector3 direction = (targetPosition - transform.position).normalized;
@@ -278,8 +274,7 @@ public abstract class CharacterMovement : MonoBehaviour
                 }
 
                 transform.position = targetPosition;
-
-                isMoving = false;
+                
                 if(anim != null) anim.SetBool(ClimbRightHash, false);
             }
         }
@@ -301,9 +296,7 @@ public abstract class CharacterMovement : MonoBehaviour
             }
             if(anim != null) anim.SetBool(ClimbUpHash, false);
             transform.position = targetPosition;
-
-            isMoving = false;
-
+            
         }
         else
         {
@@ -324,10 +317,10 @@ public abstract class CharacterMovement : MonoBehaviour
           
             transform.position = targetPosition;
             if(anim != null) anim.SetBool(ClimbDownHash, false);
-
-            isMoving = false;
+            
         }
-        
+
+        isMoving = false;
         CheckTile(targetTile);
     }
     

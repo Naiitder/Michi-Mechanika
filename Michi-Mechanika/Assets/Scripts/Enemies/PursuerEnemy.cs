@@ -8,4 +8,16 @@ public class PursuerEnemy : Enemy
     {
         hasSeenPlayer = true;
     }
+
+    public void Chase()
+    {
+        if (!hasSeenPlayer) return;
+        
+        
+    }
+
+    public void CheckForPlayer()
+    {
+        
+    }
 }

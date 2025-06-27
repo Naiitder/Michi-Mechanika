@@ -51,8 +51,9 @@ public class PlayerMovement : CharacterMovement
             }
         }
 
-        if (InputController.instance.HasDragged)
+        if (InputController.instance.HasDragged && !isMoving)
         {
+            Debug.Log("Moving");
             Vector2 dir = InputController.instance.DragDirection;
             InputController.instance.HasDragged = false;
             Vector3 camForward = Camera.main.transform.forward;

@@ -100,7 +100,20 @@ public class GameController : MonoBehaviour
     {
         foreach (Enemy enemy in enemies)
         {
-            enemy.Attack();
+            if(enemy.DettectPlayer())enemy.Attack();
+            if(enemy is MovingEnemy)
+            {            
+                MovingEnemy me = (MovingEnemy)enemy;
+                me.UpdatePosition();
+            }
+
+            if (enemy is PursuerEnemy)
+            {
+                PursuerEnemy pe = (PursuerEnemy)enemy;
+                pe.Chase();
+                pe.CheckForPlayer();
+            }
+
         }
 
         foreach (Saw saw in saws)

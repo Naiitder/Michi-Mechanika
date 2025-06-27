@@ -8,6 +8,7 @@ using UnityEngine;
 public class Enemy : CharacterMovement
 {
     public PlayerMovement playerMovement;
+    Tile bestCandidate = null;
 
     public override void Initialize()
     {
@@ -16,11 +17,11 @@ public class Enemy : CharacterMovement
         currentTile.enemyOnTile = this;
     }
 
-    public void Attack()
+    public bool DettectPlayer()
     {
         Vector3 forward = transform.forward;
         
-        Tile bestCandidate = null;
+        bestCandidate = null;
         float bestDot = -1f;
 
         foreach (Tile neighbor in currentTile.connectedTiles)
@@ -39,12 +40,17 @@ public class Enemy : CharacterMovement
         {
             if (playerMovement.currentTile == bestCandidate)
             {
-                anim.SetBool(AttackHash,true);
-                MoveSmoothlyTo(bestCandidate);
-
-                playerMovement.Die();
+               return true;
             }
         }
+        return false;
+    }
+
+    public void Attack()
+    {
+        anim.SetBool(AttackHash,true);
+        MoveSmoothlyTo(bestCandidate);
+        playerMovement.Die();
     }
 
     public void Die()
