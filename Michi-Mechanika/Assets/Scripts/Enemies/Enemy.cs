@@ -60,6 +60,12 @@ public class Enemy : CharacterMovement
 
     protected override void CheckTile(Tile targetTile)
     {
+        if(currentTile is TilePression)
+        {
+            TilePression tp = (TilePression)currentTile;
+            tp.CheckForPression(false);
+        }
+        
         currentTile.enemyOnTile = null;
         currentTile = targetTile;
         targetTile.enemyOnTile = this;
@@ -69,5 +75,7 @@ public class Enemy : CharacterMovement
             TilePression tp = (TilePression)currentTile;
             tp.CheckForPression(true);
         }
+        
+        if(currentTile.sawOnTile != null) Die();
     }
 }

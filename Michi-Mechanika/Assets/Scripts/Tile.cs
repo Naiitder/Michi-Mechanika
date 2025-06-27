@@ -13,6 +13,9 @@ public class Tile : MonoBehaviour
     [SerializeField] public Type tileType = Type.Floor;
 
     public Enemy enemyOnTile;
+
+    public bool sawRail = false;
+    public Saw sawOnTile;
     
     public enum Direction { Forward, Back, Right, Left }
     [Header("Blocked Directions")]

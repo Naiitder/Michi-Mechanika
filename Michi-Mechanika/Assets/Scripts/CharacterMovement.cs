@@ -41,13 +41,6 @@ public abstract class CharacterMovement : MonoBehaviour
     
     public void MoveSmoothlyTo(Tile targetTile)
     {
-        
-        if(currentTile is TilePression)
-        {
-            TilePression tp = (TilePression)currentTile;
-            tp.CheckForPression(false);
-        }
-        
         if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Floor) StartCoroutine(MoveFromFloorToFloor(targetTile));
         else if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Roof) StartCoroutine(MoveFromFloorToRoof(targetTile));
         else if(currentTile.tileType == Tile.Type.Roof && targetTile.tileType == Tile.Type.Floor) StartCoroutine(MoveFromRoofToFloor(targetTile));
@@ -58,7 +51,7 @@ public abstract class CharacterMovement : MonoBehaviour
     IEnumerator MoveFromFloorToFloor(Tile targetTile)
     {
         isMoving = true;
-        anim.SetBool(WalkHash, true);
+        if(anim != null) anim.SetBool(WalkHash, true);
         
         Vector3 targetPosition = targetTile.position;
         
@@ -85,7 +78,7 @@ public abstract class CharacterMovement : MonoBehaviour
         transform.position = targetPosition;
 
         isMoving = false;
-        anim.SetBool(WalkHash, false);
+        if(anim != null) anim.SetBool(WalkHash, false);
         
         CheckTile(targetTile);
     }
@@ -93,7 +86,7 @@ public abstract class CharacterMovement : MonoBehaviour
     IEnumerator MoveFromFloorToRoof(Tile targetTile)
     {
         isMoving = true;
-        anim.SetBool(WalkHash, true);
+        if(anim != null) anim.SetBool(WalkHash, true);
         
         Vector3 targetPosition = targetTile.position;
         
@@ -118,12 +111,12 @@ public abstract class CharacterMovement : MonoBehaviour
             );
             yield return null;
         }
-        anim.SetBool(WalkHash, false);
+        if(anim != null) anim.SetBool(WalkHash, false);
 
         if (currentTile.position.y < targetPosition.y)
         {
            
-            anim.SetBool(ClimbUpHash, true);
+            if(anim != null) anim.SetBool(ClimbUpHash, true);
             
             while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
             {
@@ -140,8 +133,8 @@ public abstract class CharacterMovement : MonoBehaviour
                 );
                 yield return null;
             }
-            anim.SetBool(ClimbUpHash, false);
-            anim.SetBool(ClimbHash, true);
+            if(anim != null) anim.SetBool(ClimbUpHash, false);
+            if(anim != null) anim.SetBool(ClimbHash, true);
             transform.position = targetPosition;
 
             isMoving = false;
@@ -149,7 +142,7 @@ public abstract class CharacterMovement : MonoBehaviour
         }
         else
         {
-            anim.SetBool(ClimbDownHash, true);
+            if(anim != null) anim.SetBool(ClimbDownHash, true);
 
             targetRotation = transform.rotation * Quaternion.Euler(0, 180f, 0);
             
@@ -168,8 +161,8 @@ public abstract class CharacterMovement : MonoBehaviour
                 );
                 yield return null;
             }
-            anim.SetBool(ClimbDownHash, false);
-            anim.SetBool(ClimbHash, true);
+            if(anim != null) anim.SetBool(ClimbDownHash, false);
+            if(anim != null) anim.SetBool(ClimbHash, true);
             transform.position = targetPosition;
 
             isMoving = false;
@@ -183,8 +176,8 @@ public abstract class CharacterMovement : MonoBehaviour
         
         Vector3 targetPosition = targetTile.position;
         
-        if(currentTile.position.y < targetPosition.y )anim.SetBool(ClimbUpHash, true);
-       else anim.SetBool(ClimbDownHash, true);
+        if(currentTile.position.y < targetPosition.y && anim != null)anim.SetBool(ClimbUpHash, true);
+        else if(anim != null) anim.SetBool(ClimbDownHash, true);
         
         Vector3 direction = (targetPosition - transform.position).normalized;
         direction.y = 0f;
@@ -208,10 +201,10 @@ public abstract class CharacterMovement : MonoBehaviour
             yield return null;
         }
         
-        anim.SetBool(ClimbUpHash, false); 
-        anim.SetBool(ClimbDownHash, false);
+        if(anim != null) anim.SetBool(ClimbUpHash, false); 
+        if(anim != null) anim.SetBool(ClimbDownHash, false);
         
-        anim.SetBool(WalkHash, true);
+        if(anim != null) anim.SetBool(WalkHash, true);
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
         {
             transform.rotation = Quaternion.Slerp(
@@ -231,7 +224,7 @@ public abstract class CharacterMovement : MonoBehaviour
         transform.position = targetPosition;
 
         isMoving = false;
-        anim.SetBool(WalkHash, false);
+        if(anim != null) anim.SetBool(WalkHash, false);
        
         CheckTile(targetTile);
 
@@ -246,7 +239,7 @@ public abstract class CharacterMovement : MonoBehaviour
             if (currentTile.position.x > targetPosition.x)
             {
                 isMoving = true;
-                anim.SetBool(ClimbLeftHash, true);
+                if(anim != null) anim.SetBool(ClimbLeftHash, true);
         
                 Vector3 direction = (targetPosition - transform.position).normalized;
                 direction.y = 0f;
@@ -264,12 +257,12 @@ public abstract class CharacterMovement : MonoBehaviour
                 transform.position = targetPosition;
 
                 isMoving = false;
-                anim.SetBool(ClimbLeftHash, false);
+                if(anim != null) anim.SetBool(ClimbLeftHash, false);
             }
             else
             {
                 isMoving = true;
-                anim.SetBool(ClimbRightHash, true);
+                if(anim != null) anim.SetBool(ClimbRightHash, true);
         
                 Vector3 direction = (targetPosition - transform.position).normalized;
                 direction.y = 0f;
@@ -287,7 +280,7 @@ public abstract class CharacterMovement : MonoBehaviour
                 transform.position = targetPosition;
 
                 isMoving = false;
-                anim.SetBool(ClimbRightHash, false);
+                if(anim != null) anim.SetBool(ClimbRightHash, false);
             }
         }
         else if (currentTile.position.y < targetPosition.y)
@@ -295,7 +288,7 @@ public abstract class CharacterMovement : MonoBehaviour
             Vector3 direction = (targetPosition - transform.position).normalized;
             direction.y = 0f;
             
-            anim.SetBool(ClimbUpHash, true);
+            if(anim != null) anim.SetBool(ClimbUpHash, true);
             
             while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
             {
@@ -306,7 +299,7 @@ public abstract class CharacterMovement : MonoBehaviour
                 );
                 yield return null;
             }
-            anim.SetBool(ClimbUpHash, false);
+            if(anim != null) anim.SetBool(ClimbUpHash, false);
             transform.position = targetPosition;
 
             isMoving = false;
@@ -314,7 +307,7 @@ public abstract class CharacterMovement : MonoBehaviour
         }
         else
         {
-            anim.SetBool(ClimbDownHash, true);
+            if(anim != null) anim.SetBool(ClimbDownHash, true);
             
             Vector3 direction = (targetPosition - transform.position).normalized;
             direction.y = 0f;
@@ -330,7 +323,7 @@ public abstract class CharacterMovement : MonoBehaviour
             }
           
             transform.position = targetPosition;
-            anim.SetBool(ClimbDownHash, false);
+            if(anim != null) anim.SetBool(ClimbDownHash, false);
 
             isMoving = false;
         }

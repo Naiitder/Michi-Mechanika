@@ -119,6 +119,12 @@ public class PlayerMovement : CharacterMovement
 
     protected override void CheckTile(Tile targetTile)
     {
+        if(currentTile is TilePression)
+        {
+            TilePression tp = (TilePression)currentTile;
+            tp.CheckForPression(false);
+        }
+        
         currentTile = targetTile;
         
         if(currentTile is TilePression)
@@ -129,6 +135,7 @@ public class PlayerMovement : CharacterMovement
         
         //Todo cambiarlo y activar animacion de matar
         if(currentTile.enemyOnTile != null) currentTile.enemyOnTile.Die();
+        if(currentTile.sawOnTile != null) Die();
         if(GameController.instance != null) GameController.instance.UpdateGameFlow();
     }
 }

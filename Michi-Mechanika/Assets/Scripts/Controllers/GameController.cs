@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
     public static GameController instance;
     public bool canInteract = true;
     public bool isGamePaused;
+    public PlayerMovement playerMovement;
     
     [Header ("Lists")]
     public Enemy[] enemies;
@@ -35,13 +36,13 @@ public class GameController : MonoBehaviour
         foreach (Lever lever in levers)
             lever.Initialize();
         
-        PlayerMovement pm = FindFirstObjectByType<PlayerMovement>();
-        pm.Initialize();
+        playerMovement = FindFirstObjectByType<PlayerMovement>();
+        playerMovement.Initialize();
         
         enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         foreach (Enemy enemy in enemies)
         {
-            enemy.playerMovement = pm;
+            enemy.playerMovement = playerMovement;
             enemy.Initialize();
         }
         
