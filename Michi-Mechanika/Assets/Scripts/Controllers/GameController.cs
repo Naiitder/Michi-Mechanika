@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -96,29 +97,53 @@ public class GameController : MonoBehaviour
         Application.Quit();
     }
 
-    public void UpdateGameFlow()
+    public IEnumerator UpdateGameFlow()
     {
+        canInteract = false;
+
+        List<IEnumerator> parallelRoutines = new List<IEnumerator>();
+
         foreach (Enemy enemy in enemies)
         {
-            if(enemy.DettectPlayer())enemy.Attack();
-            if(enemy is MovingEnemy)
-            {            
-                MovingEnemy me = (MovingEnemy)enemy;
-                me.UpdatePosition();
-            }
+            if (enemy.DettectPlayer())
+                enemy.Attack();
 
-            if (enemy is PursuerEnemy)
+            if (enemy is MovingEnemy me)
             {
-                PursuerEnemy pe = (PursuerEnemy)enemy;
-                pe.Chase();
-                pe.CheckForPlayer();
+                parallelRoutines.Add(me.UpdatePosition());
             }
 
+            if (enemy is PursuerEnemy pe)
+            {
+                if(!pe.hasSeenPlayer) pe.CheckForPlayer();
+                else parallelRoutines.Add(pe.Chase());
+            }
         }
 
         foreach (Saw saw in saws)
         {
-            saw.UpdatePosition();
+            parallelRoutines.Add(saw.UpdatePosition());
+        }
+        
+        yield return StartCoroutine(WaitForAll(parallelRoutines));
+
+        canInteract = true;
+    }
+
+    
+    private IEnumerator WaitForAll(List<IEnumerator> routines)
+    {
+        List<Coroutine> coroutines = new List<Coroutine>();
+
+        foreach (var routine in routines)
+        {
+            coroutines.Add(StartCoroutine(routine));
+        }
+
+        foreach (var coroutine in coroutines)
+        {
+            yield return coroutine;
         }
     }
+
 }

@@ -1,8 +1,9 @@
+using System.Collections;
 using UnityEngine;
 
 public class MovingEnemy : Enemy
 {
-    public void UpdatePosition()
+    public IEnumerator UpdatePosition()
     {
         Vector3 forward = transform.forward;
         Vector3 back = -transform.forward;
@@ -39,7 +40,9 @@ public class MovingEnemy : Enemy
 
         if (bestCandidate != null)
         { 
-            MoveSmoothlyTo(bestCandidate);
+           StartCoroutine(MoveSmoothlyTo(bestCandidate));
         }
+        
+        yield return null;
     }
 }

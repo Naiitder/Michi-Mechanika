@@ -19,22 +19,7 @@ public class Enemy : CharacterMovement
 
     public bool DettectPlayer()
     {
-        Vector3 forward = transform.forward;
-        
-        bestCandidate = null;
-        float bestDot = -1f;
-
-        foreach (Tile neighbor in currentTile.connectedTiles)
-        {
-            Vector3 dirToNeighbor = (neighbor.position - currentTile.position).normalized;
-            float dot = Vector3.Dot(forward, dirToNeighbor);
-
-            if (dot > bestDot)
-            {
-                bestDot = dot;
-                bestCandidate = neighbor;
-            }
-        }
+        bestCandidate = TileController.instance.GetForwardTile(currentTile, transform);
 
         if (bestCandidate != null)
         {

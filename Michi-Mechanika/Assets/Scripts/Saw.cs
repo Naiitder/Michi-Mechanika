@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Saw : CharacterMovement
@@ -8,7 +9,7 @@ public class Saw : CharacterMovement
         currentTile = TileController.instance.GetClosestTile(transform.position);
         currentTile.sawOnTile = this;
     }
-    public void UpdatePosition()
+    public IEnumerator UpdatePosition()
     {
         Vector3 forward = transform.forward;
         Vector3 right = transform.right;
@@ -63,8 +64,10 @@ public class Saw : CharacterMovement
 
         if (bestCandidate != null)
         { 
-            MoveSmoothlyTo(bestCandidate);
+            StartCoroutine(MoveSmoothlyTo(bestCandidate));
         }
+        
+        yield return null;
     }
     
     protected override void CheckTile(Tile targetTile)

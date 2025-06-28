@@ -150,5 +150,25 @@ public class TileController : MonoBehaviour
         return null;
     }
 
+    public Tile GetForwardTile(Tile currentTile, Transform goTransform)
+    {
+        Vector3 forward = goTransform.forward;
+        
+        float bestDot = -1f;
+        Tile bestCandidate = null;
 
+        foreach (Tile neighbor in currentTile.connectedTiles)
+        {
+            Vector3 dirToNeighbor = (neighbor.position - currentTile.position).normalized;
+            float dot = Vector3.Dot(forward, dirToNeighbor);
+
+            if (dot > bestDot)
+            {
+                bestDot = dot;
+                bestCandidate = neighbor;
+            }
+        }
+        
+        return bestCandidate != null  ? bestCandidate : null;
+    }
 }

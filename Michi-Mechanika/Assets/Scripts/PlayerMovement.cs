@@ -53,7 +53,6 @@ public class PlayerMovement : CharacterMovement
 
         if (InputController.instance.HasDragged && !isMoving)
         {
-            Debug.Log("Moving");
             Vector2 dir = InputController.instance.DragDirection;
             InputController.instance.HasDragged = false;
             Vector3 camForward = Camera.main.transform.forward;
@@ -113,7 +112,7 @@ public class PlayerMovement : CharacterMovement
     {
         if (Array.Exists(currentTile.connectedTiles, t => t == targetTile))
         {
-            MoveSmoothlyTo(targetTile);
+            StartCoroutine(MoveSmoothlyTo(targetTile));
         }
         
     }
@@ -137,6 +136,6 @@ public class PlayerMovement : CharacterMovement
         //Todo cambiarlo y activar animacion de matar
         if(currentTile.enemyOnTile != null) currentTile.enemyOnTile.Die();
         if(currentTile.sawOnTile != null) Die();
-        if(GameController.instance != null) GameController.instance.UpdateGameFlow();
+        if(GameController.instance != null) StartCoroutine(GameController.instance.UpdateGameFlow());
     }
 }

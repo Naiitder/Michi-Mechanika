@@ -39,13 +39,13 @@ public abstract class CharacterMovement : MonoBehaviour
         transform = GetComponent<Transform>();
     }
     
-    public void MoveSmoothlyTo(Tile targetTile)
+    public IEnumerator MoveSmoothlyTo(Tile targetTile)
     {
-        if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Floor) StartCoroutine(MoveFromFloorToFloor(targetTile));
-        else if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Roof) StartCoroutine(MoveFromFloorToRoof(targetTile));
-        else if(currentTile.tileType == Tile.Type.Roof && targetTile.tileType == Tile.Type.Floor) StartCoroutine(MoveFromRoofToFloor(targetTile));
-        else if(currentTile.tileType == Tile.Type.Roof && targetTile.tileType == Tile.Type.Roof) StartCoroutine(MoveFromRoofToRoof(targetTile));
-
+        if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Floor) yield return StartCoroutine(MoveFromFloorToFloor(targetTile));
+        else if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Roof) yield return StartCoroutine(MoveFromFloorToRoof(targetTile));
+        else if(currentTile.tileType == Tile.Type.Roof && targetTile.tileType == Tile.Type.Floor) yield return StartCoroutine(MoveFromRoofToFloor(targetTile));
+        else if(currentTile.tileType == Tile.Type.Roof && targetTile.tileType == Tile.Type.Roof) yield return StartCoroutine(MoveFromRoofToRoof(targetTile));
+        yield return null;
     }
 
     IEnumerator MoveFromFloorToFloor(Tile targetTile)
@@ -323,6 +323,23 @@ public abstract class CharacterMovement : MonoBehaviour
         isMoving = false;
         CheckTile(targetTile);
     }
-    
+
+    public IEnumerator RotateTowardsTarget(Vector3 targetPosition)
+    {   
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        direction.y = 0f;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.01f)
+        {
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                Time.deltaTime * rotationSpeed 
+            );
+        }
+        yield return null;
+    }
     protected abstract void CheckTile(Tile tile);
 }
