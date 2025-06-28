@@ -93,8 +93,6 @@ public class TileController : MonoBehaviour
                         && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofUpOffset) < 0.1f
                     );
                 
-                Debug.Log(diff);
-                
                 if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor || 
                     isVerticalXUpNeighbor || isVerticalZUpNeighbor)
                 {
