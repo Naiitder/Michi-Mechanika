@@ -49,18 +49,18 @@ public class TileController : MonoBehaviour
                 Vector3 diff = other.position - tile.position;
                 
                 bool isHorizontalXNeighbor =
-                    Mathf.Abs(diff.y) < 0.1f && Mathf.Approximately(diff.z, 0f) &&
+                    Mathf.Abs(diff.y) < 0.1f && Mathf.Abs(Math.Abs(diff.z)) < 0.1f &&
                     (
                         Mathf.Approximately(Mathf.Abs(diff.x), horizontalOffset) 
                     );
                 bool isHorizontalZNeighbor =                     
-                    Mathf.Approximately(diff.y, 0f) &&  Mathf.Approximately(diff.x, 0f) &&
+                    Mathf.Abs(Math.Abs(diff.y)) < 0.1f &&  Mathf.Abs(Math.Abs(diff.x)) < 0.1f &&
                     (
                         Mathf.Approximately(Mathf.Abs(diff.z), horizontalOffset)
                         );
                 
                 bool isVerticalNeighbor =                     
-                    Mathf.Approximately(diff.z, 0f) &&  Mathf.Approximately(diff.x, 0f) &&
+                    Mathf.Abs(Math.Abs(diff.z)) < 0.1f &&  Mathf.Abs(Math.Abs(diff.x)) < 0.1f &&
                     (
                         Mathf.Approximately(Mathf.Abs(diff.y), verticalOffset)
                     );
@@ -92,6 +92,8 @@ public class TileController : MonoBehaviour
                         Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < 0.1f
                         && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofUpOffset) < 0.1f
                     );
+                
+                Debug.Log(diff);
                 
                 if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor || 
                     isVerticalXUpNeighbor || isVerticalZUpNeighbor)
