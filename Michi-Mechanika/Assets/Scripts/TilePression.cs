@@ -4,6 +4,7 @@ using UnityEngine;
 public class TilePression : Tile
 {
     bool active = false;
+    bool somethingUp = false;
     [SerializeField] Transform baseTransform;
 
     [Header("PlatformMovement")] 
@@ -13,35 +14,47 @@ public class TilePression : Tile
     [SerializeField] private Transform pivotB;
     
 
-    public void CheckForPression(bool somethingUp)
+    public void CheckForPression(bool isSomethingUp)
     {
-        if (somethingUp && !active)
+        if (isSomethingUp && !active)
         {
-            Activate();
-            active = true;
+            this.somethingUp = true;
         }
-        else if (!somethingUp && active)
+        else if (!isSomethingUp && active)
         {
-            DeActivate();
-            active = false;
+            this.somethingUp = false;
         }
     }
 
-    void Activate()
+    public IEnumerator ActivateOrDeactivate()
+    {
+        if (somethingUp && !active)
+        {
+            active = true;
+            yield return StartCoroutine(Activate());
+        }
+        else if (!somethingUp && active)
+        {
+            active = false;
+            yield return StartCoroutine(DeActivate());
+        }
+    }
+
+    IEnumerator Activate()
     {
         StartCoroutine(MoveBaseTransform(Vector3.down / 2, 0.3f));
         foreach (GameObject go in tilesGameObjects)
         {
-            StartCoroutine(MoveToPivot(go, pivotB, 1.25f));
+            yield return StartCoroutine(MoveToPivot(go, pivotB, 1.25f));
         }
     }
     
-    void DeActivate()
+    IEnumerator DeActivate()
     {
         StartCoroutine(MoveBaseTransform(Vector3.up / 2, 0.3f));
         foreach (GameObject go in tilesGameObjects)
         {
-            StartCoroutine(MoveToPivot(go, pivotA, 1.25f));
+            yield return StartCoroutine(MoveToPivot(go, pivotA, 1.25f));
         }
     }
     
@@ -64,7 +77,6 @@ public class TilePression : Tile
     
     private IEnumerator MoveToPivot(GameObject go, Transform targetPivot, float duration)
     {
-        if(GameController.instance != null)  GameController.instance.canInteract = false;
         Transform t = go.transform;
     
         Vector3 startPos = t.position;
@@ -101,7 +113,5 @@ public class TilePression : Tile
         }
         
         if(TileController.instance != null) TileController.instance.ConnectTiles();
-        if(GameController.instance != null)  GameController.instance.canInteract = true;
-        
     }
 }

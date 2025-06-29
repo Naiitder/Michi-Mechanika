@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class Tile : MonoBehaviour
 {
@@ -12,10 +13,8 @@ public class Tile : MonoBehaviour
     
     [SerializeField] public Type tileType = Type.Floor;
 
-    public Enemy enemyOnTile;
-
+    public CharacterMovement characterOnTile;
     public bool sawRail = false;
-    public Saw sawOnTile;
     
     public enum Direction { Forward, Back, Right, Left }
     [Header("Blocked Directions")]

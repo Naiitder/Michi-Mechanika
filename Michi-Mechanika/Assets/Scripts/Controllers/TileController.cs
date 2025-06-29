@@ -13,6 +13,8 @@ public class TileController : MonoBehaviour
     private const float horizontalRoofUpOffset = 1.53f;
     private const float verticalRoofUpOffset = 1.53f;
     private const float verticalRoofDownOffset = 1.49f;
+    
+    private const float minimumThreshold = 0.1f;
 
     Tile[] allTiles;
     
@@ -49,48 +51,48 @@ public class TileController : MonoBehaviour
                 Vector3 diff = other.position - tile.position;
                 
                 bool isHorizontalXNeighbor =
-                    Mathf.Abs(diff.y) < 0.1f && Mathf.Abs(Math.Abs(diff.z)) < 0.1f &&
+                    Mathf.Abs(diff.y) < minimumThreshold && Mathf.Abs(Math.Abs(diff.z)) < minimumThreshold &&
                     (
                         Mathf.Approximately(Mathf.Abs(diff.x), horizontalOffset) 
                     );
                 bool isHorizontalZNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.y)) < 0.1f &&  Mathf.Abs(Math.Abs(diff.x)) < 0.1f &&
+                    Mathf.Abs(Math.Abs(diff.y)) < minimumThreshold &&  Mathf.Abs(Math.Abs(diff.x)) < minimumThreshold&&
                     (
                         Mathf.Approximately(Mathf.Abs(diff.z), horizontalOffset)
                         );
                 
                 bool isVerticalNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.z)) < 0.1f &&  Mathf.Abs(Math.Abs(diff.x)) < 0.1f &&
+                    Mathf.Abs(Math.Abs(diff.z)) < minimumThreshold &&  Mathf.Abs(Math.Abs(diff.x)) < minimumThreshold &&
                     (
                         Mathf.Approximately(Mathf.Abs(diff.y), verticalOffset)
                     );
                 
                 bool isVerticalXNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.z)) < 0.1f &&
+                    Mathf.Abs(Math.Abs(diff.z)) < minimumThreshold &&
                     (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofDownOffset) < 0.1f
-                        && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofOffset) < 0.1f
+                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofDownOffset) < minimumThreshold
+                        && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofOffset) < minimumThreshold
                     );
                 
                 bool isVerticalZNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.x)) < 0.1f &&
+                    Mathf.Abs(Math.Abs(diff.x)) < minimumThreshold &&
                     (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofDownOffset) < 0.1f
-                        && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofOffset) < 0.1f
+                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofDownOffset) < minimumThreshold
+                        && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofOffset) < minimumThreshold
                     );
                 
                 bool isVerticalXUpNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.z)) < 0.1f &&
+                    Mathf.Abs(Math.Abs(diff.z)) < minimumThreshold &&
                     (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < 0.1f
-                        && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofUpOffset) < 0.1f
+                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < minimumThreshold
+                        && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofUpOffset) < minimumThreshold
                     );
                 
                 bool isVerticalZUpNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.x)) < 0.1f &&
+                    Mathf.Abs(Math.Abs(diff.x)) < minimumThreshold &&
                     (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < 0.1f
-                        && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofUpOffset) < 0.1f
+                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < minimumThreshold
+                        && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofUpOffset) < minimumThreshold
                     );
                 
                 if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor || 

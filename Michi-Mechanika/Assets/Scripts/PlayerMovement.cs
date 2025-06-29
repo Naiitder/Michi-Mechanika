@@ -134,8 +134,19 @@ public class PlayerMovement : CharacterMovement
         }
         
         //Todo cambiarlo y activar animacion de matar
-        if(currentTile.enemyOnTile != null) currentTile.enemyOnTile.Die();
-        if(currentTile.sawOnTile != null) Die();
+        if (currentTile.characterOnTile != null)
+        {
+            if (currentTile.characterOnTile is Enemy)
+            {
+                Enemy enemyOnTile = (Enemy)currentTile.characterOnTile;
+                enemyOnTile.Die();
+            }
+            else if (currentTile.characterOnTile is Saw)
+            {
+                Die();
+            }
+        }
+        if(currentTile.characterOnTile is not Saw) currentTile.characterOnTile = this;
         if(GameController.instance != null) StartCoroutine(GameController.instance.UpdateGameFlow());
     }
 }

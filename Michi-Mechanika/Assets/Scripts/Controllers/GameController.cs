@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     [Header ("Lists")]
     public Enemy[] enemies;
     public List<Saw> saws = new List<Saw>();
+    public List<TilePression> tilePressions = new List<TilePression>();
     
     [Header("Canvas")]
     [SerializeField] private GameObject pauseCanvas;
@@ -52,6 +53,8 @@ public class GameController : MonoBehaviour
         {
             saw.Initialize();
         }
+        
+        tilePressions = FindObjectsByType<TilePression>(FindObjectsSortMode.None).ToList();
         
         if(pauseCanvas != null) pauseCanvas.SetActive(false);
     }
@@ -123,6 +126,11 @@ public class GameController : MonoBehaviour
         foreach (Saw saw in saws)
         {
             parallelRoutines.Add(saw.UpdatePosition());
+        }
+
+        foreach (TilePression tilePression in tilePressions)
+        {
+            parallelRoutines.Add(tilePression.ActivateOrDeactivate());
         }
         
         yield return StartCoroutine(WaitForAll(parallelRoutines));

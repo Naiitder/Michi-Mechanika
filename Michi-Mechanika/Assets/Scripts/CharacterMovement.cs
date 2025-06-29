@@ -223,7 +223,7 @@ public abstract class CharacterMovement : MonoBehaviour
 
         isMoving = false;
         if(anim != null) anim.SetBool(WalkHash, false);
-       
+        
         CheckTile(targetTile);
 
     }

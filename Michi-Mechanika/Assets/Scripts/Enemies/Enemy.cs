@@ -14,7 +14,7 @@ public class Enemy : CharacterMovement
     {
         base.Initialize();
         currentTile = TileController.instance.GetClosestTile(transform.position);
-        currentTile.enemyOnTile = this;
+        currentTile.characterOnTile = this;
     }
 
     public bool DettectPlayer()
@@ -34,7 +34,7 @@ public class Enemy : CharacterMovement
     public void Attack()
     {
         anim.SetBool(AttackHash,true);
-        MoveSmoothlyTo(bestCandidate);
+        StartCoroutine(MoveSmoothlyTo(bestCandidate));
         playerMovement.Die();
     }
 
@@ -44,7 +44,7 @@ public class Enemy : CharacterMovement
         enemiesList.Remove(this);
         GameController.instance.enemies = enemiesList.ToArray();
         
-        currentTile.enemyOnTile = null;
+        currentTile.characterOnTile = null;
         anim.SetBool(DeadHash, true);
         Destroy(this.gameObject, 1f);
     }
@@ -57,16 +57,22 @@ public class Enemy : CharacterMovement
             tp.CheckForPression(false);
         }
         
-        currentTile.enemyOnTile = null;
-        currentTile = targetTile;
-        targetTile.enemyOnTile = this;
+        currentTile.characterOnTile = null;
         
         if(currentTile is TilePression)
         {
             TilePression tp = (TilePression)currentTile;
             tp.CheckForPression(true);
         }
-        
-        if(currentTile.sawOnTile != null) Die();
+
+        if (currentTile.characterOnTile != null && currentTile.characterOnTile is Saw)
+        {
+            Die();
+        }
+        else 
+        {
+            currentTile = targetTile;
+            targetTile.characterOnTile = this;
+        }
     }
 }

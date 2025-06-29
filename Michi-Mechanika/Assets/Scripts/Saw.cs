@@ -7,7 +7,7 @@ public class Saw : CharacterMovement
     {
         base.Initialize();
         currentTile = TileController.instance.GetClosestTile(transform.position);
-        currentTile.sawOnTile = this;
+        currentTile.characterOnTile = this;
     }
     public IEnumerator UpdatePosition()
     {
@@ -72,10 +72,9 @@ public class Saw : CharacterMovement
     
     protected override void CheckTile(Tile targetTile)
     {
-        currentTile.sawOnTile = null;
+        currentTile.characterOnTile = null;
         currentTile = targetTile;
-        targetTile.sawOnTile = this;
-        
+
         foreach (Enemy enemy in GameController.instance.enemies)
         {
             if(enemy.currentTile == currentTile) enemy.Die();
@@ -85,5 +84,7 @@ public class Saw : CharacterMovement
         {
             GameController.instance.playerMovement.Die();
         }
+        
+        targetTile.characterOnTile = this;
     }
 }
