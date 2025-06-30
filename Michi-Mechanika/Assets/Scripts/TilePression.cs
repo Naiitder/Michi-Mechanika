@@ -76,7 +76,7 @@ public class TilePression : Tile
     }
     
     private IEnumerator MoveToPivot(GameObject go, Transform targetPivot, float duration)
-    {
+    { 
         Transform t = go.transform;
     
         Vector3 startPos = t.position;
