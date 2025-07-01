@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour
 
     public CharacterMovement characterOnTile;
     public bool sawRail = false;
+    public bool endingTile = false;
     
     public enum Direction { Forward, Back, Right, Left }
     [Header("Blocked Directions")]
@@ -56,6 +57,5 @@ public class Tile : MonoBehaviour
     {
         return connectedTiles.FirstOrDefault(t => t.position.y < position.y);
     }
-
     
 }
