@@ -58,6 +58,7 @@ public class Enemy : CharacterMovement
         }
         
         currentTile.characterOnTile = null;
+        currentTile = targetTile;
         
         if(currentTile is TilePression)
         {
@@ -69,10 +70,6 @@ public class Enemy : CharacterMovement
         {
             Die();
         }
-        else 
-        {
-            currentTile = targetTile;
-            targetTile.characterOnTile = this;
-        }
+        if(currentTile.characterOnTile is not Saw) currentTile.characterOnTile = this;
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class PlayerMovement : CharacterMovement
@@ -124,7 +125,8 @@ public class PlayerMovement : CharacterMovement
             TilePression tp = (TilePression)currentTile;
             tp.CheckForPression(false);
         }
-        
+
+        currentTile.characterOnTile = null;
         currentTile = targetTile;
         
         if(currentTile is TilePression)
@@ -147,6 +149,42 @@ public class PlayerMovement : CharacterMovement
             }
         }
         if(currentTile.characterOnTile is not Saw) currentTile.characterOnTile = this;
+        StartCoroutine(LevelFinish());
         if(GameController.instance != null) StartCoroutine(GameController.instance.UpdateGameFlow());
+    }
+
+    private IEnumerator LevelFinish()
+    {
+        if (currentTile.endingTile)
+        {
+            GameController.instance.levelEnded = true;
+            
+            int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+            if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
+            {
+                yield return AdvanceTillTheEnd();
+                
+                string nextScenePath = SceneUtility.GetScenePathByBuildIndex(nextSceneIndex);
+                string nextSceneName = System.IO.Path.GetFileNameWithoutExtension(nextScenePath);
+
+                if(LevelManager.instance != null)StartCoroutine(LevelManager.instance.LoadSceneFade(nextSceneName));
+            }
+        }
+    }
+
+    private IEnumerator AdvanceTillTheEnd()
+    {
+        anim.SetBool(WalkHash,true);
+        Vector3 targetPosition = transform.position + transform.forward*8;
+        while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPosition,
+                movementSpeed * Time.deltaTime
+            );
+            yield return null;
+        }
+        anim.SetBool(WalkHash,false);
     }
 }

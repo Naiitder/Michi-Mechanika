@@ -10,7 +10,6 @@ public class LevelManager : MonoBehaviour
     public static LevelManager instance;
 
     [SerializeField] private GameObject loaderCanvas;
-    [SerializeField] private Image progressBar;
     private float targetProgress;
     
     private bool isLoading = false;
@@ -56,21 +55,24 @@ public class LevelManager : MonoBehaviour
             await Task.Delay(100);
             targetProgress = scene.progress;
         } while (scene.progress < 0.9f);
-
-        await Task.Delay(1000);
+        
+        //TO DO Fade LOADSCENE CANVAS
+        
+        await Task.Delay(1500);
 
         scene.allowSceneActivation = true;
     }
     
-    public void UpdateProgressBar()
-    {
-        progressBar.fillAmount = Mathf.MoveTowards(progressBar.fillAmount, targetProgress, 3*Time.deltaTime);
-    }
-
-    
     public void RestartScene()
     {
         StartCoroutine(FadeOutAndRestart());
+    }
+
+    public IEnumerator LoadSceneFade(string sceneName)
+    {
+        Time.timeScale = 1;
+        yield return Fade(0, 1); 
+        LoadScene(sceneName);
     }
     
     private IEnumerator FadeIn()

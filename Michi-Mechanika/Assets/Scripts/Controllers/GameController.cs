@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     public bool canInteract = true;
     public bool isGamePaused;
     public PlayerMovement playerMovement;
+    public bool levelEnded = false;
     
     [Header ("Lists")]
     public Enemy[] enemies;
@@ -62,7 +63,7 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         HandlePause();
-    }
+        }
 
     private void HandlePause()
     {
@@ -99,13 +100,12 @@ public class GameController : MonoBehaviour
     {
         Application.Quit();
     }
-
+    
     public IEnumerator UpdateGameFlow()
     {
         canInteract = false;
-
-        List<IEnumerator> parallelRoutines = new List<IEnumerator>();
-
+        
+        List<IEnumerator> movingEnemyRoutines = new List<IEnumerator>();
         foreach (Enemy enemy in enemies)
         {
             if (enemy.DettectPlayer())
@@ -113,30 +113,41 @@ public class GameController : MonoBehaviour
 
             if (enemy is MovingEnemy me)
             {
-                parallelRoutines.Add(me.UpdatePosition());
+                movingEnemyRoutines.Add(me.UpdatePosition());
             }
-
+        }
+        yield return StartCoroutine(WaitForAll(movingEnemyRoutines));
+        
+        List<IEnumerator> pursuerEnemyRoutines = new List<IEnumerator>();
+        foreach (Enemy enemy in enemies)
+        {
             if (enemy is PursuerEnemy pe)
             {
-                if(!pe.hasSeenPlayer) pe.CheckForPlayer();
-                else parallelRoutines.Add(pe.Chase());
+                if (!pe.hasSeenPlayer)
+                    pe.CheckForPlayer();
+                else
+                    pursuerEnemyRoutines.Add(pe.Chase());
             }
         }
-
+        yield return StartCoroutine(WaitForAll(pursuerEnemyRoutines));
+        
+        List<IEnumerator> sawRoutines = new List<IEnumerator>();
         foreach (Saw saw in saws)
         {
-            parallelRoutines.Add(saw.UpdatePosition());
+            sawRoutines.Add(saw.UpdatePosition());
         }
-
+        yield return StartCoroutine(WaitForAll(sawRoutines));
+        
+        List<IEnumerator> tilePressionRoutines = new List<IEnumerator>();
         foreach (TilePression tilePression in tilePressions)
         {
-            parallelRoutines.Add(tilePression.ActivateOrDeactivate());
+            tilePressionRoutines.Add(tilePression.ActivateOrDeactivate());
         }
+        yield return StartCoroutine(WaitForAll(tilePressionRoutines));
         
-        yield return StartCoroutine(WaitForAll(parallelRoutines));
-
         canInteract = true;
     }
+
 
     
     private IEnumerator WaitForAll(List<IEnumerator> routines)

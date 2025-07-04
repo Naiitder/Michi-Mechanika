@@ -7,7 +7,7 @@ public abstract class CharacterMovement : MonoBehaviour
     
     [Header("Movement")]
     protected new Transform transform;
-    [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] protected float movementSpeed = 5f;
     [SerializeField] private float rotationSpeed = 15f;
     protected bool isMoving = false;
 

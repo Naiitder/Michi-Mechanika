@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Lever : MonoBehaviour
@@ -56,6 +57,19 @@ public class Lever : MonoBehaviour
         Quaternion endRot = targetPivot.rotation;
 
         float elapsed = 0f;
+        
+        List<(CharacterMovement character, Vector3 localOffset)> charactersToMove = new();
+
+        Tile[] tilesInThisGO = go.GetComponentsInChildren<Tile>();
+        foreach (Tile tile in tilesInThisGO)
+        {
+            if (tile.characterOnTile != null)
+            {
+                CharacterMovement cm = tile.characterOnTile;
+                Vector3 offset = cm.transform.position - t.position;
+                charactersToMove.Add((cm, offset));
+            }
+        }
 
         while (elapsed < duration)
         {
@@ -67,19 +81,20 @@ public class Lever : MonoBehaviour
             t.position = Vector3.Lerp(startPos, endPos, tLerp);
             t.rotation = Quaternion.Slerp(startRot, endRot, tLerp);
         
+            foreach (var (character, offset) in charactersToMove)
+            {
+                character.transform.position = t.position + offset;
+            }
+            
             yield return null;
         }
         
         t.position = endPos;
         t.rotation = endRot;
 
-        foreach (GameObject tilesGOs in tilesGameObjects)
+        foreach (Tile tile in tilesInThisGO)
         {
-            Tile[] tilesInThisGO = tilesGOs.GetComponentsInChildren<Tile>();
-            foreach (Tile tile in tilesInThisGO)
-            {
-                tile.UpdatePosition();
-            }
+            tile.UpdatePosition();
         }
         
         if(TileController.instance != null) TileController.instance.ConnectTiles();
