@@ -11119,6 +11119,7 @@ MonoBehaviour:
   canInteract: 1
   isGamePaused: 0
   playerMovement: {fileID: 0}
+  levelEnded: 0
   enemies: []
   saws: []
   tilePressions: []

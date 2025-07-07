@@ -137,14 +137,14 @@ public class GameController : MonoBehaviour
             sawRoutines.Add(saw.UpdatePosition());
         }
         yield return StartCoroutine(WaitForAll(sawRoutines));
-        
+
         List<IEnumerator> tilePressionRoutines = new List<IEnumerator>();
         foreach (TilePression tilePression in tilePressions)
         {
             tilePressionRoutines.Add(tilePression.ActivateOrDeactivate());
         }
         yield return StartCoroutine(WaitForAll(tilePressionRoutines));
-        
+
         canInteract = true;
     }
 

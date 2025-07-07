@@ -158,13 +158,15 @@ public class TileController : MonoBehaviour
         
         float bestDot = -1f;
         Tile bestCandidate = null;
+        
+        float dotThreshold = 0.9f; 
 
         foreach (Tile neighbor in currentTile.connectedTiles)
         {
             Vector3 dirToNeighbor = (neighbor.position - currentTile.position).normalized;
             float dot = Vector3.Dot(forward, dirToNeighbor);
 
-            if (dot > bestDot)
+            if (dot > bestDot && dot >= dotThreshold)
             {
                 bestDot = dot;
                 bestCandidate = neighbor;

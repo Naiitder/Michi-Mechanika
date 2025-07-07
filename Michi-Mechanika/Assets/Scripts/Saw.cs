@@ -64,7 +64,7 @@ public class Saw : CharacterMovement
 
         if (bestCandidate != null)
         { 
-            StartCoroutine(MoveSmoothlyTo(bestCandidate));
+            yield return StartCoroutine(MoveSmoothlyTo(bestCandidate));
         }
         
         yield return null;

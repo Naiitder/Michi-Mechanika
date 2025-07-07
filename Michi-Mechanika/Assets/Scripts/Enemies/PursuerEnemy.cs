@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -37,8 +38,16 @@ public class PursuerEnemy : Enemy
 
         tilesWherePlayerHasBeen.Add(playerMovement.currentTile);
 
-        yield return StartCoroutine(MoveSmoothlyTo(nextTile));
-        yield return StartCoroutine(RotateTowardsTarget(tilesWherePlayerHasBeen[0].transform.position));
+        if (currentTile.connectedTiles.Contains(nextTile))
+        {
+            
+            yield return StartCoroutine(MoveSmoothlyTo(nextTile));
+            yield return StartCoroutine(RotateTowardsTarget(tilesWherePlayerHasBeen[0].transform.position));
+        }
+        else
+        {
+            hasSeenPlayer = false;
+        }
     }
 
     public void CheckForPlayer()

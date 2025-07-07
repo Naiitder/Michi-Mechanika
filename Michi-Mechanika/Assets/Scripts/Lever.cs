@@ -6,7 +6,6 @@ using UnityEngine;
 public class Lever : MonoBehaviour
 {
     public Tile tileWhereLeverIs;
-    public bool activated = false;
     
     public GameObject[] tilesGameObjects;
     
@@ -27,17 +26,15 @@ public class Lever : MonoBehaviour
     {
         if (tileWhereLeverIs != tileWherePlayerIs) return;
         
-        activated = !activated;
         if( GameController.instance != null) GameController.instance.canInteract = false;
         StopAllCoroutines();
-        
-        Quaternion targetRotation = activated
-            ? Quaternion.Euler(0, 0, -45)
-            : originalRotation;
+
+        Quaternion targetRotation = Quaternion.Euler(0, 0, -45);
         
         StartCoroutine(RotatePivot(pivotGameObject, targetRotation, 0.5f));
 
-        Transform pivotTarget = activated ? pivotB : pivotA;
+        Transform currentPivot = GetClosestPivot(tilesGameObjects[0].transform, pivotA, pivotB);
+        Transform pivotTarget = currentPivot == pivotA ? pivotB : pivotA;
 
         foreach (GameObject go in tilesGameObjects)
         {
@@ -115,6 +112,13 @@ public class Lever : MonoBehaviour
         }
 
         target.localRotation = targetRotation;
+    }
+    
+    private Transform GetClosestPivot(Transform movingObject, Transform pivotA, Transform pivotB)
+    {
+        float distToA = Vector3.Distance(movingObject.position, pivotA.position);
+        float distToB = Vector3.Distance(movingObject.position, pivotB.position);
+        return distToA < distToB ? pivotA : pivotB;
     }
 
 }
