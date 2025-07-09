@@ -18,6 +18,21 @@ public class MovingEnemy : Enemy
                if(bestCandidate != null) yield return StartCoroutine(RotateTowardsTarget(bestCandidate.position));   
            }
         }
+        else
+        {
+            bestCandidate = GetBackTile();
+            if (bestCandidate != null)
+            {
+                yield return StartCoroutine(MoveSmoothlyTo(bestCandidate));
+           
+                bestCandidate = GetForwardTile();
+                if (bestCandidate == null)
+                {
+                    bestCandidate = GetBackTile();
+                    if(bestCandidate != null) yield return StartCoroutine(RotateTowardsTarget(bestCandidate.position));   
+                }
+            }
+        }
         
         yield return null;
     }

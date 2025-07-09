@@ -35,14 +35,27 @@ public class Saw : CharacterMovement
         {
             foreach (Tile neighbor in currentTile.connectedTiles)
             {
-                Vector3 dirToNeighbor = (neighbor.position - currentTile.position).normalized;
-                float dotLeft = Vector3.Dot(left, dirToNeighbor);
-                float dotRight = Vector3.Dot(right, dirToNeighbor);
-
-                if ((dotLeft > 0.5f || dotRight > 0.5f) && neighbor.sawRail)
+                Tile.Direction? directionOfTile;
+                directionOfTile = TileController.GetCardinalDirection(currentTile.transform.position, neighbor.transform.position);
+                if (directionOfTile.HasValue)
                 {
-                    bestCandidate = neighbor;
-                    break; 
+                    if(!currentTile.blockedSawDirections.Contains(directionOfTile.Value))
+                    {
+                        Tile.Direction opposite = Tile.GetOppositeDirection(directionOfTile.Value);
+                        
+                        if (!neighbor.blockedSawDirections.Contains(opposite))
+                        {
+                            Vector3 dirToNeighbor = (neighbor.position - currentTile.position).normalized;
+                            float dotLeft = Vector3.Dot(left, dirToNeighbor);
+                            float dotRight = Vector3.Dot(right, dirToNeighbor);
+
+                            if ((dotLeft > 0.5f || dotRight > 0.5f) && neighbor.sawRail)
+                            {
+                                bestCandidate = neighbor;
+                                break; 
+                            }   
+                        }
+                    }
                 }
             }
         }
