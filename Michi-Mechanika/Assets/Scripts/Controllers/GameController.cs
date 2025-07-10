@@ -33,14 +33,14 @@ public class GameController : MonoBehaviour
         Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
         
         TileController tc = FindFirstObjectByType<TileController>();
-        tc.Initialize();
+        if(tc != null) tc.Initialize();
         
         Lever[] levers = FindObjectsByType<Lever>(FindObjectsSortMode.None);
         foreach (Lever lever in levers)
             lever.Initialize();
         
         playerMovement = FindFirstObjectByType<PlayerMovement>();
-        playerMovement.Initialize();
+        if(playerMovement != null)playerMovement.Initialize();
         
         enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         foreach (Enemy enemy in enemies)

@@ -33,7 +33,7 @@ public class LevelManager : MonoBehaviour
     
     private void Start()
     {
-        StartCoroutine(FadeIn());
+        if(fadeImage != null) StartCoroutine(FadeIn());
     }
 
 
@@ -66,6 +66,11 @@ public class LevelManager : MonoBehaviour
     public void RestartScene()
     {
         StartCoroutine(FadeOutAndRestart());
+    }
+
+    public void LoadSceneFromUI(string sceneName)
+    {
+        StartCoroutine(LoadSceneFade(sceneName));
     }
 
     public IEnumerator LoadSceneFade(string sceneName)

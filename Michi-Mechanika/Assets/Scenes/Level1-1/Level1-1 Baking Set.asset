@@ -18,7 +18,7 @@ MonoBehaviour:
     m_Version: 1
     dilationSettings:
       enableDilation: 0
-      dilationDistance: 3
+      dilationDistance: 4
       dilationValidityThreshold: 0.25
       dilationIterations: 1
       squaredDistWeighting: 1
@@ -55,11 +55,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: -1, y: -1, z: 0}
       index: 9
-      probeCount: 1472
+      probeCount: 1088
       minSubdiv: 1
       indexChunkCount: 3
       shChunkCount: 1
-      bricksCount: 23
+      bricksCount: 17
       indirectionEntryInfo:
       - positionInBricks: {x: -27, y: -27, z: 0}
         minSubdiv: 1
@@ -83,11 +83,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: -1, y: 0, z: 0}
       index: 12
-      probeCount: 1536
+      probeCount: 832
       minSubdiv: 1
       indexChunkCount: 3
       shChunkCount: 1
-      bricksCount: 24
+      bricksCount: 13
       indirectionEntryInfo:
       - positionInBricks: {x: -27, y: 0, z: 0}
         minSubdiv: 1
@@ -97,11 +97,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: 0, y: -1, z: -1}
       index: 1
-      probeCount: 1344
+      probeCount: 1216
       minSubdiv: 1
       indexChunkCount: 3
       shChunkCount: 1
-      bricksCount: 21
+      bricksCount: 19
       indirectionEntryInfo:
       - positionInBricks: {x: 0, y: -27, z: -27}
         minSubdiv: 1
@@ -111,11 +111,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: 0, y: -1, z: 0}
       index: 10
-      probeCount: 2112
+      probeCount: 1600
       minSubdiv: 1
       indexChunkCount: 3
       shChunkCount: 1
-      bricksCount: 33
+      bricksCount: 25
       indirectionEntryInfo:
       - positionInBricks: {x: 0, y: -27, z: 0}
         minSubdiv: 1
@@ -125,11 +125,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: 0, y: 0, z: -1}
       index: 4
-      probeCount: 1152
+      probeCount: 1088
       minSubdiv: 1
       indexChunkCount: 3
       shChunkCount: 1
-      bricksCount: 18
+      bricksCount: 17
       indirectionEntryInfo:
       - positionInBricks: {x: 0, y: 0, z: -27}
         minSubdiv: 1
@@ -139,11 +139,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: 0, y: 0, z: 0}
       index: 13
-      probeCount: 2560
+      probeCount: 1920
       minSubdiv: 1
       indexChunkCount: 3
       shChunkCount: 1
-      bricksCount: 40
+      bricksCount: 30
       indirectionEntryInfo:
       - positionInBricks: {x: 0, y: 0, z: 0}
         minSubdiv: 1
@@ -182,7 +182,7 @@ MonoBehaviour:
     m_Keys:
     - Default
     m_Values:
-    - sceneHash: 708140093
+    - sceneHash: -43009377
       cellDataAsset:
         m_AssetGUID: d5af41d79545ab94da70a88e07c19ad5
         m_StreamableAssetPath: APVStreamingAssets\74f02f62149cecc459c609aade62157a\d5af41d79545ab94da70a88e07c19ad5.bytes
@@ -265,19 +265,19 @@ MonoBehaviour:
       - offset: 0
         elementCount: 15
       - offset: 240
-        elementCount: 23
-      - offset: 608
+        elementCount: 17
+      - offset: 512
         elementCount: 3
-      - offset: 656
-        elementCount: 24
-      - offset: 1040
-        elementCount: 21
-      - offset: 1376
-        elementCount: 33
-      - offset: 1904
-        elementCount: 18
-      - offset: 2192
-        elementCount: 40
+      - offset: 560
+        elementCount: 13
+      - offset: 768
+        elementCount: 19
+      - offset: 1072
+        elementCount: 25
+      - offset: 1472
+        elementCount: 17
+      - offset: 1744
+        elementCount: 30
     m_Asset: {fileID: 0}
   cellSupportDataAsset:
     m_AssetGUID: 235dbfe424a918540bc53dbd55e5bad3
@@ -308,9 +308,9 @@ MonoBehaviour:
   minCellPosition: {x: -1, y: -1, z: -1}
   globalBounds:
     m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 243, y: 243, z: 243}
+    m_Extent: {x: 324, y: 324, z: 324}
   bakedSimplificationLevels: 3
-  bakedMinDistanceBetweenProbes: 3
+  bakedMinDistanceBetweenProbes: 4
   bakedProbeOcclusion: 0
   bakedSkyOcclusionValue: 0
   bakedSkyShadingDirectionValue: 0
@@ -341,7 +341,7 @@ MonoBehaviour:
   freezePlacement: 0
   probeOffset: {x: 0, y: 0, z: 0}
   simplificationLevels: 3
-  minDistanceBetweenProbes: 3
+  minDistanceBetweenProbes: 4
   renderersLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -362,4 +362,4 @@ MonoBehaviour:
       bakeScene: 1
       bounds:
         m_Center: {x: 0, y: 0, z: 0}
-        m_Extent: {x: 243, y: 243, z: 243}
+        m_Extent: {x: 324, y: 324, z: 324}
