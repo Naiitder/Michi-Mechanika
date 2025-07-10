@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class Saw : CharacterMovement
 {
+    [SerializeField] private GameObject trailGO;
     public override void Initialize()
     {
         base.Initialize();
         currentTile = TileController.instance.GetClosestTile(transform.position);
         currentTile.characterOnTile = this;
+        if(trailGO != null) trailGO.SetActive(false);
     }
     public IEnumerator UpdatePosition()
     {
@@ -77,7 +79,9 @@ public class Saw : CharacterMovement
 
         if (bestCandidate != null)
         { 
+            if(trailGO != null) trailGO.SetActive(true);
             yield return StartCoroutine(MoveSmoothlyTo(bestCandidate));
+            if(trailGO != null) trailGO.SetActive(false);
         }
         
         yield return null;
