@@ -10,6 +10,10 @@ public class PursuerEnemy : Enemy
     public bool hasSeenPlayer = false;
     private List<Tile> tilesWherePlayerHasBeen = new List<Tile>();
     private bool startedChase = false;
+    
+    [SerializeField] private GameObject exclamationPrefab;
+    [SerializeField] private Transform exclamationSpawnPoint;
+    [SerializeField] private float exclamationDuration = 2f;
 
     public void Activate()
     {
@@ -17,6 +21,10 @@ public class PursuerEnemy : Enemy
         startedChase = false;
         tilesWherePlayerHasBeen.Clear();
         tilesWherePlayerHasBeen.Add(playerMovement.currentTile);
+        
+        GameObject exclamation = Instantiate(exclamationPrefab, exclamationSpawnPoint.position, Quaternion.identity);
+        exclamation.transform.SetParent(exclamationSpawnPoint); 
+        Destroy(exclamation, exclamationDuration);
     }
     
     public IEnumerator Chase()
