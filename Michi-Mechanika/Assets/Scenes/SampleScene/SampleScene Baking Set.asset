@@ -369,7 +369,7 @@ MonoBehaviour:
         elementCount: 1
       - offset: 155648
         elementCount: 1
-    m_Asset: {fileID: 0}
+    m_Asset: {fileID: 4900000, guid: 3bb8aba325a142d43a661bc144c1907e, type: 3}
   scenarios:
     m_Keys:
     - Default
@@ -422,7 +422,7 @@ MonoBehaviour:
             elementCount: 1
           - offset: 2490368
             elementCount: 1
-        m_Asset: {fileID: 0}
+        m_Asset: {fileID: 4900000, guid: 216fe22ebf1fafc49b7d80996f6429e1, type: 3}
       cellOptionalDataAsset:
         m_AssetGUID: 9db5ca429c2108449b592a3d3d4cebd8
         m_StreamableAssetPath: APVStreamingAssets\37ffd8095d134f148890dbd880ef0dc8\9db5ca429c2108449b592a3d3d4cebd8.bytes
@@ -470,7 +470,7 @@ MonoBehaviour:
             elementCount: 1
           - offset: 2490368
             elementCount: 1
-        m_Asset: {fileID: 0}
+        m_Asset: {fileID: 4900000, guid: 9db5ca429c2108449b592a3d3d4cebd8, type: 3}
       cellProbeOcclusionDataAsset:
         m_AssetGUID: 
         m_StreamableAssetPath: APVStreamingAssets\37ffd8095d134f148890dbd880ef0dc8\.bytes
@@ -566,7 +566,7 @@ MonoBehaviour:
         elementCount: 7
       - offset: 2864
         elementCount: 5
-    m_Asset: {fileID: 0}
+    m_Asset: {fileID: 4900000, guid: fc1f6bfb66ceab44d884f3a0d1a1a160, type: 3}
   cellSupportDataAsset:
     m_AssetGUID: 4861fdb411c0e844cb1c0895c233d8c0
     m_StreamableAssetPath: APVStreamingAssets\37ffd8095d134f148890dbd880ef0dc8\4861fdb411c0e844cb1c0895c233d8c0.bytes
@@ -614,7 +614,7 @@ MonoBehaviour:
         elementCount: 1
       - offset: 4980736
         elementCount: 1
-    m_Asset: {fileID: 0}
+    m_Asset: {fileID: 4900000, guid: 4861fdb411c0e844cb1c0895c233d8c0, type: 3}
   chunkSizeInBricks: 128
   maxCellPosition: {x: 2, y: 1, z: 2}
   minCellPosition: {x: -2, y: -1, z: -2}
@@ -649,7 +649,7 @@ MonoBehaviour:
   supportOffsetsChunkSize: 98304
   supportDataChunkSize: 262144
   lightingScenario: Default
-  version: 1
+  version: 2
   freezePlacement: 0
   probeOffset: {x: 0, y: 0, z: 0}
   simplificationLevels: 3

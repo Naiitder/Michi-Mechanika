@@ -92,14 +92,14 @@ public class Saw : CharacterMovement
         currentTile.characterOnTile = null;
         currentTile = targetTile;
 
-        foreach (Enemy enemy in GameController.instance.enemies)
+        foreach (Enemy enemy in GameFlow.instance.enemies)
         {
             if(enemy.currentTile == currentTile) enemy.Die();
         }
 
-        if (GameController.instance.playerMovement.currentTile == currentTile)
+        if (GameFlow.instance.playerMovement.currentTile == currentTile)
         {
-            GameController.instance.playerMovement.Die();
+            GameFlow.instance.playerMovement.Die();
         }
         
         targetTile.characterOnTile = this;

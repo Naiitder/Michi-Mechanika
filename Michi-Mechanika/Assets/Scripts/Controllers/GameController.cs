@@ -7,15 +7,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
-    public bool canInteract = true;
     public bool isGamePaused;
-    public PlayerMovement playerMovement;
-    public bool levelEnded = false;
-    
-    [Header ("Lists")]
-    public Enemy[] enemies;
-    public List<Saw> saws = new List<Saw>();
-    public List<TilePression> tilePressions = new List<TilePression>();
     
     [Header("Canvas")]
     [SerializeField] private GameObject pauseCanvas;
@@ -32,38 +24,13 @@ public class GameController : MonoBehaviour
         Vector2 hotspot = Vector2.zero;
         Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
         
-        TileController tc = FindFirstObjectByType<TileController>();
-        if(tc != null) tc.Initialize();
-        
-        Lever[] levers = FindObjectsByType<Lever>(FindObjectsSortMode.None);
-        foreach (Lever lever in levers)
-            lever.Initialize();
-        
-        playerMovement = FindFirstObjectByType<PlayerMovement>();
-        if(playerMovement != null)playerMovement.Initialize();
-        
-        enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-        foreach (Enemy enemy in enemies)
-        {
-            enemy.playerMovement = playerMovement;
-            enemy.Initialize();
-        }
-        
-        saws = FindObjectsByType<Saw>(FindObjectsSortMode.None).ToList();
-        foreach (Saw saw in saws)
-        {
-            saw.Initialize();
-        }
-        
-        tilePressions = FindObjectsByType<TilePression>(FindObjectsSortMode.None).ToList();
-        
         if(pauseCanvas != null) pauseCanvas.SetActive(false);
     }
 
     private void Update()
     {
         HandlePause();
-        }
+    }
 
     private void HandlePause()
     {
@@ -101,68 +68,5 @@ public class GameController : MonoBehaviour
         Application.Quit();
     }
     
-    public IEnumerator UpdateGameFlow()
-    {
-        canInteract = false;
-        
-        List<IEnumerator> movingEnemyRoutines = new List<IEnumerator>();
-        foreach (Enemy enemy in enemies)
-        {
-            if (enemy.DettectPlayer())
-                enemy.Attack();
-
-            if (enemy is MovingEnemy me)
-            {
-                movingEnemyRoutines.Add(me.UpdatePosition());
-            }
-        }
-        yield return StartCoroutine(WaitForAll(movingEnemyRoutines));
-        
-        List<IEnumerator> pursuerEnemyRoutines = new List<IEnumerator>();
-        foreach (Enemy enemy in enemies)
-        {
-            if (enemy is PursuerEnemy pe)
-            {
-                if (!pe.hasSeenPlayer)
-                    pe.CheckForPlayer();
-                else
-                    pursuerEnemyRoutines.Add(pe.Chase());
-            }
-        }
-        yield return StartCoroutine(WaitForAll(pursuerEnemyRoutines));
-        
-        List<IEnumerator> sawRoutines = new List<IEnumerator>();
-        foreach (Saw saw in saws)
-        {
-            sawRoutines.Add(saw.UpdatePosition());
-        }
-        yield return StartCoroutine(WaitForAll(sawRoutines));
-
-        List<IEnumerator> tilePressionRoutines = new List<IEnumerator>();
-        foreach (TilePression tilePression in tilePressions)
-        {
-            tilePressionRoutines.Add(tilePression.ActivateOrDeactivate());
-        }
-        yield return StartCoroutine(WaitForAll(tilePressionRoutines));
-
-        canInteract = true;
-    }
-
-
-    
-    private IEnumerator WaitForAll(List<IEnumerator> routines)
-    {
-        List<Coroutine> coroutines = new List<Coroutine>();
-
-        foreach (var routine in routines)
-        {
-            coroutines.Add(StartCoroutine(routine));
-        }
-
-        foreach (var coroutine in coroutines)
-        {
-            yield return coroutine;
-        }
-    }
 
 }

@@ -40,9 +40,9 @@ public class Enemy : CharacterMovement
 
     public void Die()
     {
-        List<Enemy> enemiesList = GameController.instance.enemies.ToList();
+        List<Enemy> enemiesList = GameFlow.instance.enemies.ToList();
         enemiesList.Remove(this);
-        GameController.instance.enemies = enemiesList.ToArray();
+        GameFlow.instance.enemies = enemiesList.ToArray();
         
         currentTile.characterOnTile = null;
         anim.SetBool(DeadHash, true);

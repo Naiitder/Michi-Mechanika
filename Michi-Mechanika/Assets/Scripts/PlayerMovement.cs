@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 public class PlayerMovement : CharacterMovement
 {
@@ -22,7 +20,7 @@ public class PlayerMovement : CharacterMovement
 
     private void Update()
     {
-        if (GameController.instance == null || !GameController.instance.canInteract || isMoving) return;
+        if (GameFlow.instance == null || !GameFlow.instance.canInteract || isMoving) return;
         HandleInput();
 
     }
@@ -52,7 +50,7 @@ public class PlayerMovement : CharacterMovement
             }
         }
 
-        if (InputController.instance.HasDragged && !isMoving)
+        else if (InputController.instance.HasDragged && !isMoving)
         {
             Vector2 dir = InputController.instance.DragDirection;
             InputController.instance.HasDragged = false;
@@ -73,6 +71,7 @@ public class PlayerMovement : CharacterMovement
 
                 if (targetTile != null)
                 {
+                    GameFlow.instance.canInteract = false;
                     MoveToNextPosition(targetTile);
                 }
                 else
@@ -88,7 +87,10 @@ public class PlayerMovement : CharacterMovement
                         verticalTile = currentTile.GetConnectedTileBelow();
 
                     if (verticalTile != null)
+                    {
+                        GameFlow.instance.canInteract = false;
                         MoveToNextPosition(verticalTile);
+                    }
                 }
             }
         }
@@ -150,14 +152,14 @@ public class PlayerMovement : CharacterMovement
         }
         if(currentTile.characterOnTile is not Saw) currentTile.characterOnTile = this;
         StartCoroutine(LevelFinish());
-        if(GameController.instance != null) StartCoroutine(GameController.instance.UpdateGameFlow());
+        if(GameController.instance != null) StartCoroutine(GameFlow.instance.UpdateGameFlow());
     }
 
     private IEnumerator LevelFinish()
     {
         if (currentTile.endingTile)
         {
-            GameController.instance.levelEnded = true;
+            GameFlow.instance.levelEnded = true;
             
             int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
             if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)

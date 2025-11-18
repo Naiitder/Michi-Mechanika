@@ -15,7 +15,7 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        if(player == null || GameController.instance.levelEnded) return;
+        if(player == null || GameFlow.instance.levelEnded) return;
         
         Vector3 desiredPosition = player.position + offset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);

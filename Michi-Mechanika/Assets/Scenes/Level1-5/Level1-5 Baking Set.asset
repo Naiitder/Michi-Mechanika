@@ -177,7 +177,7 @@ MonoBehaviour:
         elementCount: 1
       - offset: 57344
         elementCount: 1
-    m_Asset: {fileID: 0}
+    m_Asset: {fileID: 4900000, guid: a2d5bb79105889844a2d6d1e8b25f3b0, type: 3}
   scenarios:
     m_Keys:
     - Default
@@ -206,7 +206,7 @@ MonoBehaviour:
             elementCount: 1
           - offset: 917504
             elementCount: 1
-        m_Asset: {fileID: 0}
+        m_Asset: {fileID: 4900000, guid: b0896e59452632c4ba49cc955d91a686, type: 3}
       cellOptionalDataAsset:
         m_AssetGUID: 6aa99bedd010d6348bf9b844bd18c2b4
         m_StreamableAssetPath: APVStreamingAssets\8c1b728f53e347145bbce5ef5f0df79c\6aa99bedd010d6348bf9b844bd18c2b4.bytes
@@ -230,7 +230,7 @@ MonoBehaviour:
             elementCount: 1
           - offset: 917504
             elementCount: 1
-        m_Asset: {fileID: 0}
+        m_Asset: {fileID: 4900000, guid: 6aa99bedd010d6348bf9b844bd18c2b4, type: 3}
       cellProbeOcclusionDataAsset:
         m_AssetGUID: 
         m_StreamableAssetPath: APVStreamingAssets\8c1b728f53e347145bbce5ef5f0df79c\.bytes
@@ -278,7 +278,7 @@ MonoBehaviour:
         elementCount: 15
       - offset: 1984
         elementCount: 30
-    m_Asset: {fileID: 0}
+    m_Asset: {fileID: 4900000, guid: fbf3ed1ddd12cab4488735d9e6302041, type: 3}
   cellSupportDataAsset:
     m_AssetGUID: 9086ff0699242134e910192994b0efae
     m_StreamableAssetPath: APVStreamingAssets\8c1b728f53e347145bbce5ef5f0df79c\9086ff0699242134e910192994b0efae.bytes
@@ -302,7 +302,7 @@ MonoBehaviour:
         elementCount: 1
       - offset: 1835008
         elementCount: 1
-    m_Asset: {fileID: 0}
+    m_Asset: {fileID: 4900000, guid: 9086ff0699242134e910192994b0efae, type: 3}
   chunkSizeInBricks: 128
   maxCellPosition: {x: 1, y: 1, z: 1}
   minCellPosition: {x: -1, y: -1, z: -1}
@@ -337,7 +337,7 @@ MonoBehaviour:
   supportOffsetsChunkSize: 98304
   supportDataChunkSize: 262144
   lightingScenario: Default
-  version: 1
+  version: 2
   freezePlacement: 0
   probeOffset: {x: 0, y: 0, z: 0}
   simplificationLevels: 3

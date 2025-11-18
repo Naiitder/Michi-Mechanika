@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,24 +23,45 @@ public class Lever : MonoBehaviour
 
     public void PullLever(Tile tileWherePlayerIs)
     {
-        if (tileWhereLeverIs != tileWherePlayerIs) return;
-        
-        if( GameController.instance != null) GameController.instance.canInteract = false;
+        if (GameController.instance == null) return;
+
+        GameFlow.instance.RunExclusiveRoutine(ActivateLever(tileWherePlayerIs));
+    }
+    
+    private IEnumerator ActivateLever(Tile tileWherePlayerIs)
+    {
+        if (tileWhereLeverIs != tileWherePlayerIs)
+            yield break;
+
         StopAllCoroutines();
 
-        Quaternion targetRotation = Quaternion.Euler(0, 0, -45);
-        
-        StartCoroutine(RotatePivot(pivotGameObject, targetRotation, 0.5f));
+        Quaternion targetRotation = pivotGameObject.localRotation == originalRotation ? Quaternion.Euler(0, 0, -45) : originalRotation;
 
         Transform currentPivot = GetClosestPivot(tilesGameObjects[0].transform, pivotA, pivotB);
         Transform pivotTarget = currentPivot == pivotA ? pivotB : pivotA;
+        
+        List<Coroutine> routines = new List<Coroutine>();
+        routines.Add(StartCoroutine(RotatePivot(pivotGameObject, targetRotation, 0.5f)));
+        routines.Add(StartCoroutine(MoveTilesToPivot(pivotTarget, durationTransition)));
+
+        foreach (var c in routines)
+            yield return c;
+        
+    }
+    
+    private IEnumerator MoveTilesToPivot(Transform targetPivot, float duration)
+    {
+        List<Coroutine> routines = new List<Coroutine>();
 
         foreach (GameObject go in tilesGameObjects)
         {
-            StartCoroutine(MoveToPivot(go, pivotTarget, durationTransition));
+            routines.Add(StartCoroutine(MoveToPivot(go, targetPivot, duration)));
         }
-        
+
+        foreach (var c in routines)
+            yield return c;
     }
+    
     
     private IEnumerator MoveToPivot(GameObject go, Transform targetPivot, float duration)
     {
@@ -95,8 +115,6 @@ public class Lever : MonoBehaviour
         }
         
         if(TileController.instance != null) TileController.instance.ConnectTiles();
-        if(GameController.instance != null)  GameController.instance.canInteract = true;
-        
     }
     private IEnumerator RotatePivot(Transform target, Quaternion targetRotation, float duration)
     {

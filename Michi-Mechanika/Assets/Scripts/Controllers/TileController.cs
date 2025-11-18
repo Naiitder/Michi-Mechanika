@@ -32,7 +32,7 @@ public class TileController : MonoBehaviour
     {
         foreach (Tile tile in allTiles)
         {
-            tile.connectedTiles = new Tile[0];
+            tile.connectedTiles = Array.Empty<Tile>();
         }
         
     }
@@ -142,11 +142,11 @@ public class TileController : MonoBehaviour
 
         if (diff.x <= horizontalOffset && diff.x > 0)
             return Tile.Direction.Forward;
-        else if (diff.x >= -horizontalOffset && diff.x < 0)
+        if (diff.x >= -horizontalOffset && diff.x < 0)
             return Tile.Direction.Back;
-        else if (diff.z <= horizontalOffset && diff.z > 0)
+        if (diff.z <= horizontalOffset && diff.z > 0)
             return Tile.Direction.Left;
-        else if (diff.z >= -horizontalOffset && diff.z < 0)
+        if (diff.z >= -horizontalOffset && diff.z < 0)
             return Tile.Direction.Right;
 
         return null;
