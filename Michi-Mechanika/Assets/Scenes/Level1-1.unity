@@ -9233,6 +9233,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8899468851077952972, guid: e26c2be61f15b294cb3b85ca215ca39e, type: 3}
+      propertyPath: movementSpeed
+      value: 7.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11329,6 +11333,7 @@ GameObject:
   - component: {fileID: 1553417778}
   - component: {fileID: 1553417779}
   - component: {fileID: 1553417780}
+  - component: {fileID: 1553417781}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -11375,14 +11380,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1411451e49c1c4da783e231863d0f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canInteract: 1
   isGamePaused: 0
-  playerMovement: {fileID: 0}
-  levelEnded: 0
-  enemies: []
-  saws: []
-  tilePressions: []
   pauseCanvas: {fileID: 70881156}
+  normalTimeScale: 1
+  fastForwardTimeScale: 2
+  pausedTimeScale: 0
 --- !u!114 &1553417779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11411,6 +11413,24 @@ MonoBehaviour:
   loaderCanvas: {fileID: 809542217}
   fadeImage: {fileID: 308495126}
   fadeDuration: 1
+--- !u!114 &1553417781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553417775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82ce126e0897f4cd7bdacdc873017e02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canInteract: 1
+  levelEnded: 0
+  playerMovement: {fileID: 0}
+  enemies: []
+  saws: []
+  tilePressions: []
 --- !u!1001 &1589599050
 PrefabInstance:
   m_ObjectHideFlags: 0

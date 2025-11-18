@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -15,7 +11,6 @@ public class GameController : MonoBehaviour
     [Header("Speed")]
     [SerializeField] private float normalTimeScale = 1f;
     [SerializeField] private float fastForwardTimeScale = 2f;
-    [SerializeField] private float pausedTimeScale = 0f;
     
     private void Awake()
     {
@@ -66,7 +61,7 @@ public class GameController : MonoBehaviour
     {
         pauseCanvas.SetActive(true);
         isGamePaused = true;
-        Time.timeScale = pausedTimeScale;
+        Time.timeScale = 0f;
     }
     
     public void QuitGame()
@@ -76,7 +71,7 @@ public class GameController : MonoBehaviour
     
     private void UpdateTimeScale()
     {
-        if (GameController.instance != null && GameController.instance.isGamePaused)
+        if (isGamePaused)
             return;
 
         int pending = InputController.instance != null ? InputController.instance.BufferCount : 0;
