@@ -12,6 +12,11 @@ public class GameController : MonoBehaviour
     [Header("Canvas")]
     [SerializeField] private GameObject pauseCanvas;
     
+    [Header("Speed")]
+    [SerializeField] private float normalTimeScale = 1f;
+    [SerializeField] private float fastForwardTimeScale = 2f;
+    [SerializeField] private float pausedTimeScale = 0f;
+    
     private void Awake()
     {
         if(instance == null) instance = this;
@@ -30,6 +35,7 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         HandlePause();
+        UpdateTimeScale();
     }
 
     private void HandlePause()
@@ -52,7 +58,7 @@ public class GameController : MonoBehaviour
     {
         pauseCanvas.SetActive(false);
         isGamePaused = false;
-        Time.timeScale = 1;
+        Time.timeScale = normalTimeScale;
         
     }
     
@@ -60,7 +66,7 @@ public class GameController : MonoBehaviour
     {
         pauseCanvas.SetActive(true);
         isGamePaused = true;
-        Time.timeScale = 0;
+        Time.timeScale = pausedTimeScale;
     }
     
     public void QuitGame()
@@ -68,5 +74,14 @@ public class GameController : MonoBehaviour
         Application.Quit();
     }
     
+    private void UpdateTimeScale()
+    {
+        if (GameController.instance != null && GameController.instance.isGamePaused)
+            return;
+
+        int pending = InputController.instance != null ? InputController.instance.BufferCount : 0;
+
+        Time.timeScale = pending > 0 ? fastForwardTimeScale : normalTimeScale;
+    }
 
 }

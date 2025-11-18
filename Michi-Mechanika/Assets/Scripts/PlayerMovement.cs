@@ -16,13 +16,11 @@ public class PlayerMovement : CharacterMovement
         base.Initialize();
         if(TileController.instance != null) currentTile = TileController.instance.GetClosestTile(transform.position);
     }
-
-
+    
     private void Update()
     {
         if (GameFlow.instance == null || !GameFlow.instance.canInteract || isMoving) return;
-        HandleInput();
-
+        HandleBufferedInput();
     }
 
     public void Die()
@@ -31,70 +29,84 @@ public class PlayerMovement : CharacterMovement
         LevelManager.instance.RestartScene();
     }
 
-    private void HandleInput()
+    private void HandleBufferedInput()
     {
         if (InputController.instance == null) return;
 
-        if (InputController.instance.HasClicked)
+        if (!InputController.instance.TryDequeueAction(out var action))
+            return; 
+
+        switch (action.Type)
         {
-            InputController.instance.HasClicked = false;
-            Vector2 screenPos = InputController.instance.ClickPosition;
-            Ray ray = Camera.main.ScreenPointToRay(screenPos);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, interactiveLayer))
+            case BufferedActionType.ClickLever:
+                ProcessClick(action.ClickScreenPos);
+                break;
+
+            case BufferedActionType.DragMove:
+                ProcessDrag(action.DragStart, action.DragEnd);
+                break;
+        }
+    }
+
+    private void ProcessClick(Vector2 screenPos)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenPos);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, interactiveLayer))
+        {
+            Lever clickedLever = hit.collider.GetComponentInParent<Lever>();
+            if (clickedLever != null)
             {
-                Lever clickedLever = hit.collider.GetComponentInParent<Lever>();
-                if (clickedLever != null)
-                {
-                    clickedLever.PullLever(currentTile);
-                }
+                GameFlow.instance.LockInteraction();
+                clickedLever.PullLever(currentTile);
             }
         }
+    }
 
-        else if (InputController.instance.HasDragged && !isMoving)
+    private void ProcessDrag(Vector2 dragStart, Vector2 dragEnd)
+    {
+        Vector2 dir = (dragEnd - dragStart).normalized;
+
+        Vector3 camForward = Camera.main.transform.forward;
+        Vector3 camRight   = Camera.main.transform.right;
+
+        camForward.y = 0;
+        camRight.y   = 0;
+        camForward.Normalize();
+        camRight.Normalize();
+
+        Vector3 worldDir = (camRight * dir.x + camForward * dir.y).normalized;
+        Tile.Direction? desiredDirection = GetDirectionFromWorld(worldDir);
+
+        if (desiredDirection != null)
         {
-            Vector2 dir = InputController.instance.DragDirection;
-            InputController.instance.HasDragged = false;
-            Vector3 camForward = Camera.main.transform.forward;
-            Vector3 camRight = Camera.main.transform.right;
+            Tile targetTile = currentTile.GetConnectedTileInDirection(desiredDirection.Value);
 
-            camForward.y = 0;
-            camRight.y = 0;
-            camForward.Normalize();
-            camRight.Normalize();
-
-            Vector3 worldDir = (camRight * dir.x + camForward * dir.y).normalized;
-            Tile.Direction? desiredDirection = GetDirectionFromWorld(worldDir);
-
-            if (desiredDirection != null)
+            if (targetTile != null)
             {
-                Tile targetTile = currentTile.GetConnectedTileInDirection(desiredDirection.Value);
+                GameFlow.instance.LockInteraction();
+                MoveToNextPosition(targetTile);
+            }
+            else
+            {
+                Vector3 forward = transform.forward;
+                float dot = Vector3.Dot(worldDir, forward);
 
-                if (targetTile != null)
+                Tile verticalTile = null;
+
+                if (dot > 0.5f)
+                    verticalTile = currentTile.GetConnectedTileAbove();
+                else if (dot < -0.5f) 
+                    verticalTile = currentTile.GetConnectedTileBelow();
+
+                if (verticalTile != null)
                 {
-                    GameFlow.instance.canInteract = false;
-                    MoveToNextPosition(targetTile);
-                }
-                else
-                {
-                    Vector3 forward = transform.forward;
-                    float dot = Vector3.Dot(worldDir, forward);
-
-                    Tile verticalTile = null;
-
-                    if (dot > 0.5f)
-                        verticalTile = currentTile.GetConnectedTileAbove();
-                    else if (dot < -0.5f) 
-                        verticalTile = currentTile.GetConnectedTileBelow();
-
-                    if (verticalTile != null)
-                    {
-                        GameFlow.instance.canInteract = false;
-                        MoveToNextPosition(verticalTile);
-                    }
+                    GameFlow.instance.LockInteraction();
+                    MoveToNextPosition(verticalTile);
                 }
             }
         }
     }
+
 
     Tile.Direction? GetDirectionFromWorld(Vector3 worldDir)
     {

@@ -15,6 +15,7 @@ public class GameFlow : MonoBehaviour
     public Enemy[] enemies;
     public List<Saw> saws = new List<Saw>();
     public List<TilePression> tilePressions = new List<TilePression>();
+    
     private void Awake()
     {
         if(instance == null) instance = this;
@@ -134,7 +135,6 @@ public class GameFlow : MonoBehaviour
 
     public void UnlockInteraction()
     {
-        Debug.Log("Unlock Interaction");
         if (!GameController.instance.isGamePaused && !levelEnded)
             canInteract = true;
     }

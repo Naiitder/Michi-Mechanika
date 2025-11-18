@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,20 +13,14 @@ public class InputController : MonoBehaviour
     private Vector2 pointerEndPos;
     private bool isDragging = false;
     
-    private bool hasClicked = false;
-    private bool hasDragged = false;
     private bool hasPaused = false;
 
-    public Vector2 ClickPosition { get; private set; }
-    public Vector2 DragStart { get; private set; }
-    public Vector2 DragEnd { get; private set; }
-    public Vector2 DragDirection => (DragEnd - DragStart).normalized;
-
-    public bool HasClicked {get{ return hasClicked; } set {hasClicked = value;}}
-    public bool HasDragged {get{ return hasDragged; } set {hasDragged = value;}}
-    public bool HasPaused {get{ return hasPaused; } set {hasPaused = value;}}
-
     public float dragThreshold = 10f;
+    
+    private readonly Queue<BufferedAction> inputBuffer = new Queue<BufferedAction>();
+    public int BufferCount => inputBuffer.Count;
+    
+    public bool HasPaused { get {return hasPaused;} set {hasPaused = value; } }
     
     private void Awake()
     {
@@ -41,7 +36,7 @@ public class InputController : MonoBehaviour
             
             inputActions.Pointer.PointerClick.started += OnPointerDown;
             inputActions.Pointer.PointerClick.canceled += OnPointerUp;
-            inputActions.UserActions.Pause.started +=  onPauseInputStart;
+            inputActions.UserActions.Pause.started +=  OnPauseInputStart;
         }
         inputActions.Enable();
     }
@@ -54,14 +49,12 @@ public class InputController : MonoBehaviour
     private void OnPointerDown(InputAction.CallbackContext context)
     {
         pointerStartPos = inputActions.Pointer.PointerPosition.ReadValue<Vector2>();
-        DragStart = pointerStartPos;
         isDragging = true;
     }
 
     private void OnPointerUp(InputAction.CallbackContext context)
     {
         pointerEndPos = inputActions.Pointer.PointerPosition.ReadValue<Vector2>();
-        DragEnd = pointerEndPos;
 
         if (!isDragging) return;
 
@@ -69,19 +62,68 @@ public class InputController : MonoBehaviour
 
         if (dragDistance < dragThreshold)
         {
-            ClickPosition = pointerEndPos;
-            hasClicked = true;
+            EnqueueClick(pointerEndPos);
         }
         else
         {
-            hasDragged = true;
+            EnqueueDrag(pointerStartPos,pointerEndPos);
         }
 
         isDragging = false;
     }
     
-    void onPauseInputStart(InputAction.CallbackContext context)
+    void OnPauseInputStart(InputAction.CallbackContext context)
     {
         hasPaused = !hasPaused; 
     }
+    
+    private void EnqueueClick(Vector2 screenPos)
+    {
+        inputBuffer.Enqueue(new BufferedAction
+        {
+            Type = BufferedActionType.ClickLever,
+            ClickScreenPos = screenPos
+        });
+    }
+
+    private void EnqueueDrag(Vector2 start, Vector2 end)
+    {
+        inputBuffer.Enqueue(new BufferedAction
+        {
+            Type = BufferedActionType.DragMove,
+            DragStart = start,
+            DragEnd   = end
+        });
+    }
+
+    public bool TryDequeueAction(out BufferedAction action)
+    {
+        if (inputBuffer.Count > 0)
+        {
+            action = inputBuffer.Dequeue();
+            return true;
+        }
+
+        action = null;
+        return false;
+    }
+
+    public void ClearBuffer()
+    {
+        inputBuffer.Clear();
+    }
+    
+}
+public enum BufferedActionType
+{
+    ClickLever,
+    DragMove
+}
+
+public class BufferedAction
+{
+    public BufferedActionType Type;
+    public Vector2 ClickScreenPos;   
+    public Vector2 DragStart;        
+    public Vector2 DragEnd;
 }
