@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class TileController : MonoBehaviour
 {
-    
     public static TileController instance;
-    private const float horizontalOffset = 3f;
-    private const float verticalOffset = 3f;
     
-    private const float horizontalRoofOffset = 1.47f;
-    private const float horizontalRoofUpOffset = 1.53f;
-    private const float verticalRoofUpOffset = 1.53f;
-    private const float verticalRoofDownOffset = 1.49f;
+    private const float horizontalOffset = 3f; 
     
-    private const float minimumThreshold = 0.1f;
+    float _maxDistance = 4f;        
+    float _maxLateral = 0.5f;       
+    float _maxVertical = 2f;    
 
     Tile[] allTiles;
     
@@ -34,87 +30,111 @@ public class TileController : MonoBehaviour
         {
             tile.connectedTiles = Array.Empty<Tile>();
         }
-        
     }
 
     public void ConnectTiles()
     {
         DisconnectTiles();
+        
         foreach (Tile tile in allTiles)
         {
             List<Tile> neighbors = new List<Tile>();
-
-            foreach (Tile other in allTiles)
-            {
-                if (tile == other) continue;
-                
-                Vector3 diff = other.position - tile.position;
-                
-                bool isHorizontalXNeighbor =
-                    Mathf.Abs(diff.y) < minimumThreshold && Mathf.Abs(Math.Abs(diff.z)) < minimumThreshold &&
-                    (
-                        Mathf.Approximately(Mathf.Abs(diff.x), horizontalOffset) 
-                    );
-                bool isHorizontalZNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.y)) < minimumThreshold &&  Mathf.Abs(Math.Abs(diff.x)) < minimumThreshold&&
-                    (
-                        Mathf.Approximately(Mathf.Abs(diff.z), horizontalOffset)
-                        );
-                
-                bool isVerticalNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.z)) < minimumThreshold &&  Mathf.Abs(Math.Abs(diff.x)) < minimumThreshold &&
-                    (
-                        Mathf.Approximately(Mathf.Abs(diff.y), verticalOffset)
-                    );
-                
-                bool isVerticalXNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.z)) < minimumThreshold &&
-                    (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofDownOffset) < minimumThreshold
-                        && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofOffset) < minimumThreshold
-                    );
-                
-                bool isVerticalZNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.x)) < minimumThreshold &&
-                    (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofDownOffset) < minimumThreshold
-                        && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofOffset) < minimumThreshold
-                    );
-                
-                bool isVerticalXUpNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.z)) < minimumThreshold &&
-                    (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < minimumThreshold
-                        && Mathf.Abs(Math.Abs(diff.x) - horizontalRoofUpOffset) < minimumThreshold
-                    );
-                
-                bool isVerticalZUpNeighbor =                     
-                    Mathf.Abs(Math.Abs(diff.x)) < minimumThreshold &&
-                    (
-                        Mathf.Abs(Math.Abs(diff.y) - verticalRoofUpOffset) < minimumThreshold
-                        && Mathf.Abs(Math.Abs(diff.z) - horizontalRoofUpOffset) < minimumThreshold
-                    );
-                
-                if (isHorizontalXNeighbor || isHorizontalZNeighbor || isVerticalNeighbor || isVerticalXNeighbor || isVerticalZNeighbor || 
-                    isVerticalXUpNeighbor || isVerticalZUpNeighbor)
-                {
-                    Tile.Direction? dir = GetCardinalDirection(tile.position, other.position);
-                    if (dir.HasValue)
-                    {
-                        if (tile.blockedDirections.Contains(dir.Value))
-                            continue;
-                        
-                        Tile.Direction opposite = Tile.GetOppositeDirection(dir.Value);
-                        if (other.blockedDirections.Contains(opposite))
-                            continue;
-                    }
-                    neighbors.Add(other);
-                }
-            }
+            
+            TryAddNeighbor(tile, Tile.Direction.Forward,  Vector3.right,   _maxDistance, _maxLateral, _maxVertical, neighbors);
+            TryAddNeighbor(tile, Tile.Direction.Back,     Vector3.left,    _maxDistance, _maxLateral, _maxVertical, neighbors);
+            TryAddNeighbor(tile, Tile.Direction.Left,     Vector3.forward, _maxDistance, _maxLateral, _maxVertical, neighbors);
+            TryAddNeighbor(tile, Tile.Direction.Right,    Vector3.back,    _maxDistance, _maxLateral, _maxVertical, neighbors);
+            
+            TryAddVerticalNeighbor(tile, Vector3.up, _maxDistance, _maxLateral, neighbors);
+            TryAddVerticalNeighbor(tile, Vector3.down, _maxDistance, _maxLateral, neighbors);
 
             tile.connectedTiles = neighbors.ToArray();
         }
     }
+
+    private void TryAddNeighbor(
+        Tile tile,
+        Tile.Direction dir,
+        Vector3 worldDir,
+        float maxDistance,
+        float maxLateral,
+        float maxVertical,
+        List<Tile> neighbors
+    )
+    {
+        if (tile.blockedDirections.Contains(dir))
+            return;
+
+        Tile candidate = FindClosestTileInDirection(tile.position, worldDir, maxDistance, maxLateral, maxVertical, tile);
+        if (candidate == null) return;
+        
+        Tile.Direction opposite = Tile.GetOppositeDirection(dir);
+        if (candidate.blockedDirections.Contains(opposite))
+            return;
+
+        if (!neighbors.Contains(candidate))
+            neighbors.Add(candidate);
+    }
+    
+    private void TryAddVerticalNeighbor(
+        Tile tile,
+        Vector3 worldDir,              
+        float maxDistance,
+        float maxLateral,
+        List<Tile> neighbors
+    )
+    {
+        Tile candidate = FindClosestTileInDirection(tile.position, worldDir, maxDistance, maxLateral, float.MaxValue, tile);
+        if (candidate == null) return;
+
+        if (!neighbors.Contains(candidate))
+            neighbors.Add(candidate);
+    }
+    
+    public Tile FindClosestTileInDirection(
+        Vector3 from,
+        Vector3 dir,
+        float maxDistance,
+        float maxLateralOffset,
+        float maxVerticalOffset,
+        Tile ignoreTile = null
+    )
+    {
+        dir = dir.normalized;
+        Tile best = null;
+        float bestForwardDist = Mathf.Infinity;
+
+        foreach (Tile tile in allTiles)
+        {
+            if (tile == null || tile == ignoreTile) continue;
+
+            Vector3 toTile = tile.position - from;
+            
+            float forwardDist = Vector3.Dot(toTile, dir);
+            if (forwardDist <= 0 || forwardDist > maxDistance) 
+                continue; 
+            
+            Vector3 projected = dir * forwardDist;
+            Vector3 lateral = toTile - projected;
+
+            float lateralXZ = new Vector2(lateral.x, lateral.z).magnitude;
+            float vertical = Mathf.Abs(lateral.y);
+
+            if (lateralXZ > maxLateralOffset) 
+                continue; 
+            if (vertical > maxVerticalOffset) 
+                continue; 
+
+            if (forwardDist < bestForwardDist)
+            {
+                bestForwardDist = forwardDist;
+                best = tile;
+            }
+        }
+
+        return best;
+    }
+    
 
     public Tile GetClosestTile(Vector3 position, Tile ignoreTile = null)
     {

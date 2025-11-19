@@ -18,6 +18,7 @@ public class Tile : MonoBehaviour
     public bool endingTile = false;
     
     public enum Direction { Forward, Back, Right, Left }
+    
     [Header("Blocked Directions")]
     public List<Direction> blockedDirections = new List<Direction>();
     public List<Direction> blockedSawDirections = new List<Direction>();
