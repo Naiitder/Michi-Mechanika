@@ -19,13 +19,21 @@ public class Grid : MonoBehaviour
 
     private void Start()
     {
-        GenerateGridMesh();
+        GenerateGridMesh(0);
     }
 
-    private void GenerateGridMesh()
+    public void UpdateGridLevel(int yLevel)
     {
-        MeshFilter mf = gameObject.AddComponent<MeshFilter>();
-        MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
+        GenerateGridMesh(yLevel);
+    }
+
+    private void GenerateGridMesh(int yLevel)
+    {
+        MeshFilter mf = GetComponent<MeshFilter>();
+        if (mf == null) mf = gameObject.AddComponent<MeshFilter>();
+        
+        MeshRenderer mr = GetComponent<MeshRenderer>();
+        if (mr == null) mr = gameObject.AddComponent<MeshRenderer>();
         
         if (gridMaterial != null) mr.material = gridMaterial;
         else mr.material = new Material(Shader.Find("Sprites/Default"));
@@ -39,10 +47,12 @@ public class Grid : MonoBehaviour
         int vIndex = 0;
         int iIndex = 0;
         
+        float yPos = yLevel * cellSize;
+
         for (int x = 0; x <= width; x++)
         {
-            vertices[vIndex] = new Vector3(x * cellSize, 0, 0);
-            vertices[vIndex + 1] = new Vector3(x * cellSize, 0, height * cellSize);
+            vertices[vIndex] = new Vector3(x * cellSize, yPos, 0);
+            vertices[vIndex + 1] = new Vector3(x * cellSize, yPos, height * cellSize);
             
             indices[iIndex] = vIndex;
             indices[iIndex + 1] = vIndex + 1;
@@ -53,8 +63,8 @@ public class Grid : MonoBehaviour
         
         for (int z = 0; z <= height; z++)
         {
-            vertices[vIndex] = new Vector3(0, 0, z * cellSize);
-            vertices[vIndex + 1] = new Vector3(width * cellSize, 0, z * cellSize);
+            vertices[vIndex] = new Vector3(0, yPos, z * cellSize);
+            vertices[vIndex + 1] = new Vector3(width * cellSize, yPos, z * cellSize);
 
             indices[iIndex] = vIndex;
             indices[iIndex + 1] = vIndex + 1;
@@ -95,5 +105,11 @@ public class Grid : MonoBehaviour
     {
         return gridPos.x >= 0 && gridPos.z >= 0 && gridPos.y >= 0 &&
                gridPos.x < width && gridPos.z < height && gridPos.y < heightY;
+    }
+
+    public void GetXZ(Vector3 worldPosition, out int x, out int z)
+    {
+        x = Mathf.FloorToInt((worldPosition - transform.position).x / cellSize);
+        z = Mathf.FloorToInt((worldPosition - transform.position).z / cellSize);
     }
 }
