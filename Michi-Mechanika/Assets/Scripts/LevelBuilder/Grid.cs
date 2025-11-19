@@ -1,14 +1,21 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Grid : MonoBehaviour
 {
     [SerializeField] private int width = 10;
     [SerializeField] private int height = 10;
+    [SerializeField] private int heightY = 5; 
     [SerializeField] private float cellSize = 1f;
     [SerializeField] private bool showDebug = true;
-    [SerializeField] private Material gridMaterial; // Assign a material for the runtime grid
+    [SerializeField] private Material gridMaterial;
 
     public float CellSize => cellSize;
+    public int Width => width;
+    public int Height => height;
+    public int HeightY => heightY;
+
+    private Dictionary<Vector3Int, LevelItem> occupiedCells = new Dictionary<Vector3Int, LevelItem>();
 
     private void Start()
     {
@@ -21,7 +28,7 @@ public class Grid : MonoBehaviour
         MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
         
         if (gridMaterial != null) mr.material = gridMaterial;
-        else mr.material = new Material(Shader.Find("Sprites/Default")); // Fallback
+        else mr.material = new Material(Shader.Find("Sprites/Default"));
 
         Mesh mesh = new Mesh();
         
@@ -31,8 +38,7 @@ public class Grid : MonoBehaviour
 
         int vIndex = 0;
         int iIndex = 0;
-
-        // Vertical lines
+        
         for (int x = 0; x <= width; x++)
         {
             vertices[vIndex] = new Vector3(x * cellSize, 0, 0);
@@ -44,8 +50,7 @@ public class Grid : MonoBehaviour
             vIndex += 2;
             iIndex += 2;
         }
-
-        // Horizontal lines
+        
         for (int z = 0; z <= height; z++)
         {
             vertices[vIndex] = new Vector3(0, 0, z * cellSize);
@@ -63,47 +68,32 @@ public class Grid : MonoBehaviour
         mf.mesh = mesh;
     }
 
-    private void OnDrawGizmos()
+    public Vector3 GetWorldPosition(int x, int y, int z)
     {
-        if (!showDebug) return;
+        return new Vector3(x, y, z) * cellSize + transform.position;
+    }
 
-        Gizmos.color = Color.white;
-        for (int x = 0; x <= width; x++)
+    public Vector3 GetCenterWorldPosition(Vector3Int gridPos)
+    {
+        return GetWorldPosition(gridPos.x, gridPos.y, gridPos.z) + new Vector3(cellSize, 0, cellSize) * 0.5f; 
+    }
+
+    public bool IsCellOccupied(Vector3Int gridPos)
+    {
+        return occupiedCells.ContainsKey(gridPos);
+    }
+
+    public void SetCellOccupied(Vector3Int gridPos, LevelItem item)
+    {
+        if (!IsCellOccupied(gridPos))
         {
-            Gizmos.DrawLine(GetWorldPosition(x, 0), GetWorldPosition(x, height));
-        }
-        for (int z = 0; z <= height; z++)
-        {
-            Gizmos.DrawLine(GetWorldPosition(0, z), GetWorldPosition(width, z));
+            occupiedCells[gridPos] = item;
         }
     }
 
-    public Vector3 GetWorldPosition(int x, int z)
+    public bool IsValidGridPosition(Vector3Int gridPos)
     {
-        return new Vector3(x, 0, z) * cellSize + transform.position;
+        return gridPos.x >= 0 && gridPos.z >= 0 && gridPos.y >= 0 &&
+               gridPos.x < width && gridPos.z < height && gridPos.y < heightY;
     }
-
-    public Vector3 GetCenterWorldPosition(int x, int z)
-    {
-        return GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * 0.5f;
-    }
-
-    public void GetXZ(Vector3 worldPosition, out int x, out int z)
-    {
-        x = Mathf.FloorToInt((worldPosition - transform.position).x / cellSize);
-        z = Mathf.FloorToInt((worldPosition - transform.position).z / cellSize);
-    }
-
-    public bool TryGetGridPosition(Vector3 worldPosition, out Vector3 snapPos)
-    {
-        GetXZ(worldPosition, out int x, out int z);
-        
-        if (x >= 0 && z >= 0 && x < width && z < height)
-        {
-            snapPos = GetCenterWorldPosition(x, z);
-            return true;
-        }
-        
-        snapPos = Vector3.zero;
-        return false;
-    }}
+}

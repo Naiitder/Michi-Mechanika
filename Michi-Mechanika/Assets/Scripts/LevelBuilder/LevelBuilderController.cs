@@ -6,67 +6,101 @@ public class LevelBuilderController : MonoBehaviour
     [Header("References")]
     [SerializeField] private Grid grid;
     [SerializeField] private LevelItem selectedItem;
-    [SerializeField] private LayerMask placementLayerMask;
 
-    private InputActions inputActions;
-    private Camera mainCamera;
+    private Vector3Int currentGridPosition;
+    private GameObject previewObject;
+    private LevelItem currentPreviewItem;
 
-    private void Awake()
+    private void Start()
     {
-        inputActions = new InputActions();
-        mainCamera = Camera.main;
-        grid = GetComponent<Grid>();
+        if (grid == null) grid = GetComponent<Grid>();
+        currentGridPosition = new Vector3Int(0, 0, 0);
+        UpdatePreview();
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        inputActions.Pointer.Enable();
-        inputActions.Pointer.PointerClick.performed += OnPointerClick;
+        HandleMovement();
+        HandlePlacement();
     }
 
-    private void OnDisable()
+    private void HandleMovement()
     {
-        inputActions.Pointer.PointerClick.performed -= OnPointerClick;
-        inputActions.Pointer.Disable();
-    }
+        Vector3Int moveDir = Vector3Int.zero;
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return;
 
-    private void OnPointerClick(InputAction.CallbackContext context)
-    {
-        if (selectedItem == null) return;
+        if (keyboard.wKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame) moveDir.z = 1;
+        if (keyboard.sKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame) moveDir.z = -1;
+        if (keyboard.aKey.wasPressedThisFrame || keyboard.leftArrowKey.wasPressedThisFrame) moveDir.x = -1;
+        if (keyboard.dKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame) moveDir.x = 1;
         
-        // Check if pointer is over UI
-        if (UnityEngine.EventSystems.EventSystem.current != null && 
-            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        if (keyboard.eKey.wasPressedThisFrame) moveDir.y = 1;
+        if (keyboard.qKey.wasPressedThisFrame) moveDir.y = -1;
+
+        if (moveDir != Vector3Int.zero)
         {
-            return;
-        }
-
-        Vector2 pointerPos = inputActions.Pointer.PointerPosition.ReadValue<Vector2>();
-        Ray ray = mainCamera.ScreenPointToRay(pointerPos);
-        
-        Plane gridPlane = new Plane(Vector3.up, grid.transform.position);
-        
-        if (gridPlane.Raycast(ray, out float enter))
-        {
-            Vector3 hitPoint = ray.GetPoint(enter);
-            
-            if (grid.TryGetGridPosition(hitPoint, out Vector3 snapPos))
+            Vector3Int nextPos = currentGridPosition + moveDir;
+            if (grid.IsValidGridPosition(nextPos))
             {
-                PlaceItem(snapPos);
+                currentGridPosition = nextPos;
+                UpdatePreviewPosition();
             }
         }
     }
 
-    private void PlaceItem(Vector3 position)
+    private void HandlePlacement()
     {
-        if (selectedItem.prefab != null)
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return;
+
+        if (keyboard.enterKey.wasPressedThisFrame)
         {
-            Instantiate(selectedItem.prefab, position, Quaternion.identity);
+            if (selectedItem != null && !grid.IsCellOccupied(currentGridPosition))
+            {
+                PlaceItem(currentGridPosition);
+            }
+        }
+    }
+
+    private void UpdatePreview()
+    {
+        if (selectedItem != currentPreviewItem)
+        {
+            if (previewObject != null) Destroy(previewObject);
+            currentPreviewItem = selectedItem;
+            
+            if (selectedItem != null && selectedItem.prefab != null)
+            {
+                previewObject = Instantiate(selectedItem.prefab);
+                var colliders = previewObject.GetComponentsInChildren<Collider>();
+                foreach (var col in colliders) col.enabled = false;
+                
+                UpdatePreviewPosition();
+            }
+        }
+    }
+
+    private void UpdatePreviewPosition()
+    {
+        if (previewObject != null)
+        {
+            previewObject.transform.position = grid.GetCenterWorldPosition(currentGridPosition);
+        }
+    }
+
+    private void PlaceItem(Vector3Int position)
+    {
+        if (selectedItem != null && selectedItem.prefab != null)
+        {
+            Instantiate(selectedItem.prefab, grid.GetCenterWorldPosition(position), Quaternion.identity);
+            grid.SetCellOccupied(position, selectedItem);
         }
     }
 
     public void SelectItem(LevelItem item)
     {
         selectedItem = item;
+        UpdatePreview();
     }
 }

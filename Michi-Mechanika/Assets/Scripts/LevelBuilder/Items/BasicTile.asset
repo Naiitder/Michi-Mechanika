@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8b4a39ae51cb432ebfff61d480044f3, type: 3}
   m_Name: BasicTile
   m_EditorClassIdentifier: 
-  itemName: 
-  prefab: {fileID: 0}
-  icon: {fileID: 0}
+  itemName: BasicTile
+  prefab: {fileID: 4828944468003645266, guid: e505e6568e8324159891067a30924024, type: 3}
+  icon: {fileID: -4992558212496127271, guid: e0018e123761e344bb79ca44447aa41e, type: 3}
