@@ -3,7 +3,10 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
+    
+    [Header("Game Status")]
     public bool isGamePaused;
+    public bool isLevelBuilding;
     
     [Header("Canvas")]
     [SerializeField] private GameObject pauseCanvas;
