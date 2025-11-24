@@ -38,7 +38,7 @@ public class PlayerMovement : CharacterMovement
 
         switch (action.Type)
         {
-            case BufferedActionType.ClickLever:
+            case BufferedActionType.Click:
                 ProcessClick(action.ClickScreenPos);
                 break;
 

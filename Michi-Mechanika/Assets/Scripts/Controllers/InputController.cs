@@ -7,7 +7,7 @@ public class InputController : MonoBehaviour
 {
     public static InputController instance;
     
-    InputActions inputActions;
+    public InputActions inputActions;
     
     private Vector2 pointerStartPos;
     private Vector2 pointerEndPos;
@@ -17,30 +17,36 @@ public class InputController : MonoBehaviour
 
     public float dragThreshold = 10f;
     
+    public Vector2 CameraDragDelta => inputActions.Camera.Drag.ReadValue<Vector2>();
+    
     private readonly Queue<BufferedAction> inputBuffer = new Queue<BufferedAction>();
     public int BufferCount => inputBuffer.Count;
     
     public bool HasPaused { get {return hasPaused;} set {hasPaused = value; } }
+    public bool IsCameraDragging { get; private set; }
+
     
     private void Awake()
     {
         if(instance == null) instance = this;
         else Destroy(this);
     }
-
     private void OnEnable()
     {
         if (inputActions == null)
         {
             inputActions = new InputActions();
-            
-            inputActions.Pointer.PointerClick.started += OnPointerDown;
+
+            inputActions.Pointer.PointerClick.started  += OnPointerDown;
             inputActions.Pointer.PointerClick.canceled += OnPointerUp;
-            inputActions.UserActions.Pause.started +=  OnPauseInputStart;
+            inputActions.UserActions.Pause.started     += OnPauseInputStart;
+
+            inputActions.Camera.Press.started  += ctx => IsCameraDragging = true;
+            inputActions.Camera.Press.canceled += ctx => IsCameraDragging = false;
         }
+
         inputActions.Enable();
     }
-
     private void OnDisable()
     {
         inputActions.Disable();
@@ -81,7 +87,7 @@ public class InputController : MonoBehaviour
     {
         inputBuffer.Enqueue(new BufferedAction
         {
-            Type = BufferedActionType.ClickLever,
+            Type = BufferedActionType.Click,
             ClickScreenPos = screenPos
         });
     }
@@ -116,7 +122,7 @@ public class InputController : MonoBehaviour
 }
 public enum BufferedActionType
 {
-    ClickLever,
+    Click,
     DragMove
 }
 

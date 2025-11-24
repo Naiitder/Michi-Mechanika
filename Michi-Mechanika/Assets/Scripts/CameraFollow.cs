@@ -8,8 +8,6 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private CinemachineCamera vcamFree;
     [SerializeField] private float dragSpeed = 1f;
 
-    private Vector3 lastMousePos;
-
     void Update()
     {
         bool isBuilding = GameController.instance.isLevelBuilding;
@@ -22,21 +20,16 @@ public class CameraFollow : MonoBehaviour
         if (isBuilding)
             HandleFreeCamDrag();
     }
-
+    
     private void HandleFreeCamDrag()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            lastMousePos = Input.mousePosition;
-        }
-        if (Input.GetMouseButton(0))
-        {
-            Vector3 current = Input.mousePosition;
-            Vector3 delta = current - lastMousePos;
-            lastMousePos = current;
+        var input = InputController.instance;
+        if (input == null) return;
+        if (!input.IsCameraDragging) return;
 
-            Vector3 move = new Vector3(-delta.x, 0, -delta.y) * dragSpeed * Time.deltaTime;
-            vcamFree.transform.Translate(move, Space.World);
-        }
+        Vector2 camDelta = input.CameraDragDelta;
+
+        Vector3 move = new Vector3(-camDelta.x, 0, -camDelta.y) * dragSpeed;
+        vcamFree.transform.Translate(move, Space.World);
     }
 }
