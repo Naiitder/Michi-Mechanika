@@ -19,6 +19,7 @@ public class InputController : MonoBehaviour
     
     public Vector2 CameraDragDelta => inputActions.Camera.Drag.ReadValue<Vector2>();
     public float CameraScroll => inputActions.Camera.Scroll.ReadValue<float>();
+    
     public bool IsAltHeld => inputActions.Camera.Alt.ReadValue<float>() > 0.5f;
     
     private readonly Queue<BufferedAction> inputBuffer = new Queue<BufferedAction>();

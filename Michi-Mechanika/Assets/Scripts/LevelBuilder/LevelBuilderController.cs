@@ -29,30 +29,31 @@ public class LevelBuilderController : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (InputController.instance == null) return;
+
+        InputActions.UserActionsActions ua = InputController.instance.inputActions.UserActions;
+
         Vector3Int moveDir = Vector3Int.zero;
-        var keyboard = Keyboard.current;
-        if (keyboard == null) return;
 
-        if (keyboard.wKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame) moveDir.z = 1;
-        if (keyboard.sKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame) moveDir.z = -1;
-        if (keyboard.aKey.wasPressedThisFrame || keyboard.leftArrowKey.wasPressedThisFrame) moveDir.x = -1;
-        if (keyboard.dKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame) moveDir.x = 1;
-        
-        if (keyboard.eKey.wasPressedThisFrame) moveDir.y = 1;
-        if (keyboard.qKey.wasPressedThisFrame) moveDir.y = -1;
+        if (ua.GridMoveUp.triggered)    moveDir.z =  1;
+        if (ua.GridMoveDown.triggered)  moveDir.z = -1;
+        if (ua.GridMoveLeft.triggered)  moveDir.x = -1;
+        if (ua.GridMoveRight.triggered) moveDir.x =  1;
 
-        if (moveDir != Vector3Int.zero)
+        if (ua.GridVerticalUp.triggered)   moveDir.y = 1;
+        if (ua.GridVerticalDown.triggered) moveDir.y = -1;
+
+        if (moveDir == Vector3Int.zero) return;
+
+        Vector3Int nextPos = currentGridPosition + moveDir;
+        if (grid.IsValidGridPosition(nextPos))
         {
-            Vector3Int nextPos = currentGridPosition + moveDir;
-            if (grid.IsValidGridPosition(nextPos))
-            {
-                currentGridPosition = nextPos;
-                UpdateGridLevel();
-                UpdatePreviewPosition();
-            }
+            currentGridPosition = nextPos;
+            UpdateGridLevel();
+            UpdatePreviewPosition();
         }
     }
-
+    
     private void HandleMouseInput()
     {
         if (Mouse.current.leftButton.wasPressedThisFrame)

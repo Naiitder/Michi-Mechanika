@@ -170,6 +170,60 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GridMoveUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""503a49ac-8801-46b0-97ab-d81b6f8a65d3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GridMoveDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""3e1574de-5cf6-45ac-b016-e461e8996fad"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GridMoveLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""9c72b1a3-d224-4e12-bb2c-468dbd96549f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GridMoveRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""255195b4-69d3-4369-a235-23b9b515ef5d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GridVerticalUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""41c8cb4f-b260-4058-8789-fd0231172adc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GridVerticalDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""880a02c7-238e-41bd-99fc-355381d9694a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -181,6 +235,72 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5c44a565-b7a7-47f8-a311-c3794736ef26"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GridMoveUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""75b78761-dd8d-4996-875b-ceaf11976319"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GridMoveDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4a937c72-5f69-495e-9326-be9175c9201f"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GridMoveLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""308d3acf-9f92-4e3c-b555-b556449952bd"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GridMoveRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""efeeea22-201a-4c4e-b148-1becdf6d60bf"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GridVerticalUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""64a01400-69fa-4c8f-9fea-e8a0f0521281"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GridVerticalDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -306,6 +426,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // UserActions
         m_UserActions = asset.FindActionMap("UserActions", throwIfNotFound: true);
         m_UserActions_Pause = m_UserActions.FindAction("Pause", throwIfNotFound: true);
+        m_UserActions_GridMoveUp = m_UserActions.FindAction("GridMoveUp", throwIfNotFound: true);
+        m_UserActions_GridMoveDown = m_UserActions.FindAction("GridMoveDown", throwIfNotFound: true);
+        m_UserActions_GridMoveLeft = m_UserActions.FindAction("GridMoveLeft", throwIfNotFound: true);
+        m_UserActions_GridMoveRight = m_UserActions.FindAction("GridMoveRight", throwIfNotFound: true);
+        m_UserActions_GridVerticalUp = m_UserActions.FindAction("GridVerticalUp", throwIfNotFound: true);
+        m_UserActions_GridVerticalDown = m_UserActions.FindAction("GridVerticalDown", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Press = m_Camera.FindAction("Press", throwIfNotFound: true);
@@ -502,6 +628,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UserActions;
     private List<IUserActionsActions> m_UserActionsActionsCallbackInterfaces = new List<IUserActionsActions>();
     private readonly InputAction m_UserActions_Pause;
+    private readonly InputAction m_UserActions_GridMoveUp;
+    private readonly InputAction m_UserActions_GridMoveDown;
+    private readonly InputAction m_UserActions_GridMoveLeft;
+    private readonly InputAction m_UserActions_GridMoveRight;
+    private readonly InputAction m_UserActions_GridVerticalUp;
+    private readonly InputAction m_UserActions_GridVerticalDown;
     /// <summary>
     /// Provides access to input actions defined in input action map "UserActions".
     /// </summary>
@@ -517,6 +649,30 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UserActions/Pause".
         /// </summary>
         public InputAction @Pause => m_Wrapper.m_UserActions_Pause;
+        /// <summary>
+        /// Provides access to the underlying input action "UserActions/GridMoveUp".
+        /// </summary>
+        public InputAction @GridMoveUp => m_Wrapper.m_UserActions_GridMoveUp;
+        /// <summary>
+        /// Provides access to the underlying input action "UserActions/GridMoveDown".
+        /// </summary>
+        public InputAction @GridMoveDown => m_Wrapper.m_UserActions_GridMoveDown;
+        /// <summary>
+        /// Provides access to the underlying input action "UserActions/GridMoveLeft".
+        /// </summary>
+        public InputAction @GridMoveLeft => m_Wrapper.m_UserActions_GridMoveLeft;
+        /// <summary>
+        /// Provides access to the underlying input action "UserActions/GridMoveRight".
+        /// </summary>
+        public InputAction @GridMoveRight => m_Wrapper.m_UserActions_GridMoveRight;
+        /// <summary>
+        /// Provides access to the underlying input action "UserActions/GridVerticalUp".
+        /// </summary>
+        public InputAction @GridVerticalUp => m_Wrapper.m_UserActions_GridVerticalUp;
+        /// <summary>
+        /// Provides access to the underlying input action "UserActions/GridVerticalDown".
+        /// </summary>
+        public InputAction @GridVerticalDown => m_Wrapper.m_UserActions_GridVerticalDown;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -546,6 +702,24 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @GridMoveUp.started += instance.OnGridMoveUp;
+            @GridMoveUp.performed += instance.OnGridMoveUp;
+            @GridMoveUp.canceled += instance.OnGridMoveUp;
+            @GridMoveDown.started += instance.OnGridMoveDown;
+            @GridMoveDown.performed += instance.OnGridMoveDown;
+            @GridMoveDown.canceled += instance.OnGridMoveDown;
+            @GridMoveLeft.started += instance.OnGridMoveLeft;
+            @GridMoveLeft.performed += instance.OnGridMoveLeft;
+            @GridMoveLeft.canceled += instance.OnGridMoveLeft;
+            @GridMoveRight.started += instance.OnGridMoveRight;
+            @GridMoveRight.performed += instance.OnGridMoveRight;
+            @GridMoveRight.canceled += instance.OnGridMoveRight;
+            @GridVerticalUp.started += instance.OnGridVerticalUp;
+            @GridVerticalUp.performed += instance.OnGridVerticalUp;
+            @GridVerticalUp.canceled += instance.OnGridVerticalUp;
+            @GridVerticalDown.started += instance.OnGridVerticalDown;
+            @GridVerticalDown.performed += instance.OnGridVerticalDown;
+            @GridVerticalDown.canceled += instance.OnGridVerticalDown;
         }
 
         /// <summary>
@@ -560,6 +734,24 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @GridMoveUp.started -= instance.OnGridMoveUp;
+            @GridMoveUp.performed -= instance.OnGridMoveUp;
+            @GridMoveUp.canceled -= instance.OnGridMoveUp;
+            @GridMoveDown.started -= instance.OnGridMoveDown;
+            @GridMoveDown.performed -= instance.OnGridMoveDown;
+            @GridMoveDown.canceled -= instance.OnGridMoveDown;
+            @GridMoveLeft.started -= instance.OnGridMoveLeft;
+            @GridMoveLeft.performed -= instance.OnGridMoveLeft;
+            @GridMoveLeft.canceled -= instance.OnGridMoveLeft;
+            @GridMoveRight.started -= instance.OnGridMoveRight;
+            @GridMoveRight.performed -= instance.OnGridMoveRight;
+            @GridMoveRight.canceled -= instance.OnGridMoveRight;
+            @GridVerticalUp.started -= instance.OnGridVerticalUp;
+            @GridVerticalUp.performed -= instance.OnGridVerticalUp;
+            @GridVerticalUp.canceled -= instance.OnGridVerticalUp;
+            @GridVerticalDown.started -= instance.OnGridVerticalDown;
+            @GridVerticalDown.performed -= instance.OnGridVerticalDown;
+            @GridVerticalDown.canceled -= instance.OnGridVerticalDown;
         }
 
         /// <summary>
@@ -758,6 +950,48 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPause(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GridMoveUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGridMoveUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GridMoveDown" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGridMoveDown(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GridMoveLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGridMoveLeft(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GridMoveRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGridMoveRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GridVerticalUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGridVerticalUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GridVerticalDown" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGridVerticalDown(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Camera" which allows adding and removing callbacks.
