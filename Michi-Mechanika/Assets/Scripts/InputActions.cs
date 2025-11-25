@@ -207,6 +207,24 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""43d21079-64e2-409c-89c1-74ad03b1d21c"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Alt"",
+                    ""type"": ""Button"",
+                    ""id"": ""2d9e943d-7c61-44b5-a524-48789a54e4b1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -253,6 +271,28 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Drag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""619c7e60-99a4-4dd6-be46-0009829e1b32"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8342c065-b6da-4a9e-8709-bc9325cb688f"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Alt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -270,6 +310,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Press = m_Camera.FindAction("Press", throwIfNotFound: true);
         m_Camera_Drag = m_Camera.FindAction("Drag", throwIfNotFound: true);
+        m_Camera_Scroll = m_Camera.FindAction("Scroll", throwIfNotFound: true);
+        m_Camera_Alt = m_Camera.FindAction("Alt", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -557,6 +599,8 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
     private readonly InputAction m_Camera_Press;
     private readonly InputAction m_Camera_Drag;
+    private readonly InputAction m_Camera_Scroll;
+    private readonly InputAction m_Camera_Alt;
     /// <summary>
     /// Provides access to input actions defined in input action map "Camera".
     /// </summary>
@@ -576,6 +620,14 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Camera/Drag".
         /// </summary>
         public InputAction @Drag => m_Wrapper.m_Camera_Drag;
+        /// <summary>
+        /// Provides access to the underlying input action "Camera/Scroll".
+        /// </summary>
+        public InputAction @Scroll => m_Wrapper.m_Camera_Scroll;
+        /// <summary>
+        /// Provides access to the underlying input action "Camera/Alt".
+        /// </summary>
+        public InputAction @Alt => m_Wrapper.m_Camera_Alt;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -608,6 +660,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Drag.started += instance.OnDrag;
             @Drag.performed += instance.OnDrag;
             @Drag.canceled += instance.OnDrag;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
+            @Alt.started += instance.OnAlt;
+            @Alt.performed += instance.OnAlt;
+            @Alt.canceled += instance.OnAlt;
         }
 
         /// <summary>
@@ -625,6 +683,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Drag.started -= instance.OnDrag;
             @Drag.performed -= instance.OnDrag;
             @Drag.canceled -= instance.OnDrag;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
+            @Alt.started -= instance.OnAlt;
+            @Alt.performed -= instance.OnAlt;
+            @Alt.canceled -= instance.OnAlt;
         }
 
         /// <summary>
@@ -716,5 +780,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDrag(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Scroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnScroll(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Alt" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAlt(InputAction.CallbackContext context);
     }
 }
