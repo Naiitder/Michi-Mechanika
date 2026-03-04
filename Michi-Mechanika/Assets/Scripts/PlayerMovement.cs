@@ -180,37 +180,9 @@ public class PlayerMovement : CharacterMovement
                 
                 string nextScenePath = SceneUtility.GetScenePathByBuildIndex(nextSceneIndex);
                 string nextSceneName = System.IO.Path.GetFileNameWithoutExtension(nextScenePath);
-
-                SaveNextLevelProgress(nextSceneName);
+                
                 if(LevelManager.instance != null)StartCoroutine(LevelManager.instance.LoadSceneFade(nextSceneName));
             }
-        }
-    }
-    
-    private void SaveNextLevelProgress(string sceneName)
-    {
-        try
-        {
-            string numbersPart = sceneName.Replace("Level", ""); 
-            
-            string[] parts = numbersPart.Split('-');
-
-            if(parts.Length == 2)
-            {
-                int chapter = int.Parse(parts[0]);
-                int level = int.Parse(parts[1]);
-                
-                if (SQLiteDB.instance != null)
-                    SQLiteDB.instance.SaveLevelCompleted(chapter, level);
-            }
-            else
-            {
-                Debug.LogWarning("Nombre de escena no tiene el formato esperado: " + sceneName);
-            }
-        }
-        catch(Exception e)
-        {
-            Debug.LogError("Error al parsear el nivel de la escena: " + e.Message);
         }
     }
     

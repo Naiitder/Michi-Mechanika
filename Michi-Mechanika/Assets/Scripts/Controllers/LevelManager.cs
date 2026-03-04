@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,7 +43,7 @@ public class LevelManager : MonoBehaviour
         if (isLoading) return; 
         isLoading = true;
         
-        
+        SaveNextLevelProgress(sceneName);
         if(GameController.instance.isGamePaused) GameController.instance.ResumeGame();
         
         AsyncOperation scene = SceneManager.LoadSceneAsync(sceneName);
@@ -105,5 +106,32 @@ public class LevelManager : MonoBehaviour
         }
 
         fadeImage.color = new Color(color.r, color.g, color.b, endAlpha);
+    }
+    
+    private void SaveNextLevelProgress(string sceneName)
+    {
+        try
+        {
+            string numbersPart = sceneName.Replace("Level", ""); 
+            
+            string[] parts = numbersPart.Split('-');
+
+            if(parts.Length == 2)
+            {
+                int chapter = int.Parse(parts[0]);
+                int level = int.Parse(parts[1]);
+                
+                if (SQLiteDB.instance != null)
+                    SQLiteDB.instance.SaveLevelCompleted(chapter, level);
+            }
+            else
+            {
+                Debug.LogWarning("Nombre de escena no tiene el formato esperado: " + sceneName);
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.LogError("Error al parsear el nivel de la escena: " + e.Message);
+        }
     }
 }
