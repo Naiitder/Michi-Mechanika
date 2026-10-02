@@ -1,7 +1,7 @@
-/Michi-Mechanika/Assets/Scripts/** linguist-language=C#
-/Michi-Mechanika/Assets/TextMesh** linguist-language=C#
-/Michi-Mechanika/Packages/** linguist-vendored
-/Michi-Mechanika/Assets/Plugins/** linguist-vendored
-/Michi-Mechanika/Assets/**/*.shader linguist-vendored
-/Michi-Mechanika/Assets/**/*.compute linguist-vendored
-/Michi-Mechanika/Assets/**/*.cginc linguist-vendored
+/Assets/Scripts/** linguist-language=C#
+/Assets/TextMesh** linguist-language=C#
+/Packages/** linguist-vendored
+/Assets/Plugins/** linguist-vendored
+/Assets/**/*.shader linguist-vendored
+/Assets/**/*.compute linguist-vendored
+/Assets/**/*.cginc linguist-vendored
