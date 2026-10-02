@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 public class LevelManager : MonoBehaviour
@@ -108,30 +109,16 @@ public class LevelManager : MonoBehaviour
         fadeImage.color = new Color(color.r, color.g, color.b, endAlpha);
     }
     
+    // Only story levels ("Level<chapter>-<level>") record progress; menus, LevelCreator, Credits... are skipped.
     private void SaveNextLevelProgress(string sceneName)
     {
-        try
-        {
-            string numbersPart = sceneName.Replace("Level", ""); 
-            
-            string[] parts = numbersPart.Split('-');
+        Match match = Regex.Match(sceneName, @"^Level(\d+)-(\d+)$");
+        if (!match.Success) return;
 
-            if(parts.Length == 2)
-            {
-                int chapter = int.Parse(parts[0]);
-                int level = int.Parse(parts[1]);
-                
-                if (SQLiteDB.instance != null)
-                    SQLiteDB.instance.SaveLevelCompleted(chapter, level);
-            }
-            else
-            {
-                Debug.LogWarning("Nombre de escena no tiene el formato esperado: " + sceneName);
-            }
-        }
-        catch(Exception e)
-        {
-            Debug.LogError("Error al parsear el nivel de la escena: " + e.Message);
-        }
+        int chapter = int.Parse(match.Groups[1].Value);
+        int level = int.Parse(match.Groups[2].Value);
+
+        if (SQLiteDB.instance != null)
+            SQLiteDB.instance.SaveLevelCompleted(chapter, level);
     }
 }

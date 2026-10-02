@@ -1,0 +1,134 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="MainMenu.uss" />
+    <ui:VisualElement name="root" class="mm-root" picking-mode="Ignore">
+
+        <!-- Main panel -->
+        <ui:VisualElement name="panel" class="mm-panel">
+            <ui:VisualElement class="mm-title">
+                <ui:Label text="Michi-" class="font-display" />
+                <ui:Label text="Mechanika" class="font-display mm-title__accent" />
+            </ui:VisualElement>
+
+            <ui:Button name="play-button" class="mm-button mm-play">
+                <ui:VisualElement class="icon mm-play__icon" picking-mode="Ignore" />
+                <ui:VisualElement picking-mode="Ignore">
+                    <ui:Label name="play-label" text="Play" class="font-display mm-play__label" />
+                    <ui:Label name="play-sub" text="Start in The Factory" class="font-semibold mm-play__sub" />
+                </ui:VisualElement>
+            </ui:Button>
+
+            <ui:Button name="levels-button" class="mm-button mm-item">
+                <ui:VisualElement class="mm-item__badge" picking-mode="Ignore">
+                    <ui:VisualElement class="icon mm-item__img mm-item__img--door" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:Label text="Select Level" class="font-display mm-item__label" />
+            </ui:Button>
+
+            <ui:Button name="creator-button" class="mm-button mm-item">
+                <ui:VisualElement class="mm-item__badge" picking-mode="Ignore">
+                    <ui:VisualElement class="icon icon--hammer" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:Label text="Level Creator" class="font-display mm-item__label" />
+            </ui:Button>
+
+            <ui:Button name="online-button" class="mm-button mm-item">
+                <ui:VisualElement class="mm-item__badge mm-item__badge--online" picking-mode="Ignore">
+                    <ui:VisualElement class="icon icon--globe" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:Label text="Online Levels" class="font-display mm-item__label" />
+            </ui:Button>
+
+            <ui:Button name="options-button" class="mm-button mm-item">
+                <ui:VisualElement class="mm-item__badge" picking-mode="Ignore">
+                    <ui:VisualElement class="icon mm-item__img mm-item__img--options" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:Label text="Options" class="font-display mm-item__label" />
+            </ui:Button>
+
+            <ui:Button name="exit-button" class="mm-button mm-item">
+                <ui:VisualElement class="mm-item__badge" picking-mode="Ignore">
+                    <ui:VisualElement class="icon icon--exit" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:Label text="Exit" class="font-display mm-item__label" />
+            </ui:Button>
+        </ui:VisualElement>
+
+        <!-- Select Level modal -->
+        <ui:VisualElement name="levels-modal" class="modal levels modal--hidden">
+            <ui:Label text="Select Level" class="font-display levels__title" />
+            <ui:Button name="levels-close" class="mm-button round-button levels__close">
+                <ui:VisualElement class="icon icon--close" picking-mode="Ignore" />
+            </ui:Button>
+            <ui:Button name="chapter-prev" class="mm-button round-button levels__nav levels__nav--prev">
+                <ui:VisualElement class="icon icon--chevron-left" picking-mode="Ignore" />
+            </ui:Button>
+            <ui:Button name="chapter-next" class="mm-button round-button levels__nav levels__nav--next">
+                <ui:VisualElement class="icon icon--chevron-right" picking-mode="Ignore" />
+            </ui:Button>
+
+            <ui:VisualElement name="book" class="book pop">
+                <ui:VisualElement name="page-left" class="page page--left">
+                    <ui:Label name="chapter-num" text="1" class="font-display chapter__num" />
+                    <ui:VisualElement class="chapter__photo">
+                        <ui:VisualElement name="chapter-art" class="chapter__art">
+                            <ui:VisualElement name="chapter-lock" class="icon icon--lock" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Label name="chapter-kicker" text="CHAPTER 1" class="font-bold chapter__kicker" />
+                    <ui:Label name="chapter-name" text="The Factory" class="font-display chapter__name" />
+                    <ui:VisualElement name="chapter-cogs" class="chapter__cogs" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="page-right" class="page page--right">
+                    <ui:Label name="map-title" text="The Factory" class="font-display map__title" />
+                    <ui:VisualElement name="map" class="map" />
+                    <ui:VisualElement name="map-locked" class="map-locked">
+                        <ui:VisualElement class="icon icon--lock" />
+                        <ui:Label text="Finish the previous chapter to open this map." class="font-semibold" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="map-footer" class="map-footer">
+                        <ui:VisualElement>
+                            <ui:Label name="selected-code" text="Level 1-1" class="font-display map-footer__code" />
+                            <ui:Label name="selected-status" text="Next up" class="font-semibold map-footer__status" />
+                        </ui:VisualElement>
+                        <ui:Button name="play-selected" class="mm-button pill-primary map-footer__play">
+                            <ui:VisualElement class="icon icon--play" picking-mode="Ignore" />
+                            <ui:Label text="Play" class="font-display" />
+                        </ui:Button>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="book__spine" picking-mode="Ignore" />
+                <ui:VisualElement class="book__ribbon" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Online Levels modal -->
+        <ui:VisualElement name="online-modal" class="modal modal--hidden">
+            <ui:VisualElement name="online-card" class="modal-card online pop">
+                <ui:Label text="Online Levels" class="font-display modal-title" />
+                <ui:VisualElement class="search">
+                    <ui:VisualElement class="icon icon--search" />
+                    <ui:TextField name="online-search" class="search__field" />
+                </ui:VisualElement>
+                <ui:ScrollView name="online-list" class="online__list" horizontal-scroller-visibility="Hidden" />
+                <ui:Button name="online-close" class="mm-button round-button online__close">
+                    <ui:VisualElement class="icon icon--close" picking-mode="Ignore" />
+                </ui:Button>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Exit modal -->
+        <ui:VisualElement name="exit-modal" class="modal modal--hidden">
+            <ui:VisualElement name="exit-card" class="modal-card exit pop">
+                <ui:Label text="Leave the factory?" class="font-display modal-title" />
+                <ui:Label text="Your progress is saved." class="exit__body" />
+                <ui:VisualElement class="exit__actions">
+                    <ui:Button name="exit-stay" text="Stay" class="mm-button font-bold exit__button exit__button--stay" />
+                    <ui:Button name="exit-confirm" text="Exit game" class="mm-button font-bold pill-primary exit__button exit__button--leave" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

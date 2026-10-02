@@ -46,6 +46,11 @@ public class SQLiteDB : MonoBehaviour
     
     public void SaveLevelCompleted(int chapter, int level)
     {
+        // Replaying an earlier level from Select Level must not move progress backwards.
+        if (chapter < playerProgress.chapter || (chapter == playerProgress.chapter && level <= playerProgress.level))
+            return;
+        playerProgress = new PlayerProgress(chapter, level);
+
         using (var connection = new SqliteConnection(dbName))
         {
             connection.Open();
