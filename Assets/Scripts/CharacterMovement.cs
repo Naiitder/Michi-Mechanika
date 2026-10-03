@@ -27,7 +27,7 @@ public abstract class CharacterMovement : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         IdleHash = Animator.StringToHash("idle");
-        WalkHash = Animator.StringToHash("walk");
+        WalkHash = Animator.StringToHash("willWalk");
         ClimbHash = Animator.StringToHash("climb");
         ClimbUpHash = Animator.StringToHash("climbUp");
         ClimbDownHash = Animator.StringToHash("climbDown");
