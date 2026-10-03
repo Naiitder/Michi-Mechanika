@@ -13,36 +13,41 @@ public abstract class CharacterMovement : MonoBehaviour
 
     [Header("Animation")]
     protected Animator anim;
-    [HideInInspector] public int IdleHash;
     [HideInInspector] public int WalkHash;
-    [HideInInspector] public int ClimbHash;
-    [HideInInspector] public int ClimbUpHash;
-    [HideInInspector] public int ClimbDownHash;
-    [HideInInspector] public int ClimbLeftHash;
-    [HideInInspector] public int ClimbRightHash;
     [HideInInspector] public int DeadHash;
     [HideInInspector] public int AttackHash;
     
     public virtual void Initialize()
     {
         anim = GetComponent<Animator>();
-        IdleHash = Animator.StringToHash("idle");
         WalkHash = Animator.StringToHash("walk");
-        ClimbHash = Animator.StringToHash("climb");
-        ClimbUpHash = Animator.StringToHash("climbUp");
-        ClimbDownHash = Animator.StringToHash("climbDown");
-        ClimbLeftHash = Animator.StringToHash("climbLeft");
-        ClimbRightHash = Animator.StringToHash("climbRight");
         DeadHash = Animator.StringToHash("isDead");
         AttackHash = Animator.StringToHash("attack");
         
         transform = GetComponent<Transform>();
     }
     
-    // Enciende o apaga la animacion de andar. Cada personaje puede decidir como hacerlo.
+    protected enum MoveAnim
+    {
+        Walk,
+        FloorToClimbUp,
+        FloorToClimbDown,
+        ClimbToFloorUp,
+        ClimbToFloorDown,
+        ClimbUp,
+        ClimbDown,
+        ClimbLeft,
+        ClimbRight
+    }
+    
     protected virtual void SetWalking(bool walking)
     {
         if (anim != null) anim.SetBool(WalkHash, walking);
+    }
+    
+    
+    protected virtual void PlayMove(MoveAnim move)
+    {
     }
 
     public IEnumerator MoveSmoothlyTo(Tile targetTile)
@@ -58,6 +63,7 @@ public abstract class CharacterMovement : MonoBehaviour
     {
         isMoving = true;
         SetWalking(true);
+        PlayMove(MoveAnim.Walk);
         
         Vector3 targetPosition = targetTile.position;
         
@@ -95,6 +101,7 @@ public abstract class CharacterMovement : MonoBehaviour
         SetWalking(true);
         
         Vector3 targetPosition = targetTile.position;
+        PlayMove(currentTile.position.y < targetPosition.y ? MoveAnim.FloorToClimbUp : MoveAnim.FloorToClimbDown);
         
         Vector3 direction = (targetPosition - transform.position).normalized;
         direction.y = 0f;
@@ -122,7 +129,6 @@ public abstract class CharacterMovement : MonoBehaviour
         if (currentTile.position.y < targetPosition.y)
         {
            
-            if(anim != null) anim.SetBool(ClimbUpHash, true);
             
             while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
             {
@@ -139,14 +145,11 @@ public abstract class CharacterMovement : MonoBehaviour
                 );
                 yield return null;
             }
-            if(anim != null) anim.SetBool(ClimbUpHash, false);
-            if(anim != null) anim.SetBool(ClimbHash, true);
             transform.position = targetPosition;
             
         }
         else
         {
-            if(anim != null) anim.SetBool(ClimbDownHash, true);
 
             targetRotation = transform.rotation * Quaternion.Euler(0, 180f, 0);
             
@@ -165,8 +168,6 @@ public abstract class CharacterMovement : MonoBehaviour
                 );
                 yield return null;
             }
-            if(anim != null) anim.SetBool(ClimbDownHash, false);
-            if(anim != null) anim.SetBool(ClimbHash, true);
             transform.position = targetPosition;
             
         }
@@ -180,8 +181,7 @@ public abstract class CharacterMovement : MonoBehaviour
         
         Vector3 targetPosition = targetTile.position;
         
-        if(currentTile.position.y < targetPosition.y && anim != null)anim.SetBool(ClimbUpHash, true);
-        else if(anim != null) anim.SetBool(ClimbDownHash, true);
+        PlayMove(currentTile.position.y < targetPosition.y ? MoveAnim.ClimbToFloorUp : MoveAnim.ClimbToFloorDown);
         
         Vector3 direction = (targetPosition - transform.position).normalized;
         direction.y = 0f;
@@ -205,8 +205,6 @@ public abstract class CharacterMovement : MonoBehaviour
             yield return null;
         }
         
-        if(anim != null) anim.SetBool(ClimbUpHash, false); 
-        if(anim != null) anim.SetBool(ClimbDownHash, false);
         
         SetWalking(true);
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
@@ -241,9 +239,10 @@ public abstract class CharacterMovement : MonoBehaviour
         
         if (currentTile.position.y == targetPosition.y)
         {
-            if (currentTile.position.x > targetPosition.x)
+            // Izquierda o derecha vistas desde el propio personaje, que en la pared mira hacia ella.
+            if (Vector3.Dot(targetPosition - currentTile.position, transform.right) < 0f)
             {
-                if(anim != null) anim.SetBool(ClimbLeftHash, true);
+                PlayMove(MoveAnim.ClimbLeft);
         
                 Vector3 direction = (targetPosition - transform.position).normalized;
                 direction.y = 0f;
@@ -260,11 +259,10 @@ public abstract class CharacterMovement : MonoBehaviour
 
                 transform.position = targetPosition;
                 
-                if(anim != null) anim.SetBool(ClimbLeftHash, false);
             }
             else
             {
-                if(anim != null) anim.SetBool(ClimbRightHash, true);
+                PlayMove(MoveAnim.ClimbRight);
         
                 Vector3 direction = (targetPosition - transform.position).normalized;
                 direction.y = 0f;
@@ -281,7 +279,6 @@ public abstract class CharacterMovement : MonoBehaviour
 
                 transform.position = targetPosition;
                 
-                if(anim != null) anim.SetBool(ClimbRightHash, false);
             }
         }
         else if (currentTile.position.y < targetPosition.y)
@@ -289,7 +286,7 @@ public abstract class CharacterMovement : MonoBehaviour
             Vector3 direction = (targetPosition - transform.position).normalized;
             direction.y = 0f;
             
-            if(anim != null) anim.SetBool(ClimbUpHash, true);
+            PlayMove(MoveAnim.ClimbUp);
             
             while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
             {
@@ -300,13 +297,12 @@ public abstract class CharacterMovement : MonoBehaviour
                 );
                 yield return null;
             }
-            if(anim != null) anim.SetBool(ClimbUpHash, false);
             transform.position = targetPosition;
             
         }
         else
         {
-            if(anim != null) anim.SetBool(ClimbDownHash, true);
+            PlayMove(MoveAnim.ClimbDown);
             
             Vector3 direction = (targetPosition - transform.position).normalized;
             direction.y = 0f;
@@ -322,7 +318,6 @@ public abstract class CharacterMovement : MonoBehaviour
             }
           
             transform.position = targetPosition;
-            if(anim != null) anim.SetBool(ClimbDownHash, false);
             
         }
 

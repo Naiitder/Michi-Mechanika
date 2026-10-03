@@ -7,8 +7,22 @@ public class PlayerMovement : CharacterMovement
 {
     private Vector2 swipeStart;
     private bool isSwiping;
+    
+    private static readonly int IdleState = Animator.StringToHash("Idle");
+    private static readonly int JumpLState = Animator.StringToHash("Jump_L");
+    private static readonly int JumpRState = Animator.StringToHash("Jump_R");
+    private static readonly int FloorToClimbUpState = Animator.StringToHash("Floor_To_ClimbUp");
+    private static readonly int FloorToClimbDownState = Animator.StringToHash("Floor_To_ClimbDown");
+    private static readonly int ClimbToFloorUpState = Animator.StringToHash("Climb_To_Floor_Up");
+    private static readonly int ClimbToFloorDownState = Animator.StringToHash("Climb_To_Floor_Down");
+    private static readonly int ClimbUpState = Animator.StringToHash("Climb_Up");
+    private static readonly int ClimbDownState = Animator.StringToHash("Climb_Down");
+    private static readonly int ClimbLeftState = Animator.StringToHash("Climb_Left");
+    private static readonly int ClimbRightState = Animator.StringToHash("Climb_Right");
 
-    private static readonly int WillWalkHash = Animator.StringToHash("willWalk");
+    private const float AnimBlendTime = 0.1f;  
+    private const float HopInterval = 0.32f;    
+    private bool leftFootNext = true;
 
     [Header ("Interaction")]
     [SerializeField] private LayerMask interactiveLayer;
@@ -25,11 +39,35 @@ public class PlayerMovement : CharacterMovement
         HandleBufferedInput();
     }
 
-    // El gato pide un salto por casilla. ResetWalking apaga willWalk al entrar en el salto,
-    // asi que aqui nunca se pone a false: si se apagara al llegar, se perderia el salto encadenado.
+
     protected override void SetWalking(bool walking)
     {
-        if (walking && anim != null) anim.SetBool(WillWalkHash, true);
+    }
+    
+    protected override void PlayMove(MoveAnim move)
+    {
+        if (anim == null) return;
+
+        int state;
+        switch (move)
+        {
+            case MoveAnim.FloorToClimbUp:   state = FloorToClimbUpState; break;
+            case MoveAnim.FloorToClimbDown: state = FloorToClimbDownState; break;
+            case MoveAnim.ClimbToFloorUp:   state = ClimbToFloorUpState; break;
+            case MoveAnim.ClimbToFloorDown: state = ClimbToFloorDownState; break;
+            case MoveAnim.ClimbUp:          state = ClimbUpState; break;
+            case MoveAnim.ClimbDown:        state = ClimbDownState; break;
+            case MoveAnim.ClimbLeft:        state = ClimbLeftState; break;
+            case MoveAnim.ClimbRight:       state = ClimbRightState; break;
+            default:
+                if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).shortNameHash == IdleState)
+                    leftFootNext = true;
+                state = leftFootNext ? JumpLState : JumpRState;
+                leftFootNext = !leftFootNext;
+                break;
+        }
+
+        anim.CrossFadeInFixedTime(state, AnimBlendTime, 0, 0f);
     }
 
     public void Die()
@@ -197,13 +235,17 @@ public class PlayerMovement : CharacterMovement
     
     private IEnumerator AdvanceTillTheEnd()
     {
-        SetWalking(true);
+        float nextHop = 0f;
+        float elapsed = 0f;
         Vector3 targetPosition = transform.position + transform.forward*8;
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
         {
-            // Pide el siguiente salto cuando el actual esta acabando, para ir alternando pies.
-            AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
-            if (!anim.IsInTransition(0) && state.normalizedTime >= 0.7f) SetWalking(true);
+            if (elapsed >= nextHop)
+            {
+                PlayMove(MoveAnim.Walk);
+                nextHop += HopInterval;
+            }
+            elapsed += Time.deltaTime;
 
             transform.position = Vector3.MoveTowards(
                 transform.position,
@@ -212,6 +254,5 @@ public class PlayerMovement : CharacterMovement
             );
             yield return null;
         }
-        anim.SetBool(WillWalkHash, false);
     }
 }
