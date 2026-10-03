@@ -8,6 +8,8 @@ public class PlayerMovement : CharacterMovement
     private Vector2 swipeStart;
     private bool isSwiping;
 
+    private static readonly int WillWalkHash = Animator.StringToHash("willWalk");
+
     [Header ("Interaction")]
     [SerializeField] private LayerMask interactiveLayer;
     
@@ -21,6 +23,13 @@ public class PlayerMovement : CharacterMovement
     {
         if (GameFlow.instance == null || !GameFlow.instance.canInteract || isMoving) return;
         HandleBufferedInput();
+    }
+
+    // El gato pide un salto por casilla. ResetWalking apaga willWalk al entrar en el salto,
+    // asi que aqui nunca se pone a false: si se apagara al llegar, se perderia el salto encadenado.
+    protected override void SetWalking(bool walking)
+    {
+        if (walking && anim != null) anim.SetBool(WillWalkHash, true);
     }
 
     public void Die()
@@ -188,10 +197,14 @@ public class PlayerMovement : CharacterMovement
     
     private IEnumerator AdvanceTillTheEnd()
     {
-        anim.SetBool(WalkHash,true);
+        SetWalking(true);
         Vector3 targetPosition = transform.position + transform.forward*8;
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
         {
+            // Pide el siguiente salto cuando el actual esta acabando, para ir alternando pies.
+            AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
+            if (!anim.IsInTransition(0) && state.normalizedTime >= 0.7f) SetWalking(true);
+
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 targetPosition,
@@ -199,6 +212,6 @@ public class PlayerMovement : CharacterMovement
             );
             yield return null;
         }
-        anim.SetBool(WalkHash,false);
+        anim.SetBool(WillWalkHash, false);
     }
 }

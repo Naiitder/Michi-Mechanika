@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     [Header("Speed")]
     [SerializeField] private float normalTimeScale = 1f;
     [SerializeField] private float fastForwardTimeScale = 2f;
+    private bool fastForward;
     
     private void Awake()
     {
@@ -78,8 +79,14 @@ public class GameController : MonoBehaviour
             return;
 
         int pending = InputController.instance != null ? InputController.instance.BufferCount : 0;
+        bool levelEnded = GameFlow.instance != null && GameFlow.instance.levelEnded;
+        bool busy = GameFlow.instance != null && !GameFlow.instance.canInteract;
 
-        Time.timeScale = pending > 0 ? fastForwardTimeScale : normalTimeScale;
+        if (levelEnded) fastForward = false;
+        else if (pending > 0) fastForward = true;
+        else if(!busy)  fastForward = false;
+
+        Time.timeScale = fastForward ? fastForwardTimeScale : normalTimeScale;
     }
 
 }

@@ -11362,7 +11362,7 @@ MonoBehaviour:
   isLevelBuilding: 0
   pauseCanvas: {fileID: 70881156}
   normalTimeScale: 1
-  fastForwardTimeScale: 2
+  fastForwardTimeScale: 1.5
 --- !u!114 &1553417779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13836,6 +13836,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 185754528379898389, guid: e26c2be61f15b294cb3b85ca215ca39e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408197126953317018, guid: e26c2be61f15b294cb3b85ca215ca39e, type: 3}
+      propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7428109264425074191, guid: e26c2be61f15b294cb3b85ca215ca39e, type: 3}
