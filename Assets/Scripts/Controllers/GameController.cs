@@ -22,8 +22,7 @@ public class GameController : MonoBehaviour
         if(instance == null) instance = this;
         else Destroy(this);
         
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 1;
+        GameSettings.ApplyFrameRate();
         
         Texture2D cursorTexture = Resources.Load<Texture2D>("Steampunk_UI_icon_02");
         Vector2 hotspot = Vector2.zero;

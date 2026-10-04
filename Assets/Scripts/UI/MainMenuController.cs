@@ -34,6 +34,7 @@ public class MainMenuController : MonoBehaviour
 
     private const string Hidden = "modal--hidden";
     private const string Entering = "modal--entering";
+    private const string SelectClosed = "select__list--hidden";
     private const int FlipMs = 350;
     private const int MarkerStepMs = 340;
 
@@ -41,7 +42,7 @@ public class MainMenuController : MonoBehaviour
     private static readonly string[] PillClasses =
     {
         "pill-primary", "mm-play", "mm-item", "round-button", "map-footer", "map-locked",
-        "search", "online-row", "online-row__code", "exit__button",
+        "search", "online-row", "online-row__code", "exit__button", "select",
     };
 
     [SerializeField] private string levelCreatorScene = "LevelCreator";
@@ -57,7 +58,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private List<OnlineLevel> onlineLevels = new List<OnlineLevel>();
 
     private VisualElement root;
-    private VisualElement levelsModal, onlineModal, exitModal;
+    private VisualElement levelsModal, onlineModal, optionsModal, exitModal;
     private VisualElement book, pageLeft, pageRight, chapterArt, chapterLock, chapterCogs, map, mapLocked, mapFooter, marker;
     private Label chapterNum, chapterKicker, chapterName, mapTitle, selectedCode, selectedStatus;
     private Button prevButton, nextButton;
@@ -65,6 +66,9 @@ public class MainMenuController : MonoBehaviour
     private readonly List<Button> mapNodes = new List<Button>();
     private TextField onlineSearch;
     private ScrollView onlineList;
+    private readonly List<Button> fpsOptions = new List<Button>();
+    private VisualElement fpsList;
+    private Label fpsValue;
 
     // Chapter being navigated to, and chapter whose map is on the right page (they differ mid-flip).
     private int chapter;
@@ -91,6 +95,7 @@ public class MainMenuController : MonoBehaviour
         BindMainPanel();
         BindLevelsModal();
         BindOnlineModal();
+        BindOptionsModal();
         BindExitModal();
 
         root.schedule.Execute(Animate).Every(16);
@@ -125,6 +130,7 @@ public class MainMenuController : MonoBehaviour
         root.Q<Button>("levels-button").clicked += OpenLevels;
         root.Q<Button>("creator-button").clicked += () => LoadScene(levelCreatorScene);
         root.Q<Button>("online-button").clicked += OpenOnline;
+        root.Q<Button>("options-button").clicked += OpenOptions;
         root.Q<Button>("exit-button").clicked += () => Open(exitModal);
     }
 
@@ -141,8 +147,9 @@ public class MainMenuController : MonoBehaviour
 
     private void CloseModals()
     {
-        foreach (VisualElement modal in new[] { levelsModal, onlineModal, exitModal })
+        foreach (VisualElement modal in new[] { levelsModal, onlineModal, optionsModal, exitModal })
             modal.AddToClassList(Hidden);
+        fpsList?.AddToClassList(SelectClosed);
     }
 
     private static bool IsOpen(VisualElement modal) => !modal.ClassListContains(Hidden);
@@ -511,6 +518,67 @@ public class MainMenuController : MonoBehaviour
         row.Add(play);
         RoundPills(row);
         return row;
+    }
+
+    // ---------- options ----------
+
+    private void BindOptionsModal()
+    {
+        optionsModal = root.Q("options-modal");
+        fpsList = root.Q("fps-list");
+        VisualElement fpsItems = root.Q("fps-options");
+        fpsValue = root.Q<Label>("fps-value");
+        Button select = root.Q<Button>("fps-select");
+
+        // The select: a button showing the current value that unfolds the list of choices below it.
+        fpsOptions.Clear();
+        fpsItems.Clear();
+        foreach (int fps in GameSettings.FrameRateOptions)
+        {
+            int value = fps;
+            var option = new Button { text = FpsLabel(value) };
+            option.RemoveFromClassList(Button.ussClassName);
+            option.AddToClassList("mm-button");
+            option.AddToClassList("font-semibold");
+            option.AddToClassList("select__option");
+            option.clicked += () =>
+            {
+                GameSettings.MaxFps = value;
+                RefreshFpsSelect();
+                fpsList.AddToClassList(SelectClosed);
+            };
+            fpsOptions.Add(option);
+            fpsItems.Add(option);
+        }
+
+        select.clicked += () => fpsList.ToggleInClassList(SelectClosed);
+
+        // Clicking anywhere else in the window folds the list back.
+        optionsModal.RegisterCallback<ClickEvent>(e =>
+        {
+            var target = e.target as VisualElement;
+            if (target == select || fpsList.Contains(target)) return;
+            fpsList.AddToClassList(SelectClosed);
+        });
+
+        CloseOnBackdropClick(optionsModal);
+        root.Q<Button>("options-close").clicked += CloseModals;
+    }
+
+    private void OpenOptions()
+    {
+        RefreshFpsSelect();
+        Open(optionsModal);
+    }
+
+    private static string FpsLabel(int fps) => fps == GameSettings.Unlimited ? "Unlimited" : fps.ToString();
+
+    private void RefreshFpsSelect()
+    {
+        int current = GameSettings.MaxFps;
+        fpsValue.text = FpsLabel(current);
+        for (int k = 0; k < fpsOptions.Count; k++)
+            fpsOptions[k].EnableInClassList("select__option--selected", GameSettings.FrameRateOptions[k] == current);
     }
 
     // ---------- exit ----------

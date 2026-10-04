@@ -121,6 +121,27 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
+        <!-- Options modal -->
+        <ui:VisualElement name="options-modal" class="modal modal--hidden">
+            <ui:VisualElement name="options-card" class="modal-card options pop">
+                <ui:Label text="Options" class="font-display modal-title" />
+                <ui:Label text="Max FPS" class="font-display options__label" />
+                <ui:Label text="Limits how many frames per second the game renders." class="font-semibold options__hint" />
+                <ui:VisualElement class="options__field">
+                    <ui:Button name="fps-select" class="mm-button select">
+                        <ui:Label name="fps-value" text="60" class="font-bold select__value" picking-mode="Ignore" />
+                        <ui:VisualElement class="icon icon--chevron-right select__arrow" picking-mode="Ignore" />
+                    </ui:Button>
+                    <ui:VisualElement name="fps-list" class="select__list select__list--hidden">
+                        <ui:ScrollView name="fps-options" class="select__scroll" horizontal-scroller-visibility="Hidden" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Button name="options-close" class="mm-button round-button options__close">
+                    <ui:VisualElement class="icon icon--close" picking-mode="Ignore" />
+                </ui:Button>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
         <!-- Exit modal -->
         <ui:VisualElement name="exit-modal" class="modal modal--hidden">
             <ui:VisualElement name="exit-card" class="modal-card exit pop">
