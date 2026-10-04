@@ -3236,7 +3236,7 @@ MonoBehaviour:
   interactiveLayer:
     serializedVersion: 2
     m_Bits: 192
-  debugAlwaysAttack: 1
+  debugAlwaysAttack: 0
 --- !u!114 &638876557552377319
 MonoBehaviour:
   m_ObjectHideFlags: 0

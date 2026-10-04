@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,11 +27,15 @@ public class PlayerMovement : CharacterMovement
     private static readonly int JumpRSheatheState = Animator.StringToHash("Jump_R_Sheathe");
     private bool attackNext;
 
-    // Los clips de salto (Jump_L/R, sus ataques y sheathe) duran 1 s. El parámetro hopSpeed del
-    // Animator los acelera para que duren exactamente lo que tarda el personaje en llegar a la casilla.
+    // El parámetro hopSpeed del Animator ajusta la velocidad de los clips de salto (Jump_L/R, sus
+    // ataques y sheathe) para que duren exactamente lo que tarda el personaje en llegar a la casilla.
+    // No todos los clips duran lo mismo (Jump_L/R duran 0,4 s y los de ataque 1 s), así que la
+    // duración real de cada estado se lee del Animator y se recuerda aquí.
     private static readonly int HopSpeedParam = Animator.StringToHash("hopSpeed");
-    private const float HopClipLength = 1f;
+    private const float FallbackHopClipLength = 1f;
     private const float DefaultHopSpeed = 0.9f;
+    private readonly Dictionary<int, float> hopClipLengths = new Dictionary<int, float>();
+    private Coroutine hopSpeedRoutine;
     private float nextHopDistance;
 
     private const float AnimBlendTime = 0.1f;  
@@ -47,7 +52,7 @@ public class PlayerMovement : CharacterMovement
 
     [Header ("Debug")]
     [Tooltip("Si está activo, todos los saltos por el suelo usan la animación de ataque aunque no haya enemigo.")]
-    [SerializeField] private bool debugAlwaysAttack = true;
+    [SerializeField] private bool debugAlwaysAttack = false;
     
     public override void Initialize()
     {
@@ -77,6 +82,7 @@ public class PlayerMovement : CharacterMovement
 
         int state;
         bool floorHop = false;
+        float hopTravelTime = 0f;
         switch (move)
         {
             case MoveAnim.FloorToClimbUp:   state = FloorToClimbUpState; break;
@@ -89,11 +95,9 @@ public class PlayerMovement : CharacterMovement
             case MoveAnim.ClimbRight:       state = ClimbRightState; break;
             default:
                 floorHop = true;
-                float hopSpeed = DefaultHopSpeed;
                 if (nextHopDistance > 0.01f && movementSpeed > 0f)
-                    hopSpeed = HopClipLength / (nextHopDistance / movementSpeed);
+                    hopTravelTime = nextHopDistance / movementSpeed;
                 nextHopDistance = 0f;
-                anim.SetFloat(HopSpeedParam, hopSpeed);
                 bool attacking = attackNext || debugAlwaysAttack;
                 if (attackNext)
                 {
@@ -123,10 +127,57 @@ public class PlayerMovement : CharacterMovement
 
         // Un CrossFade lanzado en mitad de otra transición no es fiable (puede ignorarse o dejar
         // el estado colgado), así que en ese caso se entra al estado directamente.
+        if (floorHop)
+        {
+            if (hopSpeedRoutine != null) StopCoroutine(hopSpeedRoutine);
+            hopSpeedRoutine = null;
+
+            if (hopTravelTime > 0f)
+            {
+                // Con la duración que ya conocemos de este estado; si aún no se conoce, se corrige
+                // en cuanto el Animator entra en él (ver SyncHopSpeedToClip).
+                float clipLength = hopClipLengths.TryGetValue(state, out float known) ? known : FallbackHopClipLength;
+                anim.SetFloat(HopSpeedParam, clipLength / hopTravelTime);
+                hopSpeedRoutine = StartCoroutine(SyncHopSpeedToClip(state, hopTravelTime));
+            }
+            else
+            {
+                anim.SetFloat(HopSpeedParam, DefaultHopSpeed);
+            }
+        }
+
         if (floorHop && anim.IsInTransition(0))
             anim.Play(state, 0, 0f);
         else
             anim.CrossFadeInFixedTime(state, AnimBlendTime, 0, 0f);
+    }
+
+    // Lee la duración real del clip del estado de salto en cuanto el Animator entra en él y
+    // ajusta hopSpeed para que el clip dure justo el tiempo de viaje a la casilla.
+    private IEnumerator SyncHopSpeedToClip(int state, float travelTime)
+    {
+        for (int attempt = 0; attempt < 4; attempt++)
+        {
+            yield return null; // el Animator aplica el Play/CrossFade en su siguiente actualización
+
+            AnimatorClipInfo[] clips = null;
+            if (anim.IsInTransition(0) && anim.GetNextAnimatorStateInfo(0).shortNameHash == state)
+                clips = anim.GetNextAnimatorClipInfo(0);
+            else if (anim.GetCurrentAnimatorStateInfo(0).shortNameHash == state)
+                clips = anim.GetCurrentAnimatorClipInfo(0);
+
+            if (clips != null && clips.Length > 0 && clips[0].clip != null)
+            {
+                float length = clips[0].clip.length;
+                if (length > 0.01f)
+                {
+                    hopClipLengths[state] = length;
+                    anim.SetFloat(HopSpeedParam, length / travelTime);
+                }
+                break;
+            }
+        }
+        hopSpeedRoutine = null;
     }
 
     public void Die()
