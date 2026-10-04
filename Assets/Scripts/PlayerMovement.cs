@@ -19,6 +19,8 @@ public class PlayerMovement : CharacterMovement
     private static readonly int ClimbDownState = Animator.StringToHash("Climb_Down");
     private static readonly int ClimbLeftState = Animator.StringToHash("Climb_Left");
     private static readonly int ClimbRightState = Animator.StringToHash("Climb_Right");
+    private static readonly int AttackState = Animator.StringToHash("Attack");
+    private bool attackNext;
 
     private const float AnimBlendTime = 0.1f;  
     private const float HopInterval = 0.32f;    
@@ -60,6 +62,12 @@ public class PlayerMovement : CharacterMovement
             case MoveAnim.ClimbLeft:        state = ClimbLeftState; break;
             case MoveAnim.ClimbRight:       state = ClimbRightState; break;
             default:
+                if (attackNext)
+                {
+                    attackNext = false;
+                    anim.SetBool(AttackHash, true);
+                }
+                
                 if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).shortNameHash == IdleState)
                     leftFootNext = true;
                 state = leftFootNext ? JumpLState : JumpRState;
@@ -174,6 +182,7 @@ public class PlayerMovement : CharacterMovement
     {
         if (Array.Exists(currentTile.connectedTiles, t => t == targetTile))
         {
+            attackNext = targetTile.characterOnTile is Enemy;
             StartCoroutine(MoveSmoothlyTo(targetTile));
         }
         
@@ -181,6 +190,8 @@ public class PlayerMovement : CharacterMovement
 
     protected override void CheckTile(Tile targetTile)
     {
+        anim.SetBool(AttackHash, false);
+        
         if(currentTile is TilePression)
         {
             TilePression tp = (TilePression)currentTile;

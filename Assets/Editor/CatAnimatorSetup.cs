@@ -138,7 +138,9 @@ public static class CatAnimatorSetup
         foreach (AnimatorControllerParameter parameter in controller.parameters.ToArray())
             if (!KeptParameters.Contains(parameter.name)) controller.RemoveParameter(parameter);
 
-        int removed = RemoveOrphans(controller, machines);
+        List<AnimatorStateMachine> allMachines = new List<AnimatorStateMachine>();
+        foreach (AnimatorControllerLayer layer in controller.layers) CollectMachines(layer.stateMachine, allMachines);
+        int removed = RemoveOrphans(controller, allMachines);
 
         EditorUtility.SetDirty(controller);
         AssetDatabase.SaveAssets();
