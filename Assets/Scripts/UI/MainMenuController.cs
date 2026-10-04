@@ -588,7 +588,11 @@ public class MainMenuController : MonoBehaviour
         exitModal = root.Q("exit-modal");
         CloseOnBackdropClick(exitModal);
         root.Q<Button>("exit-stay").clicked += CloseModals;
-        root.Q<Button>("exit-confirm").clicked += Application.Quit;
+        root.Q<Button>("exit-confirm").clicked += () =>
+        {
+            if (GameController.instance != null) GameController.instance.QuitGame();
+            else Application.Quit();
+        };
     }
 
     private static void RoundPills(VisualElement scope)

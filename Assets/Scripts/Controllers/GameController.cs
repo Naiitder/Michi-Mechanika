@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -70,7 +71,12 @@ public class GameController : MonoBehaviour
     
     public void QuitGame()
     {
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
         Application.Quit();
+#endif
+        
     }
     
     private void UpdateTimeScale()
