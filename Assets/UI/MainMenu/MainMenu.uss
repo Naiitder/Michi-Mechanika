@@ -1,33 +1,39 @@
-/* Main menu — port of "Main Menu v2" (claude.ai/design, Organic design system).
+/* Main menu — port of "Main Menu v2" (claude.ai/design, Organic design system),
+   repainted with the factory palette: dark iron, ember/brass and verdigris.
    Layout is authored at 1920x1080; PanelSettings scales it to fit the screen. */
 
 :root {
-    --color-bg: #f5ead8;
-    --color-surface: #ebddc5;
-    --color-text: #201e1d;
-    --color-accent: #c67139;
+    /* Hierro oscuro: paneles y tarjetas sobre la fábrica al anochecer */
+    --color-bg: #221922;
+    --color-surface: #2f222b;
+    --color-surface-strong: #44313b;
+    --color-badge: #3f2d37;
+    --color-inset: #181118;
+    --color-line: #5a4048;
+    --color-text: #f4e6cd;
+    --color-text-muted: #b9a48f;
 
-    --color-neutral-100: #f9f4ed;
-    --color-neutral-200: #eee7db;
-    --color-neutral-300: #dcd3c4;
-    --color-neutral-400: #c0b6a5;
-    --color-neutral-500: #a19786;
-    --color-neutral-600: #82796a;
-    --color-neutral-700: #645c50;
-    --color-neutral-800: #474238;
-    --color-neutral-900: #2e2b25;
+    /* Ascua y latón: acción principal, marcos y detalles */
+    --color-accent: #e58a2e;
+    --color-accent-hover: #f5a24a;
+    --color-accent-active: #c46f1c;
+    --color-accent-soft: #5a3a1c;
+    --color-on-accent: #2a1608;
+    --color-on-accent-muted: #5c3511;
+    --color-brass: #b8863b;
 
-    --color-accent-100: #fff2eb;
-    --color-accent-200: #ffe1d0;
-    --color-accent-300: #ffc6a5;
-    --color-accent-600: #b2622d;
-    --color-accent-700: #8c491a;
+    /* Verdín: acento secundario (cobre oxidado, como las lentes del gato) */
+    --color-verdigris: #5fa89a;
+    --color-verdigris-light: #a9e0d2;
+    --color-verdigris-soft: #223f3d;
 
-    --color-accent-2-200: #e1eecc;
-    --color-accent-2-500: #8fa073;
-    --color-accent-2-700: #56633f;
-    --color-accent-2-800: #3d472b;
-
+    /* Papel: solo dentro del libro de niveles (ver .book) */
+    --color-paper: #efe0c4;
+    --color-paper-shade: #dcc9a6;
+    --color-ink: #2b1f1b;
+    --color-ink-muted: #6b5a4c;
+    --color-verdigris-ink: #2f6158;
+    --color-leather: #4a2a1e;
 
     -unity-font-definition: url("/Assets/Fonts/Figtree/Figtree-Regular SDF.asset");
     color: var(--color-text);
@@ -85,14 +91,14 @@
     flex-direction: row;
     align-items: center;
     background-color: var(--color-accent);
-    color: var(--color-neutral-100);
+    color: var(--color-on-accent);
 }
 
-.pill-primary:hover { background-color: var(--color-accent-600); }
-.pill-primary:active { background-color: var(--color-accent-700); }
+.pill-primary:hover { background-color: var(--color-accent-hover); }
+.pill-primary:active { background-color: var(--color-accent-active); }
 
 .pill-primary .icon--play {
-    -unity-background-image-tint-color: var(--color-neutral-100);
+    -unity-background-image-tint-color: var(--color-on-accent);
 }
 
 /* ---------- main panel ---------- */
@@ -106,22 +112,33 @@
     padding: 64px 48px 48px 48px;
     border-radius: 32px;
     border-width: 4px;
-    border-color: var(--color-accent-600);
-    background-color: var(--color-bg);
+    border-color: var(--color-brass);
+    background-color: rgba(34, 25, 34, 0.94);
 }
 
 .mm-title {
-    margin: 0 0 40px 12px;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 0 40px 0;
+}
+
+.mm-title__icon {
+    width: 176px;
+    height: 176px;
+    margin-right: 22px;
+    flex-shrink: 0;
+    background-image: url("Images/title_icon.png");
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 .mm-title Label {
-    font-size: 84px;
+    font-size: 68px;
     color: var(--color-text);
     -unity-text-align: upper-left;
 }
 
 .mm-title .mm-title__accent {
-    color: var(--color-accent-700);
+    color: var(--color-accent);
 }
 
 .mm-play {
@@ -130,11 +147,11 @@
     padding: 12px 40px 12px 12px;
     margin-bottom: 24px;
     background-color: var(--color-accent);
-    color: var(--color-neutral-100);
+    color: var(--color-on-accent);
 }
 
-.mm-play:hover { background-color: var(--color-accent-600); }
-.mm-play:active { background-color: var(--color-accent-700); }
+.mm-play:hover { background-color: var(--color-accent-hover); }
+.mm-play:active { background-color: var(--color-accent-active); }
 
 .mm-play__icon {
     width: 88px;
@@ -147,13 +164,13 @@
 
 .mm-play__label {
     font-size: 40px;
-    color: var(--color-neutral-100);
+    color: var(--color-on-accent);
     margin-bottom: 6px;
 }
 
 .mm-play__sub {
     font-size: 21px;
-    color: var(--color-accent-100);
+    color: var(--color-on-accent-muted);
 }
 
 .mm-item {
@@ -164,25 +181,25 @@
 }
 
 .mm-item:hover { background-color: var(--color-surface); }
-.mm-item:active { background-color: var(--color-neutral-300); }
+.mm-item:active { background-color: var(--color-surface-strong); }
 
 .mm-item__badge {
     width: 60px;
     height: 60px;
     margin-right: 20px;
     border-radius: 30px;
-    background-color: var(--color-surface);
+    background-color: var(--color-badge);
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
 
-.mm-item__badge--online { background-color: var(--color-accent-2-200); }
+.mm-item__badge--online { background-color: var(--color-verdigris-soft); }
 
 .mm-item__badge .icon { width: 30px; height: 30px; }
-.mm-item__badge .icon--hammer { -unity-background-image-tint-color: var(--color-accent-700); }
-.mm-item__badge .icon--globe { -unity-background-image-tint-color: var(--color-accent-2-800); }
-.mm-item__badge .icon--exit { width: 28px; height: 28px; -unity-background-image-tint-color: var(--color-neutral-700); }
+.mm-item__badge .icon--hammer { -unity-background-image-tint-color: var(--color-accent); }
+.mm-item__badge .icon--globe { -unity-background-image-tint-color: var(--color-verdigris-light); }
+.mm-item__badge .icon--exit { width: 28px; height: 28px; -unity-background-image-tint-color: var(--color-text-muted); }
 
 .mm-item__img { width: 48px; height: 48px; }
 .mm-item__img--door { background-image: url("Images/door.png"); }
@@ -202,7 +219,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(46, 43, 37, 0.55);
+    background-color: rgba(12, 8, 14, 0.62);
     align-items: center;
     justify-content: center;
     opacity: 1;
@@ -220,6 +237,8 @@
 
 .modal-card {
     border-radius: 48px;
+    border-width: 3px;
+    border-color: var(--color-brass);
     background-color: var(--color-bg);
 }
 
@@ -253,7 +272,7 @@
 /* ---------- select level ---------- */
 
 .levels {
-    background-color: rgba(46, 43, 37, 0.7);
+    background-color: rgba(12, 8, 14, 0.78);
     align-items: flex-start;
     justify-content: flex-start;
 }
@@ -263,7 +282,7 @@
     left: 200px;
     top: 34px;
     font-size: 52px;
-    color: var(--color-neutral-100);
+    color: var(--color-text);
 }
 
 .levels__close {
@@ -281,7 +300,7 @@
     height: 88px;
 }
 
-.levels__nav:hover { background-color: var(--color-accent-200); }
+.levels__nav:hover { background-color: var(--color-accent-soft); }
 .levels__nav:disabled { opacity: 0.4; }
 .levels__nav:disabled:hover { background-color: var(--color-bg); }
 .levels__nav .icon { width: 40px; height: 40px; }
@@ -295,7 +314,13 @@
     width: 1520px;
     height: 860px;
     border-radius: 36px;
-    background-color: var(--color-accent-2-700);
+    background-color: var(--color-leather);
+
+    /* Dentro del libro manda el papel: tinta oscura sobre pergamino. */
+    --color-text: var(--color-ink);
+    --color-text-muted: var(--color-ink-muted);
+    --color-surface: var(--color-paper-shade);
+    color: var(--color-ink);
 }
 
 .page {
@@ -303,7 +328,7 @@
     top: 18px;
     width: 742px;
     height: 824px;
-    background-color: var(--color-neutral-100);
+    background-color: var(--color-paper);
 }
 
 .page--left {
@@ -333,13 +358,13 @@
 
 .leaf--flat {
     scale: 0 1;
-    background-color: var(--color-neutral-300);
+    background-color: var(--color-paper-shade);
 }
 
 .leaf__kicker {
     font-size: 20px;
     letter-spacing: 2.4px;
-    color: var(--color-accent-2-700);
+    color: var(--color-verdigris-ink);
     margin-bottom: 10px;
 }
 
@@ -370,7 +395,7 @@
 
 .chapter__num {
     font-size: 34px;
-    color: var(--color-neutral-700);
+    color: var(--color-text-muted);
     margin-bottom: 24px;
 }
 
@@ -379,7 +404,7 @@
     height: 360px;
     padding: 16px;
     border-radius: 10px;
-    background-color: #ffffff;
+    background-color: #fbf3e4;
     rotate: -2deg;
     margin-bottom: 36px;
 }
@@ -387,7 +412,7 @@
 .chapter__art {
     flex-grow: 1;
     border-radius: 4px;
-    background-color: var(--color-neutral-300);
+    background-color: var(--color-paper-shade);
     -unity-background-scale-mode: scale-and-crop;
     align-items: center;
     justify-content: center;
@@ -396,13 +421,13 @@
 .chapter__art .icon--lock {
     width: 72px;
     height: 72px;
-    -unity-background-image-tint-color: var(--color-neutral-600);
+    -unity-background-image-tint-color: var(--color-ink-muted);
 }
 
 .chapter__kicker {
     font-size: 20px;
     letter-spacing: 2.4px;
-    color: var(--color-accent-2-700);
+    color: var(--color-verdigris-ink);
     margin-bottom: 6px;
     -unity-text-align: middle-center;
 }
@@ -459,7 +484,7 @@
     height: 42px;
     border-radius: 9px;
     rotate: 45deg;
-    background-color: var(--color-accent-300);
+    background-color: #f0b878;
     display: none;
 }
 
@@ -470,15 +495,15 @@
     height: 30px;
     rotate: 45deg;
     border-width: 4px;
-    border-color: var(--color-neutral-900);
+    border-color: var(--color-ink);
     border-radius: 6px;
-    background-color: var(--color-neutral-100);
+    background-color: var(--color-paper);
     transition-property: scale;
     transition-duration: 0.8s;
     transition-timing-function: ease-in-out;
 }
 
-.map-node--done .map-node__diamond { background-color: var(--color-accent-2-500); }
+.map-node--done .map-node__diamond { background-color: var(--color-verdigris); }
 .map-node--current .map-node__diamond { background-color: var(--color-accent); }
 .map-node--pulse .map-node__diamond { scale: 1.25 1.25; }
 
@@ -487,7 +512,7 @@
     left: -30px;
     top: -22px;
     font-size: 28px;
-    color: var(--color-neutral-800);
+    color: var(--color-ink);
 }
 
 .map-marker {
@@ -515,7 +540,7 @@
 
 .map-footer__status {
     font-size: 20px;
-    color: var(--color-neutral-700);
+    color: var(--color-text-muted);
 }
 
 .map-footer__play {
@@ -523,7 +548,7 @@
 }
 
 .map-footer__play .icon { width: 22px; height: 22px; margin-right: 12px; }
-.map-footer__play Label { font-size: 28px; color: var(--color-neutral-100); }
+.map-footer__play Label { font-size: 28px; color: var(--color-on-accent); }
 
 .map-locked {
     flex-direction: row;
@@ -536,12 +561,12 @@
     width: 26px;
     height: 26px;
     margin-right: 16px;
-    -unity-background-image-tint-color: var(--color-neutral-800);
+    -unity-background-image-tint-color: var(--color-ink);
 }
 
 .map-locked Label {
     font-size: 22px;
-    color: var(--color-neutral-800);
+    color: var(--color-ink);
 }
 
 /* ---------- online levels ---------- */
@@ -560,7 +585,7 @@
     background-color: var(--color-surface);
 }
 
-.online__close:hover { background-color: var(--color-neutral-300); }
+.online__close:hover { background-color: var(--color-surface-strong); }
 .online__close .icon { width: 28px; height: 28px; }
 
 .online .modal-title { margin-bottom: 28px; }
@@ -572,15 +597,15 @@
     padding: 0 28px;
     margin-bottom: 28px;
     border-width: 2px;
-    border-color: var(--color-neutral-300);
-    background-color: var(--color-neutral-100);
+    border-color: var(--color-line);
+    background-color: var(--color-inset);
 }
 
 .search > .icon {
     width: 30px;
     height: 30px;
     margin-right: 16px;
-    -unity-background-image-tint-color: var(--color-neutral-700);
+    -unity-background-image-tint-color: var(--color-text-muted);
 }
 
 .search__field {
@@ -597,12 +622,12 @@
     color: var(--color-text);
     -unity-font-definition: url("/Assets/Fonts/Figtree/Figtree-Regular SDF.asset");
     --unity-cursor-color: var(--color-accent);
-    --unity-selection-color: rgba(198, 113, 57, 0.3);
+    --unity-selection-color: rgba(229, 138, 46, 0.35);
 }
 
 .search__field .unity-text-element--placeholder,
 .search__field .unity-base-text-field__input--placeholder {
-    color: var(--color-neutral-600);
+    color: var(--color-text-muted);
 }
 
 .online__list {
@@ -637,7 +662,7 @@
     margin: 0;
     border-width: 0;
     border-radius: 5px;
-    background-color: rgba(46, 43, 37, 0.06);
+    background-color: rgba(244, 230, 205, 0.07);
 }
 
 .online__list .unity-base-slider__dragger {
@@ -646,10 +671,10 @@
     margin: 0;
     border-width: 0;
     border-radius: 5px;
-    background-color: var(--color-neutral-400);
+    background-color: var(--color-line);
 }
 
-.online__list .unity-base-slider__dragger:hover { background-color: var(--color-neutral-500); }
+.online__list .unity-base-slider__dragger:hover { background-color: var(--color-brass); }
 .online__list .unity-base-slider__dragger-border { display: none; }
 
 .online-row {
@@ -678,14 +703,14 @@
 
 .online-row__meta {
     font-size: 19px;
-    color: var(--color-neutral-700);
+    color: var(--color-text-muted);
 }
 
 .online-row__code {
     padding: 8px 18px;
     margin-right: 22px;
-    background-color: var(--color-accent-2-200);
-    color: var(--color-accent-2-800);
+    background-color: var(--color-verdigris-soft);
+    color: var(--color-verdigris-light);
     font-size: 20px;
     letter-spacing: 1.6px;
 }
@@ -695,7 +720,7 @@
 }
 
 .online-row__play .icon { width: 18px; height: 18px; margin-right: 10px; }
-.online-row__play Label { font-size: 22px; color: var(--color-neutral-100); }
+.online-row__play Label { font-size: 22px; color: var(--color-on-accent); }
 
 .online__empty {
     padding: 48px 32px;
@@ -708,7 +733,7 @@
 
 .online__empty-body {
     font-size: 22px;
-    color: var(--color-neutral-700);
+    color: var(--color-text-muted);
     white-space: normal;
 }
 
@@ -726,7 +751,7 @@
 
 .exit__body {
     font-size: 24px;
-    color: var(--color-neutral-700);
+    color: var(--color-text-muted);
     margin-bottom: 36px;
 }
 
@@ -742,5 +767,5 @@
 }
 
 .exit__button--stay { background-color: var(--color-surface); }
-.exit__button--stay:hover { background-color: var(--color-neutral-300); }
-.exit__button--leave { color: var(--color-neutral-100); }
+.exit__button--stay:hover { background-color: var(--color-surface-strong); }
+.exit__button--leave { color: var(--color-on-accent); }

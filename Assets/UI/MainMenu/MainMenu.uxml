@@ -5,8 +5,11 @@
         <!-- Main panel -->
         <ui:VisualElement name="panel" class="mm-panel">
             <ui:VisualElement class="mm-title">
-                <ui:Label text="Michi-" class="font-display" />
-                <ui:Label text="Mechanika" class="font-display mm-title__accent" />
+                <ui:VisualElement class="mm-title__icon" picking-mode="Ignore" />
+                <ui:VisualElement picking-mode="Ignore">
+                    <ui:Label text="Michi-" class="font-display" />
+                    <ui:Label text="Mechanika" class="font-display mm-title__accent" />
+                </ui:VisualElement>
             </ui:VisualElement>
 
             <ui:Button name="play-button" class="mm-button mm-play">
