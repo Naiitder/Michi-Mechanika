@@ -3143,6 +3143,7 @@ GameObject:
   - component: {fileID: 6482704301826853310}
   - component: {fileID: 8899468851077952972}
   - component: {fileID: 638876557552377319}
+  - component: {fileID: 5120384771265930841}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3828,3 +3829,19 @@ Transform:
   - {fileID: 1224491528559213809}
   m_Father: {fileID: 6046448266050680892}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5120384771265930841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7428109264425074191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1d9a4e2b6f48a3a5e0c3d91f2b6e47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 3408197126953317018}
+  bladeBase: {fileID: 7254188245039898924}
+  bladeTip: {fileID: 1813744685611267346}
+  trailMaterial: {fileID: 2100000, guid: a94c2e6d7b1f43e58c0d2f9b6e3a7c15, type: 2}

@@ -40,6 +40,11 @@ public class PlayerMovement : CharacterMovement
     [Header ("Interaction")]
     [SerializeField] private LayerMask interactiveLayer;
 
+    [Header ("Salto")]
+    [Tooltip("Avance del salto de casilla: eje X = tiempo del salto (0..1), eje Y = distancia recorrida (0..1). " +
+             "Una recta es velocidad uniforme; una S acelera al despegar y frena al aterrizar.")]
+    [SerializeField] private AnimationCurve hopCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
     [Header ("Debug")]
     [Tooltip("Si está activo, todos los saltos por el suelo usan la animación de ataque aunque no haya enemigo.")]
     [SerializeField] private bool debugAlwaysAttack = true;
@@ -59,6 +64,11 @@ public class PlayerMovement : CharacterMovement
 
     protected override void SetWalking(bool walking)
     {
+    }
+
+    protected override float EvaluateHopProgress(float t)
+    {
+        return hopCurve != null && hopCurve.length > 1 ? hopCurve.Evaluate(t) : t;
     }
     
     protected override void PlayMove(MoveAnim move)
