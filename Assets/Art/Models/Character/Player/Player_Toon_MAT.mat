@@ -49,6 +49,7 @@ Material:
     - _Cull: 2
     - _MaxBrightness: 0.95
     - _OcclusionStrength: 0.5
+    - _OutlineStencilComp: 6
     - _OutlineTexMix: 0.5
     - _OutlineWidth: 2
     - _RimAmount: 0.7

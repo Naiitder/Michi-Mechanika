@@ -87,6 +87,7 @@ public class PlayerMovement : CharacterMovement
                 if (nextHopDistance > 0.01f && movementSpeed > 0f)
                     hopTravelTime = nextHopDistance / movementSpeed;
                 nextHopDistance = 0f;
+                bool attacking = attackNext;
                 if (attackNext)
                 {
                     attackNext = false;
@@ -102,7 +103,7 @@ public class PlayerMovement : CharacterMovement
                 bool weaponDrawn = !inTransition &&
                                    (currentState == JumpLAttackState || currentState == JumpRAttackState);
 
-                if (attackNext)
+                if (attacking)
                     state = leftFootNext ? JumpLAttackState : JumpRAttackState;
                 else if (weaponDrawn)
                     state = leftFootNext ? JumpLSheatheState : JumpRSheatheState;
