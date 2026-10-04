@@ -272,7 +272,8 @@ public abstract class CharacterMovement : MonoBehaviour
         
         Vector3 targetPosition = StandPosition(targetTile, transform.forward);
         
-        PlayMove(currentTile.position.y < targetTile.position.y ? MoveAnim.ClimbToFloorUp : MoveAnim.ClimbToFloorDown);
+        bool goingUp = currentTile.position.y < targetTile.position.y;
+        PlayMove(goingUp ? MoveAnim.ClimbToFloorUp : MoveAnim.ClimbToFloorDown);
         
         Vector3 direction = (targetPosition - transform.position).normalized;
         direction.y = 0f;
@@ -298,6 +299,32 @@ public abstract class CharacterMovement : MonoBehaviour
         
         
         SetWalking(true);
+
+        if (goingUp)
+        {
+            Vector3 startPosition = transform.position;
+            float duration = Vector3.Distance(startPosition, targetPosition) / Mathf.Max(movementSpeed, 0.0001f);
+
+            nextHopDistance = duration * movementSpeed;
+            PlayMove(MoveAnim.Walk);
+
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation,
+                    targetRotation,
+                    Time.deltaTime * rotationSpeed
+                );
+
+                transform.position = Vector3.LerpUnclamped(startPosition, targetPosition, EvaluateHopProgress(t));
+                yield return null;
+            }
+        }
+
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
         {
             transform.rotation = Quaternion.Slerp(
