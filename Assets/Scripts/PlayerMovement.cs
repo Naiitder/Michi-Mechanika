@@ -31,7 +31,6 @@ public class PlayerMovement : CharacterMovement
     private const float DefaultHopSpeed = 0.9f;
     private readonly Dictionary<int, float> hopClipLengths = new Dictionary<int, float>();
     private Coroutine hopSpeedRoutine;
-    private float nextHopDistance;
 
     private const float AnimBlendTime = 0.1f;  
     private const float HopInterval = 0.32f;    
@@ -138,7 +137,7 @@ public class PlayerMovement : CharacterMovement
             }
         }
 
-        if (floorHop && anim.IsInTransition(0))
+        if (anim.IsInTransition(0))
             anim.Play(state, 0, 0f);
         else
             anim.CrossFadeInFixedTime(state, AnimBlendTime, 0, 0f);

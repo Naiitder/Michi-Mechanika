@@ -59,6 +59,8 @@ public abstract class CharacterMovement : MonoBehaviour
     
     protected virtual float RoofHeightOffset => 0f;
     protected virtual float RoofDepthOffset => 0f;
+    protected virtual float RoofEdgeInset => 0.3f;
+    protected float nextHopDistance;
     
     protected Vector3 StandPosition(Tile tile, Vector3 facingWall)
     {
@@ -129,7 +131,14 @@ public abstract class CharacterMovement : MonoBehaviour
         Vector3 toWall = targetTile.position - transform.position;
         toWall.y = 0f;
         Vector3 targetPosition = StandPosition(targetTile, goingUp ? toWall : -toWall);
-        PlayMove(currentTile.position.y < targetTile.position.y ? MoveAnim.FloorToClimbUp : MoveAnim.FloorToClimbDown);
+
+        if (!goingUp)
+        {
+            yield return StartCoroutine(DescendFromFloorToRoof(targetTile, toWall.normalized, targetPosition));
+            yield break;
+        }
+
+        PlayMove(MoveAnim.FloorToClimbUp);
         
         Vector3 direction = (targetPosition - transform.position).normalized;
         direction.y = 0f;
@@ -154,7 +163,7 @@ public abstract class CharacterMovement : MonoBehaviour
         }
         SetWalking(false);
 
-        if (currentTile.position.y < targetTile.position.y)
+        if (goingUp)
         {
            
             
@@ -203,6 +212,60 @@ public abstract class CharacterMovement : MonoBehaviour
         isMoving = false;
         CheckTile(targetTile);
     }
+    IEnumerator DescendFromFloorToRoof(Tile targetTile, Vector3 outDirection, Vector3 hangPosition)
+    {
+        Vector3 startPosition = transform.position;
+        Quaternion startRotation = transform.rotation;
+
+        Vector3 edge = new Vector3(targetTile.position.x, startPosition.y, targetTile.position.z);
+        Vector3 edgePosition = edge - outDirection * RoofEdgeInset;
+        Quaternion faceWall = Quaternion.LookRotation(-outDirection);
+
+        float approachDuration = Mathf.Max(Vector3.Distance(startPosition, edgePosition) / Mathf.Max(movementSpeed, 0.0001f), 0.25f);
+        nextHopDistance = approachDuration * movementSpeed;
+        PlayMove(MoveAnim.Walk);
+
+        float elapsed = 0f;
+        while (elapsed < approachDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / approachDuration);
+
+            transform.position = Vector3.LerpUnclamped(startPosition, edgePosition, EvaluateHopProgress(t));
+            transform.rotation = Quaternion.Slerp(startRotation, faceWall, Mathf.SmoothStep(0f, 1f, t));
+            yield return null;
+        }
+
+        transform.position = edgePosition;
+        transform.rotation = faceWall;
+        SetWalking(false);
+
+        PlayMove(MoveAnim.FloorToClimbDown);
+
+        float lowerDuration = Mathf.Max(Vector3.Distance(edgePosition, hangPosition) / Mathf.Max(movementSpeed, 0.0001f), 0.01f);
+        elapsed = 0f;
+        while (elapsed < lowerDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / lowerDuration);
+
+            float horizontal = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0f, 0.45f, t));
+            float vertical = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.2f, 1f, t));
+
+            Vector3 position = Vector3.Lerp(edgePosition, new Vector3(hangPosition.x, edgePosition.y, hangPosition.z), horizontal);
+            position.y = Mathf.Lerp(edgePosition.y, hangPosition.y, vertical);
+
+            transform.position = position;
+            transform.rotation = faceWall;
+            yield return null;
+        }
+
+        transform.position = hangPosition;
+
+        isMoving = false;
+        CheckTile(targetTile);
+    }
+
     IEnumerator MoveFromRoofToFloor(Tile targetTile)
     {
         isMoving = true;
