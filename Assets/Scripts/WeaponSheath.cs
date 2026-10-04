@@ -19,6 +19,10 @@ public class WeaponSheath : MonoBehaviour
     [Tooltip("Segundos que tarda en pasar de la espalda a la animación y viceversa")]
     [SerializeField] private float blendTime = 0.08f;
 
+    [Header("Pose del WeaponRig durante los clips de arma (la del FBX, relativa al Player)")]
+    [SerializeField] private Vector3 animatedLocalPosition = new Vector3(0.17938927f, 0.35950994f, -0.08791083f);
+    [SerializeField] private Quaternion animatedLocalRotation = new Quaternion(-0.6810162f, -0.19030766f, 0.19030759f, 0.68101615f);
+
     private int weaponLayer = -1;
     private float sheathWeight = 1f;
 
@@ -44,12 +48,15 @@ public class WeaponSheath : MonoBehaviour
             ? target
             : Mathf.MoveTowards(sheathWeight, target, Time.deltaTime / blendTime);
 
-        if (sheathWeight <= 0f) return;
+        // Pose que tiene el WeaponRig en los clips (es constante en todos): no dependemos de que
+        // el Animator la escriba, porque en el prefab el WeaponRig está guardado en la pose del socket.
+        Transform parent = weaponRig.parent;
+        Vector3 animatedPosition = parent != null ? parent.TransformPoint(animatedLocalPosition) : animatedLocalPosition;
+        Quaternion animatedRotation = parent != null ? parent.rotation * animatedLocalRotation : animatedLocalRotation;
 
-        // El Animator ya ha escrito este frame la pose animada; mezclamos hacia el socket.
         weaponRig.SetPositionAndRotation(
-            Vector3.Lerp(weaponRig.position, sheathSocket.position, sheathWeight),
-            Quaternion.Slerp(weaponRig.rotation, sheathSocket.rotation, sheathWeight));
+            Vector3.Lerp(animatedPosition, sheathSocket.position, sheathWeight),
+            Quaternion.Slerp(animatedRotation, sheathSocket.rotation, sheathWeight));
     }
 
     private bool WeaponClipPlaying()

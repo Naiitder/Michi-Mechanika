@@ -256,7 +256,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jump_R
-  m_Speed: 0.9
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8163223419331284541}
@@ -265,13 +265,13 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 656228374860809058, guid: 83cf23bbdbb192f41ac08e847c778a48, type: 3}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: hopSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -594,6 +594,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: hopSpeed
+    m_Type: 1
+    m_DefaultFloat: 1
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -615,7 +621,7 @@ AnimatorController:
     - m_State: {fileID: 599464797028555293}
       m_Motion: {fileID: -1146178154528721855, guid: ea0384ef1ea23ce458560e36eda4b501, type: 3}
     - m_State: {fileID: 2892622146083070695}
-      m_Motion: {fileID: 8783485499668828043, guid: ea0384ef1ea23ce458560e36eda4b501, type: 3}
+      m_Motion: {fileID: 3022485504074461883, guid: 153e1ec6ac71d254fa73f35bcd0d8360, type: 3}
     - m_State: {fileID: 2631117344111056078}
       m_Motion: {fileID: 6499379472301552934, guid: ea0384ef1ea23ce458560e36eda4b501, type: 3}
     - m_State: {fileID: 1859060513237310278}
@@ -688,7 +694,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jump_L
-  m_Speed: 0.9
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3557894982280819100}
@@ -697,13 +703,13 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: -647853200576183469, guid: 83cf23bbdbb192f41ac08e847c778a48, type: 3}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: hopSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -1101,7 +1107,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jump_L_Attack
-  m_Speed: 0.9
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8821150164252052334}
@@ -1110,13 +1116,13 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 2674799553225800123, guid: d5622c9bc7d3ae84794ee420ef733820, type: 3}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: hopSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -1199,7 +1205,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jump_R_Attack
-  m_Speed: 0.9
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2019945915813493850}
@@ -1208,13 +1214,13 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 8740862938570370982, guid: d5622c9bc7d3ae84794ee420ef733820, type: 3}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: hopSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -1297,7 +1303,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jump_L_Sheathe
-  m_Speed: 0.9
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2564113431014858298}
@@ -1306,13 +1312,13 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 95531530374914862, guid: d5622c9bc7d3ae84794ee420ef733820, type: 3}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: hopSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -1346,7 +1352,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jump_R_Sheathe
-  m_Speed: 0.9
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2507511355038283960}
@@ -1355,13 +1361,13 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 0
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: -3209092993677781828, guid: d5622c9bc7d3ae84794ee420ef733820, type: 3}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: hopSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 

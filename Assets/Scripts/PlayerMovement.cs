@@ -26,12 +26,23 @@ public class PlayerMovement : CharacterMovement
     private static readonly int JumpRSheatheState = Animator.StringToHash("Jump_R_Sheathe");
     private bool attackNext;
 
+    // Los clips de salto (Jump_L/R, sus ataques y sheathe) duran 1 s. El parámetro hopSpeed del
+    // Animator los acelera para que duren exactamente lo que tarda el personaje en llegar a la casilla.
+    private static readonly int HopSpeedParam = Animator.StringToHash("hopSpeed");
+    private const float HopClipLength = 1f;
+    private const float DefaultHopSpeed = 0.9f;
+    private float nextHopDistance;
+
     private const float AnimBlendTime = 0.1f;  
     private const float HopInterval = 0.32f;    
     private bool leftFootNext = true;
 
     [Header ("Interaction")]
     [SerializeField] private LayerMask interactiveLayer;
+
+    [Header ("Debug")]
+    [Tooltip("Si está activo, todos los saltos por el suelo usan la animación de ataque aunque no haya enemigo.")]
+    [SerializeField] private bool debugAlwaysAttack = true;
     
     public override void Initialize()
     {
@@ -55,6 +66,7 @@ public class PlayerMovement : CharacterMovement
         if (anim == null) return;
 
         int state;
+        bool floorHop = false;
         switch (move)
         {
             case MoveAnim.FloorToClimbUp:   state = FloorToClimbUpState; break;
@@ -66,7 +78,13 @@ public class PlayerMovement : CharacterMovement
             case MoveAnim.ClimbLeft:        state = ClimbLeftState; break;
             case MoveAnim.ClimbRight:       state = ClimbRightState; break;
             default:
-                bool attacking = attackNext;
+                floorHop = true;
+                float hopSpeed = DefaultHopSpeed;
+                if (nextHopDistance > 0.01f && movementSpeed > 0f)
+                    hopSpeed = HopClipLength / (nextHopDistance / movementSpeed);
+                nextHopDistance = 0f;
+                anim.SetFloat(HopSpeedParam, hopSpeed);
+                bool attacking = attackNext || debugAlwaysAttack;
                 if (attackNext)
                 {
                     attackNext = false;
@@ -93,7 +111,12 @@ public class PlayerMovement : CharacterMovement
                 break;
         }
 
-        anim.CrossFadeInFixedTime(state, AnimBlendTime, 0, 0f);
+        // Un CrossFade lanzado en mitad de otra transición no es fiable (puede ignorarse o dejar
+        // el estado colgado), así que en ese caso se entra al estado directamente.
+        if (floorHop && anim.IsInTransition(0))
+            anim.Play(state, 0, 0f);
+        else
+            anim.CrossFadeInFixedTime(state, AnimBlendTime, 0, 0f);
     }
 
     public void Die()
@@ -201,6 +224,9 @@ public class PlayerMovement : CharacterMovement
         if (Array.Exists(currentTile.connectedTiles, t => t == targetTile))
         {
             attackNext = targetTile.characterOnTile is Enemy;
+            nextHopDistance = targetTile.tileType == Tile.Type.Floor
+                ? Vector3.Distance(transform.position, targetTile.position)
+                : 0f;
             StartCoroutine(MoveSmoothlyTo(targetTile));
         }
         

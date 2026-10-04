@@ -6125,6 +6125,10 @@ MonoBehaviour:
   vcamPlayer: {fileID: 0}
   vcamFree: {fileID: 0}
   dragSpeed: 1
+  zoomSpeed: 5
+  minFOV: 25
+  maxFOV: 90
+  rotationSpeed: 0.2
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10804,7 +10808,8 @@ MonoBehaviour:
   isLevelBuilding: 0
   pauseCanvas: {fileID: 137704595}
   normalTimeScale: 1
-  fastForwardTimeScale: 2
+  fastForwardTimeScale: 1.5
+  timeScaleBlendTime: 0.25
 --- !u!114 &1553417779
 MonoBehaviour:
   m_ObjectHideFlags: 0

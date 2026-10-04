@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour
     [Header("Speed")]
     [SerializeField] private float normalTimeScale = 1f;
     [SerializeField] private float fastForwardTimeScale = 2f;
+    [Tooltip("Segundos (reales) que tarda en pasar de la velocidad normal a la rápida y viceversa. 0 = cambio instantáneo.")]
+    [SerializeField] private float timeScaleBlendTime = 0.25f;
     private bool fastForward;
     
     private void Awake()
@@ -86,7 +88,16 @@ public class GameController : MonoBehaviour
         else if (pending > 0) fastForward = true;
         else if(!busy)  fastForward = false;
 
-        Time.timeScale = fastForward ? fastForwardTimeScale : normalTimeScale;
+        float target = fastForward ? fastForwardTimeScale : normalTimeScale;
+        if (timeScaleBlendTime <= 0f)
+        {
+            Time.timeScale = target;
+            return;
+        }
+
+        // Transición suave en tiempo real (no escalado) para que el cambio no sea de golpe.
+        float rate = Mathf.Abs(fastForwardTimeScale - normalTimeScale) / timeScaleBlendTime;
+        Time.timeScale = Mathf.MoveTowards(Time.timeScale, target, rate * Time.unscaledDeltaTime);
     }
 
 }

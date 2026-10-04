@@ -50,6 +50,15 @@ public abstract class CharacterMovement : MonoBehaviour
     {
     }
 
+    /// <summary>
+    /// Convierte el progreso en tiempo del salto por el suelo (0..1) en progreso de distancia (0..1).
+    /// Por defecto es lineal (velocidad uniforme); el Player lo sobreescribe con una curva.
+    /// </summary>
+    protected virtual float EvaluateHopProgress(float t)
+    {
+        return t;
+    }
+
     public IEnumerator MoveSmoothlyTo(Tile targetTile)
     {
         if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Floor) yield return StartCoroutine(MoveFromFloorToFloor(targetTile));
@@ -71,19 +80,24 @@ public abstract class CharacterMovement : MonoBehaviour
         direction.y = 0f;
 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
+
+        // El salto dura lo mismo que antes (distancia / velocidad), pero el avance sigue
+        // EvaluateHopProgress para poder acelerar y frenar en vez de ir a velocidad uniforme.
+        Vector3 startPosition = transform.position;
+        float duration = Vector3.Distance(startPosition, targetPosition) / Mathf.Max(movementSpeed, 0.0001f);
+        float elapsed = 0f;
+        while (elapsed < duration)
         {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
                 Time.deltaTime * rotationSpeed 
             );
             
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                targetPosition,
-                movementSpeed * Time.deltaTime
-            );
+            transform.position = Vector3.LerpUnclamped(startPosition, targetPosition, EvaluateHopProgress(t));
             yield return null;
         }
 

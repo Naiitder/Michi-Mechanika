@@ -3227,7 +3227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTile: {fileID: 0}
-  movementSpeed: 7.5
+  movementSpeed: 4.5
   rotationSpeed: 15
   WalkHash: 0
   DeadHash: 0
@@ -3235,6 +3235,7 @@ MonoBehaviour:
   interactiveLayer:
     serializedVersion: 2
     m_Bits: 192
+  debugAlwaysAttack: 1
 --- !u!114 &638876557552377319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3252,6 +3253,8 @@ MonoBehaviour:
   sheathSocket: {fileID: 6189905091729270873}
   weaponLayerName: Weapon
   blendTime: 0.08
+  animatedLocalPosition: {x: 0.17938927, y: 0.35950994, z: -0.08791083}
+  animatedLocalRotation: {x: -0.6810162, y: -0.19030766, z: 0.19030759, w: 0.68101615}
 --- !u!1 &7475515281261281138
 GameObject:
   m_ObjectHideFlags: 0
