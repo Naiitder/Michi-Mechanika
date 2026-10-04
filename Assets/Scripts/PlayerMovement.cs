@@ -20,6 +20,10 @@ public class PlayerMovement : CharacterMovement
     private static readonly int ClimbLeftState = Animator.StringToHash("Climb_Left");
     private static readonly int ClimbRightState = Animator.StringToHash("Climb_Right");
     private static readonly int AttackState = Animator.StringToHash("Attack");
+    private static readonly int JumpLAttackState = Animator.StringToHash("Jump_L_Attack");
+    private static readonly int JumpRAttackState = Animator.StringToHash("Jump_R_Attack");
+    private static readonly int JumpLSheatheState = Animator.StringToHash("Jump_L_Sheathe");
+    private static readonly int JumpRSheatheState = Animator.StringToHash("Jump_R_Sheathe");
     private bool attackNext;
 
     private const float AnimBlendTime = 0.1f;  
@@ -62,15 +66,29 @@ public class PlayerMovement : CharacterMovement
             case MoveAnim.ClimbLeft:        state = ClimbLeftState; break;
             case MoveAnim.ClimbRight:       state = ClimbRightState; break;
             default:
+                bool attacking = attackNext;
                 if (attackNext)
                 {
                     attackNext = false;
                     anim.SetBool(AttackHash, true);
                 }
-                
-                if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).shortNameHash == IdleState)
+
+                bool inTransition = anim.IsInTransition(0);
+                int currentState = anim.GetCurrentAnimatorStateInfo(0).shortNameHash;
+
+                if (!inTransition && currentState == IdleState)
                     leftFootNext = true;
-                state = leftFootNext ? JumpLState : JumpRState;
+
+                // Si el salto anterior fue un ataque, el arma sigue en la mano: este salto la enfunda.
+                bool weaponDrawn = !inTransition &&
+                                   (currentState == JumpLAttackState || currentState == JumpRAttackState);
+
+                if (attacking)
+                    state = leftFootNext ? JumpLAttackState : JumpRAttackState;
+                else if (weaponDrawn)
+                    state = leftFootNext ? JumpLSheatheState : JumpRSheatheState;
+                else
+                    state = leftFootNext ? JumpLState : JumpRState;
                 leftFootNext = !leftFootNext;
                 break;
         }
