@@ -1,57 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Estela del arma durante el barrido de ataque.
-/// Guarda el recorrido de la punta del arma (en el espacio del Player, para que la estela acompañe
-/// al personaje), lo alisa y lo aplana sobre un plano para que salga un arco limpio, y dibuja una
-/// cinta de ancho uniforme hacia el centro del arco. El aspecto lo pone el shader Michi/WeaponTrail.
-/// Va en el mismo objeto que el Animator (la raíz del Player).
-/// </summary>
-[DefaultExecutionOrder(200)] // después de WeaponSheath, que recoloca el arma en LateUpdate
+
+[DefaultExecutionOrder(200)] 
 public class WeaponTrail : MonoBehaviour
 {
-    [Header("Referencias")]
+    [Header("References")]
     [SerializeField] private Animator anim;
-    [Tooltip("Hueso donde empieza la hoja (lado de la mano).")]
     [SerializeField] private Transform bladeBase;
-    [Tooltip("Último hueso del arma.")]
     [SerializeField] private Transform bladeTip;
-    [Tooltip("Cuánto sigue la hoja más allá del último hueso, en unidades locales de ese hueso (eje Y).")]
     [SerializeField] private float tipExtension = 0.26f;
 
-    [Header("Cuándo emite")]
-    [Tooltip("Estados de Base Layer en los que hay barrido.")]
+    [Header("When its landed")]
     [SerializeField] private string[] attackStates = { "Jump_L_Attack", "Jump_R_Attack", "Attack" };
-    [Tooltip("Tramo del clip (0..1) en el que ocurre el swing.")]
     [SerializeField] [Range(0f, 1f)] private float swingStart = 0.4f;
     [SerializeField] [Range(0f, 1f)] private float swingEnd = 0.8f;
 
-    [Header("Forma")]
-    [Tooltip("Ancho de la cinta respecto al largo de la hoja.")]
+    [Header("Form")]
     [SerializeField] [Range(0.05f, 1.5f)] private float arcWidth = 0.7f;
-    [Tooltip("1 = arco totalmente plano (sin subidas y bajadas); 0 = sigue el recorrido real de la punta.")]
     [SerializeField] [Range(0f, 1f)] private float flatten = 1f;
-    [Tooltip("Pasadas de alisado del recorrido. Más = curva más uniforme.")]
     [SerializeField] [Range(0, 8)] private int smoothing = 3;
-    [Tooltip("Segundos que tarda la estela en desaparecer. Más tiempo = arco más largo.")]
     [SerializeField] private float trailDuration = 0.35f;
 
-    [Header("Aspecto")]
-    [Tooltip("Color a lo largo de la estela: izquierda = junto al arma, derecha = la cola. El alfa controla la intensidad.")]
+    [Header("Aspect")]
     [SerializeField] private Gradient glowColor = DefaultGradient();
-    [Tooltip("Material con el shader Michi/WeaponTrail (M_WeaponTrail). Ahí se ajustan brillo, halo, vetas y afinado.")]
     [SerializeField] private Material trailMaterial;
 
     private struct Sample
     {
-        public Vector3 tip;      // punta del arma, espacio local del Player
-        public Vector3 hand;     // base de la hoja, espacio local del Player
+        public Vector3 tip;     
+        public Vector3 hand;     
         public float time;
     }
 
     private const int Subdivisions = 4;
-    private const float EdgePos = 0.75f;   // debe coincidir con _EdgePos del shader: filo al 75 % del ancho
+    private const float EdgePos = 0.75f;   
 
     private readonly List<Sample> samples = new List<Sample>();
     private readonly List<Vector3> path = new List<Vector3>();
@@ -100,8 +83,7 @@ public class WeaponTrail : MonoBehaviour
         meshRenderer.sharedMaterial = trailMaterial != null ? trailMaterial : CreateDefaultMaterial();
         meshRenderer.enabled = false;
     }
-
-    /// <summary>Solo se usa si no hay material asignado: busca el shader de la estela.</summary>
+    
     private static Material CreateDefaultMaterial()
     {
         Shader shader = Shader.Find("Michi/WeaponTrail");
@@ -115,8 +97,7 @@ public class WeaponTrail : MonoBehaviour
 
         float now = Time.time;
         float life = Mathf.Max(trailDuration, 0.01f);
-
-        // Caducar muestras viejas.
+        
         int expired = 0;
         while (expired < samples.Count && now - samples[expired].time > life) expired++;
         if (expired > 0) samples.RemoveRange(0, expired);
@@ -146,8 +127,7 @@ public class WeaponTrail : MonoBehaviour
             }
             return;
         }
-
-        // 1) Recorrido de la punta, centro del arco y largo medio de la hoja.
+        
         path.Clear();
         Vector3 centroid = Vector3.zero;
         Vector3 pivot = Vector3.zero;
@@ -162,8 +142,7 @@ public class WeaponTrail : MonoBehaviour
         centroid /= count;
         pivot /= count;
         bladeLength /= count;
-
-        // 2) Aplanar: plano que mejor encaja con el barrido (normal = suma de los giros alrededor del pivote).
+        
         Vector3 normal = Vector3.zero;
         for (int i = 0; i < count - 1; i++)
             normal += Vector3.Cross(path[i] - pivot, path[i + 1] - pivot);
@@ -179,7 +158,7 @@ public class WeaponTrail : MonoBehaviour
             pivot -= normal * Vector3.Dot(pivot - centroid, normal) * flatten;
         }
 
-        // 3) Alisar el recorrido (los extremos se quedan fijos para que la estela no se despegue del arma).
+      
         for (int pass = 0; pass < smoothing; pass++)
         {
             scratch.Clear();
@@ -187,8 +166,7 @@ public class WeaponTrail : MonoBehaviour
             for (int i = 1; i < count - 1; i++)
                 path[i] = scratch[i] * 0.5f + (scratch[i - 1] + scratch[i + 1]) * 0.25f;
         }
-
-        // 4) Cinta de ancho uniforme: del filo hacia el pivote (dentro) y un margen hacia fuera para el halo.
+        
         float width = bladeLength * arcWidth;
         float haloWidth = width * (1f - EdgePos) / EdgePos;
 
@@ -205,7 +183,7 @@ public class WeaponTrail : MonoBehaviour
             Vector3 p2 = path[i + 1];
             Vector3 p3 = path[Mathf.Min(i + 2, last)];
 
-            // Subdividir cada tramo con Catmull-Rom para que el arco salga curvo y no a picos.
+       
             int steps = i == last - 1 ? Subdivisions + 1 : Subdivisions;
             for (int s = 0; s < steps; s++)
             {
@@ -219,8 +197,8 @@ public class WeaponTrail : MonoBehaviour
                 float age = Mathf.Clamp01((now - Mathf.Lerp(samples[i].time, samples[i + 1].time, t)) / life);
                 Color c = glowColor.Evaluate(age);
 
-                vertices.Add(edge + inward * width);       // borde interior
-                vertices.Add(edge - inward * haloWidth);   // fin del halo exterior
+                vertices.Add(edge + inward * width);       
+                vertices.Add(edge - inward * haloWidth);   
                 uvs.Add(new Vector2(age, 0f));
                 uvs.Add(new Vector2(age, 1f));
                 colors.Add(c);

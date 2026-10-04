@@ -13,8 +13,7 @@ public class GameController : MonoBehaviour
     
     [Header("Speed")]
     [SerializeField] private float normalTimeScale = 1f;
-    [SerializeField] private float fastForwardTimeScale = 2f;
-    [Tooltip("Segundos (reales) que tarda en pasar de la velocidad normal a la rápida y viceversa. 0 = cambio instantáneo.")]
+    [SerializeField] private float fastForwardTimeScale = 1.5f;
     [SerializeField] private float timeScaleBlendTime = 0.25f;
     private bool fastForward;
     
