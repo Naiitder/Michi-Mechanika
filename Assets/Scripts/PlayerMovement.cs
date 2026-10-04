@@ -40,6 +40,10 @@ public class PlayerMovement : CharacterMovement
     [Header ("Interaction")]
     [SerializeField] private LayerMask interactiveLayer;
 
+    [Header ("Wall")]
+    [SerializeField] private float roofHeightOffset = -1.2f;
+    [SerializeField] private float roofDepthOffset = 0.35f;
+
     [Header ("Jump")]
     [SerializeField] private AnimationCurve hopCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     
@@ -59,6 +63,9 @@ public class PlayerMovement : CharacterMovement
     protected override void SetWalking(bool walking)
     {
     }
+
+    protected override float RoofHeightOffset => roofHeightOffset;
+    protected override float RoofDepthOffset => roofDepthOffset;
 
     protected override float EvaluateHopProgress(float t)
     {

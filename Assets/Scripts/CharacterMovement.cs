@@ -50,13 +50,24 @@ public abstract class CharacterMovement : MonoBehaviour
     {
     }
 
-    /// <summary>
-    /// Convierte el progreso en tiempo del salto por el suelo (0..1) en progreso de distancia (0..1).
-    /// Por defecto es lineal (velocidad uniforme); el Player lo sobreescribe con una curva.
-    /// </summary>
+   
     protected virtual float EvaluateHopProgress(float t)
     {
         return t;
+    }
+
+    
+    protected virtual float RoofHeightOffset => 0f;
+    protected virtual float RoofDepthOffset => 0f;
+    
+    protected Vector3 StandPosition(Tile tile, Vector3 facingWall)
+    {
+        if (tile.tileType != Tile.Type.Roof) return tile.position;
+
+        facingWall.y = 0f;
+        return tile.position
+               + Vector3.up * RoofHeightOffset
+               - facingWall.normalized * RoofDepthOffset;
     }
 
     public IEnumerator MoveSmoothlyTo(Tile targetTile)
@@ -114,8 +125,11 @@ public abstract class CharacterMovement : MonoBehaviour
         isMoving = true;
         SetWalking(true);
         
-        Vector3 targetPosition = targetTile.position;
-        PlayMove(currentTile.position.y < targetPosition.y ? MoveAnim.FloorToClimbUp : MoveAnim.FloorToClimbDown);
+        bool goingUp = currentTile.position.y < targetTile.position.y;
+        Vector3 toWall = targetTile.position - transform.position;
+        toWall.y = 0f;
+        Vector3 targetPosition = StandPosition(targetTile, goingUp ? toWall : -toWall);
+        PlayMove(currentTile.position.y < targetTile.position.y ? MoveAnim.FloorToClimbUp : MoveAnim.FloorToClimbDown);
         
         Vector3 direction = (targetPosition - transform.position).normalized;
         direction.y = 0f;
@@ -140,7 +154,7 @@ public abstract class CharacterMovement : MonoBehaviour
         }
         SetWalking(false);
 
-        if (currentTile.position.y < targetPosition.y)
+        if (currentTile.position.y < targetTile.position.y)
         {
            
             
@@ -193,9 +207,9 @@ public abstract class CharacterMovement : MonoBehaviour
     {
         isMoving = true;
         
-        Vector3 targetPosition = targetTile.position;
+        Vector3 targetPosition = StandPosition(targetTile, transform.forward);
         
-        PlayMove(currentTile.position.y < targetPosition.y ? MoveAnim.ClimbToFloorUp : MoveAnim.ClimbToFloorDown);
+        PlayMove(currentTile.position.y < targetTile.position.y ? MoveAnim.ClimbToFloorUp : MoveAnim.ClimbToFloorDown);
         
         Vector3 direction = (targetPosition - transform.position).normalized;
         direction.y = 0f;
@@ -248,13 +262,13 @@ public abstract class CharacterMovement : MonoBehaviour
     
     IEnumerator MoveFromRoofToRoof(Tile targetTile)
     {
-        Vector3 targetPosition = targetTile.position;
+        Vector3 targetPosition = StandPosition(targetTile, transform.forward);
         isMoving = true;
         
-        if (currentTile.position.y == targetPosition.y)
+        if (currentTile.position.y == targetTile.position.y)
         {
             // Izquierda o derecha vistas desde el propio personaje, que en la pared mira hacia ella.
-            if (Vector3.Dot(targetPosition - currentTile.position, transform.right) < 0f)
+            if (Vector3.Dot(targetTile.position - currentTile.position, transform.right) < 0f)
             {
                 PlayMove(MoveAnim.ClimbLeft);
         
@@ -295,7 +309,7 @@ public abstract class CharacterMovement : MonoBehaviour
                 
             }
         }
-        else if (currentTile.position.y < targetPosition.y)
+        else if (currentTile.position.y < targetTile.position.y)
         {
             Vector3 direction = (targetPosition - transform.position).normalized;
             direction.y = 0f;
