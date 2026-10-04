@@ -26,6 +26,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _BodyGlow: 0.35
+    - _BoltCount: 3
+    - _BoltFrequency: 14
+    - _BoltJitter: 0.22
+    - _BoltSpeed: 22
+    - _BoltStrength: 2
+    - _BoltWhite: 0.75
+    - _BoltWidth: 0.012
     - _CoreSharpness: 9
     - _CoreWhite: 0.45
     - _EdgePos: 0.75
