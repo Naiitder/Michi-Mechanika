@@ -25,10 +25,6 @@ public class GameController : MonoBehaviour
         
         GameSettings.ApplyFrameRate();
         
-        Texture2D cursorTexture = Resources.Load<Texture2D>("Steampunk_UI_icon_02");
-        Vector2 hotspot = Vector2.zero;
-        Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
-        
         if(pauseCanvas != null) pauseCanvas.SetActive(false);
     }
 
