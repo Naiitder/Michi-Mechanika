@@ -34,7 +34,6 @@ public class MainMenuController : MonoBehaviour
 
     private const string Hidden = "modal--hidden";
     private const string Entering = "modal--entering";
-    private const string SelectClosed = "select__list--hidden";
     private const int FlipMs = 350;
     private const int MarkerStepMs = 340;
 
@@ -42,7 +41,7 @@ public class MainMenuController : MonoBehaviour
     private static readonly string[] PillClasses =
     {
         "pill-primary", "mm-play", "mm-item", "round-button", "map-footer", "map-locked",
-        "search", "online-row", "online-row__code", "exit__button", "select",
+        "search", "online-row", "online-row__code", "exit__button", "tab", "stepper",
     };
 
     [SerializeField] private string levelCreatorScene = "LevelCreator";
@@ -73,9 +72,10 @@ public class MainMenuController : MonoBehaviour
     private readonly List<Button> mapNodes = new List<Button>();
     private TextField onlineSearch;
     private ScrollView onlineList;
-    private readonly List<Button> fpsOptions = new List<Button>();
-    private VisualElement fpsList;
-    private Label fpsValue;
+    // One refresh per setting row: re-reads the stored value and repaints the row.
+    private readonly List<Action> optionRefreshers = new List<Action>();
+    private Slider volumeSlider;
+    private Label volumeValue;
 
     // Chapter being navigated to, and chapter whose map is on the right page (they differ mid-flip).
     private int chapter;
@@ -103,7 +103,7 @@ public class MainMenuController : MonoBehaviour
         RoundPills(root);
 
         // One listener on the root covers every button, including the ones built at runtime
-        // (map nodes, online rows, FPS options). TrickleDown: it runs before the button's own handler.
+        // (map nodes, online rows, option arrows). TrickleDown: it runs before the button's own handler.
         root.RegisterCallback<ClickEvent>(OnAnyClick, TrickleDown.TrickleDown);
         // The clip is imported without "Preload Audio Data"; load it now so the first click isn't late.
         if (clickSound != null) clickSound.LoadAudioData();
@@ -200,7 +200,6 @@ public class MainMenuController : MonoBehaviour
     {
         foreach (VisualElement modal in new[] { levelsModal, onlineModal, optionsModal, exitModal })
             modal.AddToClassList(Hidden);
-        fpsList?.AddToClassList(SelectClosed);
     }
 
     private static bool IsOpen(VisualElement modal) => !modal.ClassListContains(Hidden);
@@ -573,43 +572,84 @@ public class MainMenuController : MonoBehaviour
 
     // ---------- options ----------
 
+    private static readonly string[] AdvancedTitles =
+    {
+        "Shadows", "Render scale", "Anti-aliasing", "Ambient occlusion", "Post-processing", "Volumetric fog", "Smoke and dust",
+    };
+
+    private static readonly string[] AdvancedHints =
+    {
+        "Off removes every shadow. Lower levels are blurrier and reach less far.",
+        "Resolution the game is drawn at before scaling it to the screen. The biggest speed-up.",
+        "Smooths jagged edges.",
+        "Soft contact shadows in corners and under objects.",
+        "Bloom, colour grading and the other screen effects.",
+        "The lit fog that fills the pit.",
+        "Smoke columns, steam and drifting dust clouds.",
+    };
+
     private void BindOptionsModal()
     {
         optionsModal = root.Q("options-modal");
-        fpsList = root.Q("fps-list");
-        VisualElement fpsItems = root.Q("fps-options");
-        fpsValue = root.Q<Label>("fps-value");
-        Button select = root.Q<Button>("fps-select");
+        optionRefreshers.Clear();
 
-        // The select: a button showing the current value that unfolds the list of choices below it.
-        fpsOptions.Clear();
-        fpsItems.Clear();
-        foreach (int fps in GameSettings.FrameRateOptions)
+        // Tabs
+        Button graphicsTab = root.Q<Button>("tab-graphics");
+        Button volumeTab = root.Q<Button>("tab-volume");
+        VisualElement graphicsPage = root.Q("page-graphics");
+        VisualElement volumePage = root.Q("page-volume");
+
+        void ShowTab(bool graphics)
         {
-            int value = fps;
-            var option = new Button { text = FpsLabel(value) };
-            option.RemoveFromClassList(Button.ussClassName);
-            option.AddToClassList("mm-button");
-            option.AddToClassList("font-semibold");
-            option.AddToClassList("select__option");
-            option.clicked += () =>
-            {
-                GameSettings.MaxFps = value;
-                RefreshFpsSelect();
-                fpsList.AddToClassList(SelectClosed);
-            };
-            fpsOptions.Add(option);
-            fpsItems.Add(option);
+            graphicsTab.EnableInClassList("tab--active", graphics);
+            volumeTab.EnableInClassList("tab--active", !graphics);
+            graphicsPage.EnableInClassList("options__page--hidden", !graphics);
+            volumePage.EnableInClassList("options__page--hidden", graphics);
         }
 
-        select.clicked += () => fpsList.ToggleInClassList(SelectClosed);
+        graphicsTab.clicked += () => ShowTab(true);
+        volumeTab.clicked += () => ShowTab(false);
 
-        // Clicking anywhere else in the window folds the list back.
-        optionsModal.RegisterCallback<ClickEvent>(e =>
+        // Graphics: the profile and the frame cap, then every individual setting under "Advanced".
+        VisualElement main = root.Q("graphics-main");
+        main.Clear();
+        AddChoiceRow(main, "Quality", "Sets every graphics setting at once.",
+            GraphicsOptions.PresetNames,
+            () => GraphicsOptions.Preset,
+            index => GraphicsOptions.Preset = index,
+            "Custom", GraphicsOptions.FallbackPreset);
+        AddChoiceRow(main, "Max FPS", "Limits how many frames per second the game renders.",
+            Array.ConvertAll(GameSettings.FrameRateOptions, FpsLabel),
+            () => Array.IndexOf(GameSettings.FrameRateOptions, GameSettings.MaxFps),
+            index => GameSettings.MaxFps = GameSettings.FrameRateOptions[index],
+            FpsLabel(GameSettings.MaxFps), 2);
+
+        VisualElement advanced = root.Q("graphics-advanced");
+        advanced.Clear();
+        for (int k = 0; k < GraphicsOptions.SettingCount; k++)
         {
-            var target = e.target as VisualElement;
-            if (target == select || fpsList.Contains(target)) return;
-            fpsList.AddToClassList(SelectClosed);
+            var setting = (GraphicsOptions.Setting)k;
+            AddChoiceRow(advanced, AdvancedTitles[k], AdvancedHints[k],
+                GraphicsOptions.ValueNames[k],
+                () => GraphicsOptions.Get(setting),
+                index => GraphicsOptions.Set(setting, index));
+        }
+
+        Button advancedToggle = root.Q<Button>("advanced-toggle");
+        advancedToggle.clicked += () =>
+        {
+            bool open = advanced.ClassListContains("advanced--hidden");
+            advanced.EnableInClassList("advanced--hidden", !open);
+            advancedToggle.EnableInClassList("advanced-toggle--open", open);
+        };
+
+        // Volume
+        volumeSlider = root.Q<Slider>("volume-master");
+        volumeValue = root.Q<Label>("volume-master-value");
+        volumeSlider.RegisterValueChangedCallback(e =>
+        {
+            GameSettings.MasterVolume = e.newValue / 100f;
+            volumeValue.text = $"{Mathf.RoundToInt(e.newValue)}%";
         });
 
         CloseOnBackdropClick(optionsModal);
@@ -618,18 +658,89 @@ public class MainMenuController : MonoBehaviour
 
     private void OpenOptions()
     {
-        RefreshFpsSelect();
+        RefreshOptions();
+        float volume = GameSettings.MasterVolume * 100f;
+        volumeSlider.SetValueWithoutNotify(volume);
+        volumeValue.text = $"{Mathf.RoundToInt(volume)}%";
         Open(optionsModal);
+    }
+
+    private void RefreshOptions()
+    {
+        foreach (Action refresh in optionRefreshers) refresh();
     }
 
     private static string FpsLabel(int fps) => fps == GameSettings.Unlimited ? "Unlimited" : fps.ToString();
 
-    private void RefreshFpsSelect()
+    // A setting row: title and hint on the left; on the right the current value between two arrows
+    // that step through `choices`. When `get` returns an index outside the list (a custom mix of
+    // settings), the row shows `otherLabel` and the arrows start from `otherIndex`.
+    private void AddChoiceRow(VisualElement parent, string title, string hint, string[] choices,
+        Func<int> get, Action<int> set, string otherLabel = "", int otherIndex = 0)
     {
-        int current = GameSettings.MaxFps;
-        fpsValue.text = FpsLabel(current);
-        for (int k = 0; k < fpsOptions.Count; k++)
-            fpsOptions[k].EnableInClassList("select__option--selected", GameSettings.FrameRateOptions[k] == current);
+        var row = new VisualElement();
+        row.AddToClassList("setting");
+
+        var text = new VisualElement();
+        text.AddToClassList("setting__text");
+        var titleLabel = new Label(title);
+        titleLabel.AddToClassList("font-display");
+        titleLabel.AddToClassList("setting__title");
+        var hintLabel = new Label(hint);
+        hintLabel.AddToClassList("font-semibold");
+        hintLabel.AddToClassList("setting__hint");
+        text.Add(titleLabel);
+        text.Add(hintLabel);
+
+        var stepper = new VisualElement();
+        stepper.AddToClassList("stepper");
+        Button previous = CreateStepperArrow("icon--chevron-left");
+        Button next = CreateStepperArrow("icon--chevron-right");
+        var value = new Label { pickingMode = PickingMode.Ignore };
+        value.AddToClassList("font-bold");
+        value.AddToClassList("stepper__value");
+        stepper.Add(previous);
+        stepper.Add(value);
+        stepper.Add(next);
+
+        void Step(int direction)
+        {
+            int index = get();
+            bool listed = index >= 0 && index < choices.Length;
+            set(Mathf.Clamp(listed ? index + direction : otherIndex, 0, choices.Length - 1));
+            // One setting can change others (a profile sets them all; any of them can leave the profile).
+            RefreshOptions();
+        }
+
+        previous.clicked += () => Step(-1);
+        next.clicked += () => Step(1);
+
+        optionRefreshers.Add(() =>
+        {
+            int index = get();
+            bool listed = index >= 0 && index < choices.Length;
+            value.text = listed ? choices[index] : otherLabel;
+            previous.SetEnabled(!listed || index > 0);
+            next.SetEnabled(!listed || index < choices.Length - 1);
+        });
+
+        row.Add(text);
+        row.Add(stepper);
+        parent.Add(row);
+        RoundPills(row);
+    }
+
+    private static Button CreateStepperArrow(string iconClass)
+    {
+        var button = new Button();
+        button.RemoveFromClassList(Button.ussClassName);
+        button.AddToClassList("mm-button");
+        button.AddToClassList("stepper__arrow");
+        var icon = new VisualElement { pickingMode = PickingMode.Ignore };
+        icon.AddToClassList("icon");
+        icon.AddToClassList(iconClass);
+        button.Add(icon);
+        return button;
     }
 
     // ---------- exit ----------

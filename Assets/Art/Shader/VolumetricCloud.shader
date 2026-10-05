@@ -69,6 +69,10 @@ Shader "Michi/VolumetricCloud"
             float4 _Color, _ShadeColor, _GlowColor, _Scroll, _Seed;
             float _Fade, _GlowStrength, _Density, _MaxOpacity, _Wispiness, _NoiseScale, _Churn, _Shadowing;
 
+            // Los fija el ajuste gráfico (GraphicsOptions). Pasos: 0 = sin fijar, el máximo.
+            // Detalle bajo: sin la octava fina de ruido y con la sombra propia aproximada.
+            float _MichiCloudSteps, _MichiCloudLowDetail;
+
             // Dirección de la luz principal; la rellena URP.
             float4 _MainLightPosition;
 
@@ -111,8 +115,11 @@ Shader "Michi/VolumetricCloud"
                 float3 center = float3(unity_ObjectToWorld._m03, unity_ObjectToWorld._m13, unity_ObjectToWorld._m23);
                 float3 q = (worldPos - center) * _NoiseScale - _Scroll.xyz * (_Time.y * _NoiseScale) + _Seed.xyz;
                 float n = noise3(q) * 0.6
-                        + noise3(q * 2.3 + _Time.y * _Churn * 0.17) * 0.28
-                        + noise3(q * 5.1 - _Time.y * _Churn * 0.31) * 0.12;
+                        + noise3(q * 2.3 + _Time.y * _Churn * 0.17) * 0.28;
+                if (_MichiCloudLowDetail < 0.5)
+                    n += noise3(q * 5.1 - _Time.y * _Churn * 0.31) * 0.12;
+                else
+                    n /= 0.88;
 
                 return saturate(shape * 1.3 - (1.0 - n) * _Wispiness);
             }
@@ -145,7 +152,8 @@ Shader "Michi/VolumetricCloud"
                 if (t1 <= t0) return fixed4(0, 0, 0, 0);
 
                 float jitter = frac(52.9829189 * frac(dot(i.pos.xy, float2(0.06711056, 0.00583715))));
-                float dt = (t1 - t0) / CLOUD_STEPS;
+                int steps = _MichiCloudSteps < 0.5 ? CLOUD_STEPS : (int)clamp(_MichiCloudSteps, 4.0, CLOUD_STEPS);
+                float dt = (t1 - t0) / steps;
 
                 float3 lightDir = normalize(_MainLightPosition.xyz + float3(0.0, 0.0001, 0.0));
                 float3 lightDirObj = mul((float3x3)unity_WorldToObject, lightDir);
@@ -157,6 +165,9 @@ Shader "Michi/VolumetricCloud"
 
                 for (int k = 0; k < CLOUD_STEPS; k++)
                 {
+                    // Corta al agotar los pasos del ajuste o cuando la nube ya tapa lo de detrás.
+                    if (k >= steps || transmittance < 0.02) break;
+
                     float t = t0 + (k + jitter) * dt;
                     float3 pw = ro + rd * t;
                     float3 po = roObj + rdObj * t;
@@ -164,7 +175,10 @@ Shader "Michi/VolumetricCloud"
                     float d = cloudDensity(pw, po);
                     if (d > 0.001)
                     {
-                        float towardLight = cloudDensity(pw + lightDir * probe, po + lightDirObj * probe);
+                        // Sombra propia: una segunda muestra hacia la luz, o en detalle bajo la propia densidad.
+                        float towardLight = d;
+                        if (_MichiCloudLowDetail < 0.5)
+                            towardLight = cloudDensity(pw + lightDir * probe, po + lightDirObj * probe);
                         float lit = exp(-towardLight * _Shadowing);
 
                         float3 col = lerp(_ShadeColor.rgb, _Color.rgb, lit);

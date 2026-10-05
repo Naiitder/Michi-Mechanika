@@ -121,21 +121,35 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Options modal -->
+        <!-- Options modal: tabs (Graphics, Volume). The setting rows are built by MainMenuController. -->
         <ui:VisualElement name="options-modal" class="modal modal--hidden">
             <ui:VisualElement name="options-card" class="modal-card options pop">
                 <ui:Label text="Options" class="font-display modal-title" />
-                <ui:Label text="Max FPS" class="font-display options__label" />
-                <ui:Label text="Limits how many frames per second the game renders." class="font-semibold options__hint" />
-                <ui:VisualElement class="options__field">
-                    <ui:Button name="fps-select" class="mm-button select">
-                        <ui:Label name="fps-value" text="60" class="font-bold select__value" picking-mode="Ignore" />
-                        <ui:VisualElement class="icon icon--chevron-right select__arrow" picking-mode="Ignore" />
+                <ui:VisualElement class="tabs">
+                    <ui:Button name="tab-graphics" text="Graphics" class="mm-button font-display tab tab--active" />
+                    <ui:Button name="tab-volume" text="Volume" class="mm-button font-display tab" />
+                </ui:VisualElement>
+
+                <ui:ScrollView name="page-graphics" class="options__page options__scroll" horizontal-scroller-visibility="Hidden">
+                    <ui:VisualElement name="graphics-main" />
+                    <ui:Button name="advanced-toggle" class="mm-button advanced-toggle">
+                        <ui:Label text="Advanced settings" class="font-display advanced-toggle__label" picking-mode="Ignore" />
+                        <ui:VisualElement class="icon icon--chevron-right advanced-toggle__arrow" picking-mode="Ignore" />
                     </ui:Button>
-                    <ui:VisualElement name="fps-list" class="select__list select__list--hidden">
-                        <ui:ScrollView name="fps-options" class="select__scroll" horizontal-scroller-visibility="Hidden" />
+                    <ui:VisualElement name="graphics-advanced" class="advanced advanced--hidden" />
+                </ui:ScrollView>
+
+                <ui:VisualElement name="page-volume" class="options__page options__page--hidden">
+                    <ui:VisualElement class="setting">
+                        <ui:VisualElement class="setting__text">
+                            <ui:Label text="Master volume" class="font-display setting__title" />
+                            <ui:Label text="Overall loudness of everything in the game." class="font-semibold setting__hint" />
+                        </ui:VisualElement>
+                        <ui:Slider name="volume-master" low-value="0" high-value="100" class="volume-slider" />
+                        <ui:Label name="volume-master-value" text="100%" class="font-bold volume-value" />
                     </ui:VisualElement>
                 </ui:VisualElement>
+
                 <ui:Button name="options-close" class="mm-button round-button options__close">
                     <ui:VisualElement class="icon icon--close" picking-mode="Ignore" />
                 </ui:Button>

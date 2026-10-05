@@ -28,6 +28,7 @@ public class CloudDrift : MonoBehaviour
     private Vector3 origin;
     private Vector3 baseScale;
     private bool captured;
+    private bool hiddenBySettings;
 
     private void OnEnable()
     {
@@ -50,6 +51,15 @@ public class CloudDrift : MonoBehaviour
 
     private void Update()
     {
+        // Ajuste gráfico "Smoke and dust: Off". En el editor (sin Play) se dibuja siempre.
+        bool hide = Application.isPlaying && GraphicsOptions.SmokeLevel == GraphicsOptions.Off;
+        if (hide != hiddenBySettings)
+        {
+            hiddenBySettings = hide;
+            cloudRenderer.enabled = !hide;
+        }
+        if (hide) return;
+
         float fade = 1f;
 
         if (captured)

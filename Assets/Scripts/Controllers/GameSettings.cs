@@ -8,6 +8,7 @@ public static class GameSettings
 
     private const string MaxFpsKey = "settings.maxFps";
     private const int DefaultMaxFps = 60;
+    private const string MasterVolumeKey = "settings.masterVolume";
 
     public static int MaxFps
     {
@@ -18,6 +19,24 @@ public static class GameSettings
             PlayerPrefs.Save();
             ApplyFrameRate();
         }
+    }
+
+    /// <summary>Volumen general, de 0 a 1. Escala todo lo que suena en el juego.</summary>
+    public static float MasterVolume
+    {
+        get => Mathf.Clamp01(PlayerPrefs.GetFloat(MasterVolumeKey, 1f));
+        set
+        {
+            PlayerPrefs.SetFloat(MasterVolumeKey, Mathf.Clamp01(value));
+            PlayerPrefs.Save();
+            ApplyVolume();
+        }
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    public static void ApplyVolume()
+    {
+        AudioListener.volume = MasterVolume;
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

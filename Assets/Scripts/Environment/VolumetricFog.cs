@@ -69,7 +69,15 @@ public class VolumetricFog : MonoBehaviour
         if (cam == null) cam = Camera.main;
         if (cam == null) return;
 
+        // Ajuste gráfico "Volumetric fog: Off". En el editor (sin Play) se dibuja siempre.
+        if (Application.isPlaying && GraphicsOptions.FogLevel == GraphicsOptions.Off)
+        {
+            if (quadRenderer != null) quadRenderer.enabled = false;
+            return;
+        }
+
         EnsureQuad();
+        quadRenderer.enabled = true;
         FitToCamera();
         UpdateShader();
     }

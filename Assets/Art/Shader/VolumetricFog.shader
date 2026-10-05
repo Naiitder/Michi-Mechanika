@@ -68,6 +68,9 @@ Shader "Michi/VolumetricFog"
             float _GlowDepth, _Density, _Falloff, _MaxOpacity, _MaxDistance;
             float _NoiseScale, _NoiseStrength, _TopRoughness, _LightScatter, _FogTop;
 
+            // Pasos de raymarching que fija el ajuste gráfico (GraphicsOptions). 0 = sin fijar: el máximo.
+            float _MichiFogSteps;
+
             // xyz = posición, w = alcance / rgb = color ya multiplicado por la intensidad
             float4 _FogLightPos[FOG_LIGHTS];
             float4 _FogLightColor[FOG_LIGHTS];
@@ -130,7 +133,8 @@ Shader "Michi/VolumetricFog"
 
                 // Desfase por píxel para que los pasos no se vean como bandas.
                 float jitter = frac(52.9829189 * frac(dot(i.pos.xy, float2(0.06711056, 0.00583715))));
-                float dt = (t1 - t0) / FOG_STEPS;
+                int steps = _MichiFogSteps < 0.5 ? FOG_STEPS : (int)clamp(_MichiFogSteps, 4.0, FOG_STEPS);
+                float dt = (t1 - t0) / steps;
                 float3 wind = _Wind.xyz * _Time.y * _NoiseScale;
 
                 float transmittance = 1.0;
@@ -138,6 +142,9 @@ Shader "Michi/VolumetricFog"
 
                 for (int k = 0; k < FOG_STEPS; k++)
                 {
+                    // Corta al agotar los pasos del ajuste o cuando la niebla ya tapa lo de detrás.
+                    if (k >= steps || transmittance < 0.02) break;
+
                     float3 p = ro + rd * (t0 + (k + jitter) * dt);
 
                     float n = noise3(p * _NoiseScale + wind) * 0.65

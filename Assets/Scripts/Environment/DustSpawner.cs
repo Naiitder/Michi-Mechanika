@@ -45,6 +45,7 @@ public class DustSpawner : MonoBehaviour
     private MaterialPropertyBlock block;
     private Mesh cubeMesh;
     private float nextSpawn;
+    private int cloudLimit;
 
     private void Start()
     {
@@ -55,6 +56,7 @@ public class DustSpawner : MonoBehaviour
         }
 
         cubeMesh = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
+        cloudLimit = maxClouds;
         block = new MaterialPropertyBlock();
         
         if (target != null && material != null)
@@ -70,6 +72,20 @@ public class DustSpawner : MonoBehaviour
     private void Update()
     {
         if (target == null || material == null) return;
+
+        // Ajuste gráfico "Smoke and dust": apagado no hay nubes; en Low, la mitad.
+        int quality = GraphicsOptions.SmokeLevel;
+        if (quality == GraphicsOptions.Off)
+        {
+            foreach (Cloud cloud in clouds)
+            {
+                if (!cloud.alive) continue;
+                cloud.alive = false;
+                cloud.renderer.enabled = false;
+            }
+            return;
+        }
+        cloudLimit = quality == GraphicsOptions.Low ? Mathf.Max(1, maxClouds / 2) : maxClouds;
 
         float dt = Time.deltaTime;
 
@@ -142,10 +158,13 @@ public class DustSpawner : MonoBehaviour
 
     private Cloud GetFreeCloud()
     {
+        int alive = 0;
+        foreach (Cloud existing in clouds)
+            if (existing.alive) alive++;
+        if (alive >= cloudLimit) return null;
+
         foreach (Cloud existing in clouds)
             if (!existing.alive) return existing;
-
-        if (clouds.Count >= maxClouds) return null;
 
         var go = new GameObject("Dust Cloud");
         go.transform.SetParent(transform, false);
