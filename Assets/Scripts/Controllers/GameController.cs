@@ -50,7 +50,12 @@ public class GameController : MonoBehaviour
     {
         if (InputController.instance != null && InputController.instance.HasPaused)
         {
-            if (isGamePaused)
+            // Con la ventana de opciones abierta, la tecla de pausa solo la cierra.
+            if (OptionsMenu.IsOpen)
+            {
+                OptionsMenu.Close();
+            }
+            else if (isGamePaused)
             {
                 ResumeGame();
             }

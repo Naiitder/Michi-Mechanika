@@ -34,7 +34,6 @@ public class MainMenuController : MonoBehaviour
 
     private const string Hidden = "modal--hidden";
     private const string Entering = "modal--entering";
-    private const string SelectClosed = "select__list--hidden";
     private const int FlipMs = 350;
     private const int MarkerStepMs = 340;
 
@@ -65,7 +64,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private List<OnlineLevel> onlineLevels = new List<OnlineLevel>();
 
     private VisualElement root;
-    private VisualElement levelsModal, onlineModal, optionsModal, exitModal;
+    private VisualElement levelsModal, onlineModal, exitModal;
     private VisualElement book, pageLeft, pageRight, chapterArt, chapterLock, chapterCogs, map, mapLocked, mapFooter, marker;
     private Label chapterNum, chapterKicker, chapterName, mapTitle, selectedCode, selectedStatus;
     private Button prevButton, nextButton;
@@ -73,12 +72,6 @@ public class MainMenuController : MonoBehaviour
     private readonly List<Button> mapNodes = new List<Button>();
     private TextField onlineSearch;
     private ScrollView onlineList;
-    // One refresh per setting row: re-reads the stored value and repaints the row.
-    private readonly List<Action> optionRefreshers = new List<Action>();
-    private readonly List<Button> fpsOptions = new List<Button>();
-    private VisualElement fpsList;
-    private Slider volumeSlider;
-    private Label volumeValue;
 
     // Chapter being navigated to, and chapter whose map is on the right page (they differ mid-flip).
     private int chapter;
@@ -93,6 +86,9 @@ public class MainMenuController : MonoBehaviour
 
     // Outlives the menu so the click isn't cut off when a button loads another scene.
     private static AudioSource clickSource;
+    // Last menu click sound, so the options window (also opened from the pause menu) can reuse it.
+    private static AudioClip sharedClickSound;
+    private static float sharedClickVolume = 1f;
 
     private static PlayerProgress Progress =>
         SQLiteDB.instance != null ? SQLiteDB.instance.playerProgress : new PlayerProgress(1, 1);
@@ -111,11 +107,12 @@ public class MainMenuController : MonoBehaviour
         // The clip is imported without "Preload Audio Data"; load it now so the first click isn't late.
         if (clickSound != null) clickSound.LoadAudioData();
         if (clickPlaySound != null) clickPlaySound.LoadAudioData();
+        sharedClickSound = clickSound;
+        sharedClickVolume = clickVolume;
 
         BindMainPanel();
         BindLevelsModal();
         BindOnlineModal();
-        BindOptionsModal();
         BindExitModal();
 
         root.schedule.Execute(Animate).Every(16);
@@ -134,7 +131,7 @@ public class MainMenuController : MonoBehaviour
             if (!(element is Button)) continue;
             // Buttons that start a level get their own sound; it falls back to the regular click.
             AudioClip clip = IsPlayButton(element) && clickPlaySound != null ? clickPlaySound : clickSound;
-            if (clip != null) PlayClick(clip);
+            if (clip != null) PlayClick(clip, clickVolume);
             return;
         }
     }
@@ -142,7 +139,21 @@ public class MainMenuController : MonoBehaviour
     private static bool IsPlayButton(VisualElement button) =>
         button.name == "play-button" || button.name == "play-selected" || button.ClassListContains("online-row__play");
 
-    private void PlayClick(AudioClip clip)
+    /// <summary>Plays the regular menu click. Silent until a main menu has been loaded this session.</summary>
+    internal static void PlaySharedClick()
+    {
+        if (sharedClickSound != null) PlayClick(sharedClickSound, sharedClickVolume);
+    }
+
+    /// <summary>Lets another menu provide the click when no main menu has been loaded yet.</summary>
+    internal static void SetSharedClickIfMissing(AudioClip clip, float volume)
+    {
+        if (sharedClickSound != null || clip == null) return;
+        sharedClickSound = clip;
+        sharedClickVolume = volume;
+    }
+
+    internal static void PlayClick(AudioClip clip, float volume)
     {
         if (clickSource == null)
         {
@@ -153,7 +164,7 @@ public class MainMenuController : MonoBehaviour
             clickSource.spatialBlend = 0f;
         }
 
-        clickSource.PlayOneShot(clip, clickVolume);
+        clickSource.PlayOneShot(clip, volume);
     }
 
     private void Update()
@@ -161,7 +172,13 @@ public class MainMenuController : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null) return;
 
-        if (keyboard.escapeKey.wasPressedThisFrame) CloseModals();
+        if (keyboard.escapeKey.wasPressedThisFrame)
+        {
+            // The options window is its own document (shared with the pause menu), on top of this one.
+            if (OptionsMenu.IsOpen) OptionsMenu.Close();
+            else CloseModals();
+        }
+        if (OptionsMenu.IsOpen) return;
         if (!IsOpen(levelsModal)) return;
         if (keyboard.rightArrowKey.wasPressedThisFrame) FlipTo(chapter + 1);
         if (keyboard.leftArrowKey.wasPressedThisFrame) FlipTo(chapter - 1);
@@ -184,7 +201,11 @@ public class MainMenuController : MonoBehaviour
         root.Q<Button>("levels-button").clicked += OpenLevels;
         root.Q<Button>("creator-button").clicked += () => LoadScene(levelCreatorScene);
         root.Q<Button>("online-button").clicked += OpenOnline;
-        root.Q<Button>("options-button").clicked += OpenOptions;
+        root.Q<Button>("options-button").clicked += () =>
+        {
+            CloseModals();
+            OptionsMenu.Open();
+        };
         root.Q<Button>("exit-button").clicked += () => Open(exitModal);
     }
 
@@ -201,9 +222,8 @@ public class MainMenuController : MonoBehaviour
 
     private void CloseModals()
     {
-        foreach (VisualElement modal in new[] { levelsModal, onlineModal, optionsModal, exitModal })
+        foreach (VisualElement modal in new[] { levelsModal, onlineModal, exitModal })
             modal.AddToClassList(Hidden);
-        fpsList?.AddToClassList(SelectClosed);
     }
 
     private static bool IsOpen(VisualElement modal) => !modal.ClassListContains(Hidden);
@@ -574,280 +594,6 @@ public class MainMenuController : MonoBehaviour
         return row;
     }
 
-    // ---------- options ----------
-
-    private static readonly string[] AdvancedTitles =
-    {
-        "Shadows", "Render scale", "Anti-aliasing", "Ambient occlusion", "Post-processing", "Volumetric fog", "Smoke and dust",
-    };
-
-    private static readonly string[] AdvancedHints =
-    {
-        "Off removes every shadow. Lower levels are blurrier and reach less far.",
-        "Resolution the game is drawn at before scaling it to the screen. The biggest speed-up.",
-        "Smooths jagged edges.",
-        "Soft contact shadows in corners and under objects.",
-        "Bloom, colour grading and the other screen effects.",
-        "The lit fog that fills the pit.",
-        "Smoke columns, steam and drifting dust clouds.",
-    };
-
-    private void BindOptionsModal()
-    {
-        optionsModal = root.Q("options-modal");
-        optionRefreshers.Clear();
-
-        // Tabs
-        Button graphicsTab = root.Q<Button>("tab-graphics");
-        Button volumeTab = root.Q<Button>("tab-volume");
-        VisualElement graphicsPage = root.Q("page-graphics");
-        VisualElement volumePage = root.Q("page-volume");
-
-        void ShowTab(bool graphics)
-        {
-            graphicsTab.EnableInClassList("tab--active", graphics);
-            volumeTab.EnableInClassList("tab--active", !graphics);
-            graphicsPage.EnableInClassList("options__page--hidden", !graphics);
-            fpsList.AddToClassList(SelectClosed);
-            volumePage.EnableInClassList("options__page--hidden", graphics);
-        }
-
-        graphicsTab.clicked += () => ShowTab(true);
-        volumeTab.clicked += () => ShowTab(false);
-
-        // Graphics: the profile and the frame cap, then every individual setting under "Advanced".
-        VisualElement main = root.Q("graphics-main");
-        main.Clear();
-        AddChoiceRow(main, "Quality", "Sets every graphics setting at once.",
-            GraphicsOptions.PresetNames,
-            () => GraphicsOptions.Preset,
-            index => GraphicsOptions.Preset = index,
-            "Custom", GraphicsOptions.FallbackPreset);
-        AddFpsRow(main, (ScrollView)graphicsPage);
-
-        VisualElement advanced = root.Q("graphics-advanced");
-        advanced.Clear();
-        for (int k = 0; k < GraphicsOptions.SettingCount; k++)
-        {
-            var setting = (GraphicsOptions.Setting)k;
-            AddChoiceRow(advanced, AdvancedTitles[k], AdvancedHints[k],
-                GraphicsOptions.ValueNames[k],
-                () => GraphicsOptions.Get(setting),
-                index => GraphicsOptions.Set(setting, index));
-        }
-
-        Button advancedToggle = root.Q<Button>("advanced-toggle");
-        advancedToggle.clicked += () =>
-        {
-            bool open = advanced.ClassListContains("advanced--hidden");
-            advanced.EnableInClassList("advanced--hidden", !open);
-            advancedToggle.EnableInClassList("advanced-toggle--open", open);
-        };
-
-        // Volume
-        volumeSlider = root.Q<Slider>("volume-master");
-        volumeValue = root.Q<Label>("volume-master-value");
-        volumeSlider.RegisterValueChangedCallback(e =>
-        {
-            GameSettings.MasterVolume = e.newValue / 100f;
-            volumeValue.text = $"{Mathf.RoundToInt(e.newValue)}%";
-        });
-
-        CloseOnBackdropClick(optionsModal);
-        root.Q<Button>("options-close").clicked += CloseModals;
-    }
-
-    private void OpenOptions()
-    {
-        RefreshOptions();
-        float volume = GameSettings.MasterVolume * 100f;
-        volumeSlider.SetValueWithoutNotify(volume);
-        volumeValue.text = $"{Mathf.RoundToInt(volume)}%";
-        Open(optionsModal);
-    }
-
-    private void RefreshOptions()
-    {
-        foreach (Action refresh in optionRefreshers) refresh();
-    }
-
-    private static string FpsLabel(int fps) => fps == GameSettings.Unlimited ? "Unlimited" : fps.ToString();
-
-    // The Max FPS row: a select (button with the current value) that unfolds the list of choices.
-    // The list is a child of the window, not of the scrolling page, so the page neither clips it
-    // nor draws the rows below over it; it is placed under the button each time it opens.
-    private void AddFpsRow(VisualElement parent, ScrollView page)
-    {
-        VisualElement card = root.Q("options-card");
-
-        var row = new VisualElement();
-        row.AddToClassList("setting");
-
-        var text = new VisualElement();
-        text.AddToClassList("setting__text");
-        var titleLabel = new Label("Max FPS");
-        titleLabel.AddToClassList("font-display");
-        titleLabel.AddToClassList("setting__title");
-        var hintLabel = new Label("Limits how many frames per second the game renders.");
-        hintLabel.AddToClassList("font-semibold");
-        hintLabel.AddToClassList("setting__hint");
-        text.Add(titleLabel);
-        text.Add(hintLabel);
-
-        var select = new Button();
-        select.RemoveFromClassList(Button.ussClassName);
-        select.AddToClassList("mm-button");
-        select.AddToClassList("select");
-        var value = new Label { pickingMode = PickingMode.Ignore };
-        value.AddToClassList("font-bold");
-        value.AddToClassList("select__value");
-        var arrow = new VisualElement { pickingMode = PickingMode.Ignore };
-        arrow.AddToClassList("icon");
-        arrow.AddToClassList("icon--chevron-right");
-        arrow.AddToClassList("select__arrow");
-        select.Add(value);
-        select.Add(arrow);
-
-        fpsList?.RemoveFromHierarchy();
-        fpsList = new VisualElement();
-        fpsList.AddToClassList("select__list");
-        fpsList.AddToClassList("options__scroll");
-        fpsList.AddToClassList(SelectClosed);
-        var scroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
-        scroll.AddToClassList("select__scroll");
-        fpsList.Add(scroll);
-
-        fpsOptions.Clear();
-        foreach (int fps in GameSettings.FrameRateOptions)
-        {
-            int choice = fps;
-            var option = new Button { text = FpsLabel(choice) };
-            option.RemoveFromClassList(Button.ussClassName);
-            option.AddToClassList("mm-button");
-            option.AddToClassList("font-semibold");
-            option.AddToClassList("select__option");
-            option.clicked += () =>
-            {
-                GameSettings.MaxFps = choice;
-                fpsList.AddToClassList(SelectClosed);
-                RefreshOptions();
-            };
-            fpsOptions.Add(option);
-            scroll.Add(option);
-        }
-
-        select.clicked += () =>
-        {
-            if (!fpsList.ClassListContains(SelectClosed))
-            {
-                fpsList.AddToClassList(SelectClosed);
-                return;
-            }
-
-            // Just under the button, in the window's own coordinates (absolute children start inside the border).
-            Rect button = select.worldBound;
-            Vector2 corner = card.WorldToLocal(new Vector2(button.xMin, button.yMax));
-            fpsList.style.left = corner.x - card.resolvedStyle.borderLeftWidth;
-            fpsList.style.top = corner.y - card.resolvedStyle.borderTopWidth + 8f;
-            fpsList.style.width = button.width;
-            fpsList.RemoveFromClassList(SelectClosed);
-        };
-
-        // Clicking anywhere else in the window, or scrolling the page, folds the list back.
-        optionsModal.RegisterCallback<ClickEvent>(e =>
-        {
-            var target = e.target as VisualElement;
-            if (target == select || fpsList.Contains(target)) return;
-            fpsList.AddToClassList(SelectClosed);
-        });
-        page.verticalScroller.valueChanged += _ => fpsList.AddToClassList(SelectClosed);
-
-        optionRefreshers.Add(() =>
-        {
-            int current = GameSettings.MaxFps;
-            value.text = FpsLabel(current);
-            for (int k = 0; k < fpsOptions.Count; k++)
-                fpsOptions[k].EnableInClassList("select__option--selected", GameSettings.FrameRateOptions[k] == current);
-        });
-
-        row.Add(text);
-        row.Add(select);
-        parent.Add(row);
-        card.Add(fpsList);
-        RoundPills(row);
-    }
-
-    // A setting row: title and hint on the left; on the right the current value between two arrows
-    // that step through `choices`. When `get` returns an index outside the list (a custom mix of
-    // settings), the row shows `otherLabel` and the arrows start from `otherIndex`.
-    private void AddChoiceRow(VisualElement parent, string title, string hint, string[] choices,
-        Func<int> get, Action<int> set, string otherLabel = "", int otherIndex = 0)
-    {
-        var row = new VisualElement();
-        row.AddToClassList("setting");
-
-        var text = new VisualElement();
-        text.AddToClassList("setting__text");
-        var titleLabel = new Label(title);
-        titleLabel.AddToClassList("font-display");
-        titleLabel.AddToClassList("setting__title");
-        var hintLabel = new Label(hint);
-        hintLabel.AddToClassList("font-semibold");
-        hintLabel.AddToClassList("setting__hint");
-        text.Add(titleLabel);
-        text.Add(hintLabel);
-
-        var stepper = new VisualElement();
-        stepper.AddToClassList("stepper");
-        Button previous = CreateStepperArrow("icon--chevron-left");
-        Button next = CreateStepperArrow("icon--chevron-right");
-        var value = new Label { pickingMode = PickingMode.Ignore };
-        value.AddToClassList("font-bold");
-        value.AddToClassList("stepper__value");
-        stepper.Add(previous);
-        stepper.Add(value);
-        stepper.Add(next);
-
-        void Step(int direction)
-        {
-            int index = get();
-            bool listed = index >= 0 && index < choices.Length;
-            set(Mathf.Clamp(listed ? index + direction : otherIndex, 0, choices.Length - 1));
-            // One setting can change others (a profile sets them all; any of them can leave the profile).
-            RefreshOptions();
-        }
-
-        previous.clicked += () => Step(-1);
-        next.clicked += () => Step(1);
-
-        optionRefreshers.Add(() =>
-        {
-            int index = get();
-            bool listed = index >= 0 && index < choices.Length;
-            value.text = listed ? choices[index] : otherLabel;
-            previous.SetEnabled(!listed || index > 0);
-            next.SetEnabled(!listed || index < choices.Length - 1);
-        });
-
-        row.Add(text);
-        row.Add(stepper);
-        parent.Add(row);
-        RoundPills(row);
-    }
-
-    private static Button CreateStepperArrow(string iconClass)
-    {
-        var button = new Button();
-        button.RemoveFromClassList(Button.ussClassName);
-        button.AddToClassList("mm-button");
-        button.AddToClassList("stepper__arrow");
-        var icon = new VisualElement { pickingMode = PickingMode.Ignore };
-        icon.AddToClassList("icon");
-        icon.AddToClassList(iconClass);
-        button.Add(icon);
-        return button;
-    }
-
     // ---------- exit ----------
 
     private void BindExitModal()
@@ -862,7 +608,7 @@ public class MainMenuController : MonoBehaviour
         };
     }
 
-    private static void RoundPills(VisualElement scope)
+    internal static void RoundPills(VisualElement scope)
     {
         foreach (string className in PillClasses)
         {
