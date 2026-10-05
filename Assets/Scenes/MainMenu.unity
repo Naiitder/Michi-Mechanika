@@ -279,14 +279,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8b515c54c9117f4d8e2c63a539f4201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: ccfe50828555436eaf40fe0ed7c2ee02, type: 2}
-  zoom: 1.036
-  framingX: 0.1
-  framingY: 0.38
-  flipX: 1
+  material: {fileID: 2100000, guid: 62484385d6d384ab2a1f8a743f9e0d43, type: 2}
+  zoom: 1
+  framingX: -0.06
+  framingY: -0.34
+  flipX: 0
   parallaxPerUnit: 0.005
   farFactor: 0.5
-  distance: 0.95
+  distance: 0.743
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,7 +550,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 2
-  m_Color: {r: 1, g: 0.42, b: 0.12, a: 1}
+  m_Color: {r: 1, g: 0.81275237, b: 0.12156862, a: 1}
   m_Intensity: 22
   m_Range: 16
   m_SpotAngle: 30
@@ -1099,7 +1099,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.06422814, y: 0.30382478, z: -0.020533748, w: 0.9503387}
   m_LocalPosition: {x: -1.71, y: 2.85, z: -2.91}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0.32}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
