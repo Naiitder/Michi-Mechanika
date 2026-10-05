@@ -3144,6 +3144,7 @@ GameObject:
   - component: {fileID: 8899468851077952972}
   - component: {fileID: 638876557552377319}
   - component: {fileID: 5120384771265930841}
+  - component: {fileID: 1336081661685431843}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3183,7 +3184,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: eeffe275a0c910f4e85f81b26dbe36fe, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -3236,7 +3237,40 @@ MonoBehaviour:
   interactiveLayer:
     serializedVersion: 2
     m_Bits: 192
-  debugAlwaysAttack: 0
+  roofHeightOffset: -1.2
+  roofDepthOffset: 0.35
+  hopCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  stepSource: {fileID: 1336081661685431843}
+  floorToFloorSteps:
+  - {fileID: 8300000, guid: fa45167bc2d754364aa413d19d9c4ec3, type: 3}
+  floorToRoofSteps: []
+  roofToFloorSteps: []
+  roofToRoofSteps: []
+  minPitch: 0.9
+  maxPitch: 1.1
 --- !u!114 &638876557552377319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3256,6 +3290,160 @@ MonoBehaviour:
   blendTime: 0.08
   animatedLocalPosition: {x: 0.17938927, y: 0.35950994, z: -0.08791083}
   animatedLocalRotation: {x: -0.6810162, y: -0.19030766, z: 0.19030759, w: 0.68101615}
+--- !u!114 &5120384771265930841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7428109264425074191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1d9a4e2b6f48a3a5e0c3d91f2b6e47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 3408197126953317018}
+  bladeBase: {fileID: 7254188245039898924}
+  bladeTip: {fileID: 1813744685611267346}
+  tipExtension: 0.26
+  attackStates:
+  - Jump_L_Attack
+  - Jump_R_Attack
+  - Attack
+  swingStart: 0.4
+  swingEnd: 0.8
+  arcWidth: 0.7
+  flatten: 1
+  smoothing: 3
+  trailDuration: 0.35
+  glowColor:
+    serializedVersion: 2
+    key0: {r: 0.25, g: 0.65, b: 1, a: 1}
+    key1: {r: 0.08, g: 0.35, b: 1, a: 1}
+    key2: {r: 0.05, g: 0.15, b: 0.9, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 32768
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
+  trailMaterial: {fileID: 2100000, guid: a94c2e6d7b1f43e58c0d2f9b6e3a7c15, type: 2}
+--- !u!82 &1336081661685431843
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7428109264425074191}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7475515281261281138
 GameObject:
   m_ObjectHideFlags: 0
@@ -3829,19 +4017,3 @@ Transform:
   - {fileID: 1224491528559213809}
   m_Father: {fileID: 6046448266050680892}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5120384771265930841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7428109264425074191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c1d9a4e2b6f48a3a5e0c3d91f2b6e47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anim: {fileID: 3408197126953317018}
-  bladeBase: {fileID: 7254188245039898924}
-  bladeTip: {fileID: 1813744685611267346}
-  trailMaterial: {fileID: 2100000, guid: a94c2e6d7b1f43e58c0d2f9b6e3a7c15, type: 2}
