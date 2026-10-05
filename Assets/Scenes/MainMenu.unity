@@ -1287,6 +1287,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGamePaused: 0
   isLevelBuilding: 0
+  cursorWindows: {fileID: 2800000, guid: 4729118b9235c4d9f8664a166fde681d, type: 3}
+  cursorMac: {fileID: 2800000, guid: 1d3d3580d81384e23b92fbc8769e1f1c, type: 3}
   pauseCanvas: {fileID: 0}
   normalTimeScale: 1
   fastForwardTimeScale: 2

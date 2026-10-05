@@ -9,6 +9,10 @@ public class GameController : MonoBehaviour
     public bool isGamePaused;
     public bool isLevelBuilding;
     
+    [Header("Cursor")]
+    [SerializeField] Texture2D cursorWindows; 
+    [SerializeField] Texture2D cursorMac;
+    
     [Header("Canvas")]
     [SerializeField] private GameObject pauseCanvas;
     
@@ -24,6 +28,12 @@ public class GameController : MonoBehaviour
         else Destroy(this);
         
         GameSettings.ApplyFrameRate();
+        
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+        Cursor.SetCursor(cursorMac, Vector2.zero, CursorMode.Auto);
+#else
+        Cursor.SetCursor(cursorWindows, Vector2.zero, CursorMode.Auto);
+#endif
         
         if(pauseCanvas != null) pauseCanvas.SetActive(false);
     }
