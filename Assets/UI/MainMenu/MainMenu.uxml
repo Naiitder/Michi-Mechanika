@@ -18,19 +18,19 @@
             </ui:Button>
             <ui:Button name="levels-button" class="mm-button mm-item">
                 <ui:VisualElement picking-mode="Ignore" class="mm-item__badge">
-                    <ui:VisualElement picking-mode="Ignore" class="icon mm-item__img mm-item__img--door" />
+                    <ui:VisualElement picking-mode="Ignore" class="icon mm-item__img mm-item__img--door" style="background-image: url(&quot;project://database/Assets/Art/Sprites/UI/MapIcon_512.png?fileID=2800000&amp;guid=043697745a2cf41398ee3318f8e34c29&amp;type=3#MapIcon_512&quot;); width: 50px; height: 50px;" />
                 </ui:VisualElement>
                 <ui:Label text="Select Level" class="font-display mm-item__label" />
             </ui:Button>
             <ui:Button name="creator-button" class="mm-button mm-item">
                 <ui:VisualElement picking-mode="Ignore" class="mm-item__badge">
-                    <ui:VisualElement picking-mode="Ignore" class="icon icon--hammer" />
+                    <ui:VisualElement picking-mode="Ignore" class="icon icon--hammer" style="background-image: url(&quot;project://database/Assets/Art/Sprites/UI/HammerIcon_512.png?fileID=2800000&amp;guid=98e64eb0a4aff43a3bffda74e39c5851&amp;type=3#HammerIcon_512&quot;); -unity-background-image-tint-color: rgb(255, 255, 255); width: 50px; height: 50px;" />
                 </ui:VisualElement>
                 <ui:Label text="Level Creator" class="font-display mm-item__label" />
             </ui:Button>
             <ui:Button name="online-button" class="mm-button mm-item">
-                <ui:VisualElement picking-mode="Ignore" class="mm-item__badge mm-item__badge--online">
-                    <ui:VisualElement picking-mode="Ignore" class="icon icon--globe" />
+                <ui:VisualElement picking-mode="Ignore" class="mm-item__badge mm-item__badge--online" style="background-color: rgb(63, 45, 55);">
+                    <ui:VisualElement picking-mode="Ignore" class="icon icon--globe" style="background-image: url(&quot;project://database/Assets/Art/Sprites/UI/GlobeIcon_512.png?fileID=2800000&amp;guid=913caceb3b6c14d42a730c372f877f8c&amp;type=3#GlobeIcon_512&quot;); width: 50px; height: 50px; -unity-background-image-tint-color: rgb(255, 255, 255);" />
                 </ui:VisualElement>
                 <ui:Label text="Online Levels" class="font-display mm-item__label" />
             </ui:Button>
