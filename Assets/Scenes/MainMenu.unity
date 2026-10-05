@@ -439,6 +439,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelCreatorScene: LevelCreator
+  clickSound: {fileID: 8300000, guid: 6d966f27fe1674e3b9b19302ef57d0b9, type: 3}
+  clickPlaySound: {fileID: 8300000, guid: d56bbafd28bfc4084abbfcff59cc8766, type: 3}
+  clickVolume: 0.75
   chapters:
   - title: The Factory
     levelCount: 5

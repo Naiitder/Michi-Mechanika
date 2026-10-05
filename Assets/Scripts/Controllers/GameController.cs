@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private float timeScaleBlendTime = 0.25f;
     private bool fastForward;
     
+    
+    
     private void Awake()
     {
         if(instance == null) instance = this;

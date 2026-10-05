@@ -49,6 +49,8 @@ public abstract class CharacterMovement : MonoBehaviour
     protected virtual void PlayMove(MoveAnim move)
     {
     }
+    
+    protected virtual void OnStep(Tile.Type from, Tile.Type to) { }
 
    
     protected virtual float EvaluateHopProgress(float t)
@@ -74,6 +76,7 @@ public abstract class CharacterMovement : MonoBehaviour
 
     public IEnumerator MoveSmoothlyTo(Tile targetTile)
     {
+        OnStep(currentTile.tileType, targetTile.tileType);
         if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Floor) yield return StartCoroutine(MoveFromFloorToFloor(targetTile));
         else if(currentTile.tileType == Tile.Type.Floor && targetTile.tileType == Tile.Type.Roof) yield return StartCoroutine(MoveFromFloorToRoof(targetTile));
         else if(currentTile.tileType == Tile.Type.Roof && targetTile.tileType == Tile.Type.Floor) yield return StartCoroutine(MoveFromRoofToFloor(targetTile));

@@ -47,6 +47,13 @@ public class MainMenuController : MonoBehaviour
 
     [SerializeField] private string levelCreatorScene = "LevelCreator";
 
+    [Tooltip("Played whenever any button of the menu is clicked.")]
+    [SerializeField] private AudioClip clickSound;
+    [Tooltip("Played instead of the click sound by the buttons that start a level (Play / Continue).")]
+    [SerializeField] private AudioClip clickPlaySound;
+    [Range(0f, 1f)]
+    [SerializeField] private float clickVolume = 1f;
+
     [SerializeField] private List<Chapter> chapters = new List<Chapter>
     {
         new Chapter { title = "The Factory" },
@@ -81,6 +88,9 @@ public class MainMenuController : MonoBehaviour
     private float markerAngle;
     private IVisualElementScheduledItem walk;
 
+    // Outlives the menu so the click isn't cut off when a button loads another scene.
+    private static AudioSource clickSource;
+
     private static PlayerProgress Progress =>
         SQLiteDB.instance != null ? SQLiteDB.instance.playerProgress : new PlayerProgress(1, 1);
 
@@ -92,6 +102,13 @@ public class MainMenuController : MonoBehaviour
         root.Query<Button>(className: "mm-button").ForEach(b => b.RemoveFromClassList(Button.ussClassName));
         RoundPills(root);
 
+        // One listener on the root covers every button, including the ones built at runtime
+        // (map nodes, online rows, FPS options). TrickleDown: it runs before the button's own handler.
+        root.RegisterCallback<ClickEvent>(OnAnyClick, TrickleDown.TrickleDown);
+        // The clip is imported without "Preload Audio Data"; load it now so the first click isn't late.
+        if (clickSound != null) clickSound.LoadAudioData();
+        if (clickPlaySound != null) clickPlaySound.LoadAudioData();
+
         BindMainPanel();
         BindLevelsModal();
         BindOnlineModal();
@@ -100,6 +117,40 @@ public class MainMenuController : MonoBehaviour
 
         root.schedule.Execute(Animate).Every(16);
         root.schedule.Execute(() => pulseOn = !pulseOn).Every(800);
+    }
+
+    private void OnDisable()
+    {
+        root?.UnregisterCallback<ClickEvent>(OnAnyClick, TrickleDown.TrickleDown);
+    }
+
+    private void OnAnyClick(ClickEvent e)
+    {
+        for (var element = e.target as VisualElement; element != null; element = element.parent)
+        {
+            if (!(element is Button)) continue;
+            // Buttons that start a level get their own sound; it falls back to the regular click.
+            AudioClip clip = IsPlayButton(element) && clickPlaySound != null ? clickPlaySound : clickSound;
+            if (clip != null) PlayClick(clip);
+            return;
+        }
+    }
+
+    private static bool IsPlayButton(VisualElement button) =>
+        button.name == "play-button" || button.name == "play-selected" || button.ClassListContains("online-row__play");
+
+    private void PlayClick(AudioClip clip)
+    {
+        if (clickSource == null)
+        {
+            var host = new GameObject("UIClickAudio");
+            DontDestroyOnLoad(host);
+            clickSource = host.AddComponent<AudioSource>();
+            clickSource.playOnAwake = false;
+            clickSource.spatialBlend = 0f;
+        }
+
+        clickSource.PlayOneShot(clip, clickVolume);
     }
 
     private void Update()
