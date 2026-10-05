@@ -44,7 +44,7 @@ public static class GraphicsOptions
         new[] { 1, 3, 0, 0, 1, Low,    Low    }, // Low
         new[] { 2, 4, 0, 0, 1, Medium, Medium }, // Medium
         new[] { 3, 5, 0, 1, 1, High,   High   }, // High
-        new[] { 3, 5, 1, 1, 1, Ultra,  Ultra  }, // Very High
+        new[] { 3, 5, 0, 1, 1, Ultra,  Ultra  }, // Very High: el juego tal como estaba antes de existir los perfiles
         new[] { 3, 5, 2, 1, 1, Ultra,  Ultra  }, // Ultra
     };
 

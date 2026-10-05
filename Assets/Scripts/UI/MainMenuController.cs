@@ -34,6 +34,7 @@ public class MainMenuController : MonoBehaviour
 
     private const string Hidden = "modal--hidden";
     private const string Entering = "modal--entering";
+    private const string SelectClosed = "select__list--hidden";
     private const int FlipMs = 350;
     private const int MarkerStepMs = 340;
 
@@ -41,7 +42,7 @@ public class MainMenuController : MonoBehaviour
     private static readonly string[] PillClasses =
     {
         "pill-primary", "mm-play", "mm-item", "round-button", "map-footer", "map-locked",
-        "search", "online-row", "online-row__code", "exit__button", "tab", "stepper",
+        "search", "online-row", "online-row__code", "exit__button", "tab", "stepper", "select",
     };
 
     [SerializeField] private string levelCreatorScene = "LevelCreator";
@@ -74,6 +75,8 @@ public class MainMenuController : MonoBehaviour
     private ScrollView onlineList;
     // One refresh per setting row: re-reads the stored value and repaints the row.
     private readonly List<Action> optionRefreshers = new List<Action>();
+    private readonly List<Button> fpsOptions = new List<Button>();
+    private VisualElement fpsList;
     private Slider volumeSlider;
     private Label volumeValue;
 
@@ -200,6 +203,7 @@ public class MainMenuController : MonoBehaviour
     {
         foreach (VisualElement modal in new[] { levelsModal, onlineModal, optionsModal, exitModal })
             modal.AddToClassList(Hidden);
+        fpsList?.AddToClassList(SelectClosed);
     }
 
     private static bool IsOpen(VisualElement modal) => !modal.ClassListContains(Hidden);
@@ -604,6 +608,7 @@ public class MainMenuController : MonoBehaviour
             graphicsTab.EnableInClassList("tab--active", graphics);
             volumeTab.EnableInClassList("tab--active", !graphics);
             graphicsPage.EnableInClassList("options__page--hidden", !graphics);
+            fpsList.AddToClassList(SelectClosed);
             volumePage.EnableInClassList("options__page--hidden", graphics);
         }
 
@@ -618,11 +623,7 @@ public class MainMenuController : MonoBehaviour
             () => GraphicsOptions.Preset,
             index => GraphicsOptions.Preset = index,
             "Custom", GraphicsOptions.FallbackPreset);
-        AddChoiceRow(main, "Max FPS", "Limits how many frames per second the game renders.",
-            Array.ConvertAll(GameSettings.FrameRateOptions, FpsLabel),
-            () => Array.IndexOf(GameSettings.FrameRateOptions, GameSettings.MaxFps),
-            index => GameSettings.MaxFps = GameSettings.FrameRateOptions[index],
-            FpsLabel(GameSettings.MaxFps), 2);
+        AddFpsRow(main, (ScrollView)graphicsPage);
 
         VisualElement advanced = root.Q("graphics-advanced");
         advanced.Clear();
@@ -671,6 +672,110 @@ public class MainMenuController : MonoBehaviour
     }
 
     private static string FpsLabel(int fps) => fps == GameSettings.Unlimited ? "Unlimited" : fps.ToString();
+
+    // The Max FPS row: a select (button with the current value) that unfolds the list of choices.
+    // The list is a child of the window, not of the scrolling page, so the page neither clips it
+    // nor draws the rows below over it; it is placed under the button each time it opens.
+    private void AddFpsRow(VisualElement parent, ScrollView page)
+    {
+        VisualElement card = root.Q("options-card");
+
+        var row = new VisualElement();
+        row.AddToClassList("setting");
+
+        var text = new VisualElement();
+        text.AddToClassList("setting__text");
+        var titleLabel = new Label("Max FPS");
+        titleLabel.AddToClassList("font-display");
+        titleLabel.AddToClassList("setting__title");
+        var hintLabel = new Label("Limits how many frames per second the game renders.");
+        hintLabel.AddToClassList("font-semibold");
+        hintLabel.AddToClassList("setting__hint");
+        text.Add(titleLabel);
+        text.Add(hintLabel);
+
+        var select = new Button();
+        select.RemoveFromClassList(Button.ussClassName);
+        select.AddToClassList("mm-button");
+        select.AddToClassList("select");
+        var value = new Label { pickingMode = PickingMode.Ignore };
+        value.AddToClassList("font-bold");
+        value.AddToClassList("select__value");
+        var arrow = new VisualElement { pickingMode = PickingMode.Ignore };
+        arrow.AddToClassList("icon");
+        arrow.AddToClassList("icon--chevron-right");
+        arrow.AddToClassList("select__arrow");
+        select.Add(value);
+        select.Add(arrow);
+
+        fpsList?.RemoveFromHierarchy();
+        fpsList = new VisualElement();
+        fpsList.AddToClassList("select__list");
+        fpsList.AddToClassList("options__scroll");
+        fpsList.AddToClassList(SelectClosed);
+        var scroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
+        scroll.AddToClassList("select__scroll");
+        fpsList.Add(scroll);
+
+        fpsOptions.Clear();
+        foreach (int fps in GameSettings.FrameRateOptions)
+        {
+            int choice = fps;
+            var option = new Button { text = FpsLabel(choice) };
+            option.RemoveFromClassList(Button.ussClassName);
+            option.AddToClassList("mm-button");
+            option.AddToClassList("font-semibold");
+            option.AddToClassList("select__option");
+            option.clicked += () =>
+            {
+                GameSettings.MaxFps = choice;
+                fpsList.AddToClassList(SelectClosed);
+                RefreshOptions();
+            };
+            fpsOptions.Add(option);
+            scroll.Add(option);
+        }
+
+        select.clicked += () =>
+        {
+            if (!fpsList.ClassListContains(SelectClosed))
+            {
+                fpsList.AddToClassList(SelectClosed);
+                return;
+            }
+
+            // Just under the button, in the window's own coordinates (absolute children start inside the border).
+            Rect button = select.worldBound;
+            Vector2 corner = card.WorldToLocal(new Vector2(button.xMin, button.yMax));
+            fpsList.style.left = corner.x - card.resolvedStyle.borderLeftWidth;
+            fpsList.style.top = corner.y - card.resolvedStyle.borderTopWidth + 8f;
+            fpsList.style.width = button.width;
+            fpsList.RemoveFromClassList(SelectClosed);
+        };
+
+        // Clicking anywhere else in the window, or scrolling the page, folds the list back.
+        optionsModal.RegisterCallback<ClickEvent>(e =>
+        {
+            var target = e.target as VisualElement;
+            if (target == select || fpsList.Contains(target)) return;
+            fpsList.AddToClassList(SelectClosed);
+        });
+        page.verticalScroller.valueChanged += _ => fpsList.AddToClassList(SelectClosed);
+
+        optionRefreshers.Add(() =>
+        {
+            int current = GameSettings.MaxFps;
+            value.text = FpsLabel(current);
+            for (int k = 0; k < fpsOptions.Count; k++)
+                fpsOptions[k].EnableInClassList("select__option--selected", GameSettings.FrameRateOptions[k] == current);
+        });
+
+        row.Add(text);
+        row.Add(select);
+        parent.Add(row);
+        card.Add(fpsList);
+        RoundPills(row);
+    }
 
     // A setting row: title and hint on the left; on the right the current value between two arrows
     // that step through `choices`. When `get` returns an index outside the list (a custom mix of

@@ -858,6 +858,68 @@
     -unity-text-align: middle-center;
 }
 
+/* Select (Max FPS): botón con el valor actual y lista desplegable debajo. */
+.select {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    width: 320px;
+    height: 56px;
+    padding: 0 22px 0 28px;
+    border-width: 2px;
+    border-color: var(--color-line);
+    background-color: var(--color-inset);
+}
+
+.select:hover { border-color: var(--color-brass); }
+
+.select__value {
+    font-size: 22px;
+    color: var(--color-text);
+}
+
+.select__arrow {
+    width: 20px;
+    height: 20px;
+    rotate: 90deg;
+    -unity-background-image-tint-color: var(--color-text-muted);
+}
+
+/* La lista cuelga de la ventana (no de la página con scroll); el código la coloca bajo el botón. */
+.select__list {
+    position: absolute;
+    padding: 8px;
+    border-radius: 20px;
+    border-width: 2px;
+    border-color: var(--color-brass);
+    background-color: var(--color-inset);
+    overflow: hidden;
+}
+
+.select__list--hidden { display: none; }
+
+/* El scroll va dentro del marco: el relleno y el borde son del contenedor, no del ScrollView. */
+.select__scroll { max-height: 264px; }
+
+.select__option {
+    flex-shrink: 0;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 12px;
+    font-size: 22px;
+    color: var(--color-text);
+}
+
+.select__option:hover { background-color: var(--color-surface-strong); }
+
+.select__option--selected {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+}
+
+.select__option--selected:hover { background-color: var(--color-accent-hover); }
+
 /* Ajustes avanzados: botón que despliega el resto de filas. */
 .advanced-toggle {
     flex-direction: row;
@@ -976,6 +1038,9 @@
 
 .options__scroll .unity-scroller--vertical .unity-base-slider__dragger:hover { background-color: var(--color-brass); }
 .options__scroll .unity-scroller--vertical .unity-base-slider__dragger-border { display: none; }
+
+/* Dentro del desplegable la barra se separa del marco: arriba, derecha, abajo, izquierda. */
+.select__list .unity-scroller--vertical { margin: 8px 6px 8px 10px; }
 
 /* ---------- exit ---------- */
 
