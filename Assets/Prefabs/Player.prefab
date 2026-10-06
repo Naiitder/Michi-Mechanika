@@ -3359,11 +3359,11 @@ MonoBehaviour:
   floorToFloorSteps:
   - {fileID: 8300000, guid: fa45167bc2d754364aa413d19d9c4ec3, type: 3}
   floorToRoofSteps:
-  - {fileID: 8300000, guid: cfdef4f479ece4839aa5ff5326927432, type: 3}
+  - {fileID: 8300000, guid: bff0a01887aca4e84a5f3d7a5f1dc6dc, type: 3}
   roofToFloorSteps:
   - {fileID: 8300000, guid: fa45167bc2d754364aa413d19d9c4ec3, type: 3}
   roofToRoofSteps:
-  - {fileID: 8300000, guid: cfdef4f479ece4839aa5ff5326927432, type: 3}
+  - {fileID: 8300000, guid: bff0a01887aca4e84a5f3d7a5f1dc6dc, type: 3}
   attackSwings:
   - {fileID: 8300000, guid: 61a00efa5c06d47dabdd83eada7cb13e, type: 3}
   die: []
