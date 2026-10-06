@@ -3355,6 +3355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepSource: {fileID: 1336081661685431843}
   swingSource: {fileID: 2160584033668695801}
+  dieSource: {fileID: 0}
   floorToFloorSteps:
   - {fileID: 8300000, guid: fa45167bc2d754364aa413d19d9c4ec3, type: 3}
   floorToRoofSteps:
@@ -3365,6 +3366,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: cfdef4f479ece4839aa5ff5326927432, type: 3}
   attackSwings:
   - {fileID: 8300000, guid: 61a00efa5c06d47dabdd83eada7cb13e, type: 3}
+  die: []
   minPitch: 0.9
   maxPitch: 1.1
 --- !u!82 &1336081661685431843
@@ -3477,7 +3479,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 0
   Mute: 0
