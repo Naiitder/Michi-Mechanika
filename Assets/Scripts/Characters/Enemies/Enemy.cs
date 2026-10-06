@@ -40,6 +40,8 @@ public class Enemy : CharacterMovement
 
     public void Die()
     {
+        if(sfx != null) sfx.PlayDeath();
+        
         List<Enemy> enemiesList = GameFlow.instance.enemies.ToList();
         enemiesList.Remove(this);
         GameFlow.instance.enemies = enemiesList.ToArray();

@@ -47,14 +47,6 @@ public class PlayerMovement : CharacterMovement
     [Header ("Jump")]
     [SerializeField] private AnimationCurve hopCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     
-    [Header("Footsteps")]
-    [SerializeField] private AudioSource stepSource;
-    [SerializeField] private AudioClip[] floorToFloorSteps;
-    [SerializeField] private AudioClip[] floorToRoofSteps;
-    [SerializeField] private AudioClip[] roofToFloorSteps;
-    [SerializeField] private AudioClip[] roofToRoofSteps;
-    [SerializeField] private float minPitch = 0.9f;
-    [SerializeField] private float maxPitch = 1.1f;
     
     public override void Initialize()
     {
@@ -76,20 +68,6 @@ public class PlayerMovement : CharacterMovement
 
     protected override float RoofHeightOffset => roofHeightOffset;
     protected override float RoofDepthOffset => roofDepthOffset;
-    
-    protected override void OnStep(Tile.Type from, Tile.Type to)
-    {
-        AudioClip[] clips;
-        if (from == Tile.Type.Floor && to == Tile.Type.Floor)      clips = floorToFloorSteps;
-        else if (from == Tile.Type.Floor && to == Tile.Type.Roof)  clips = floorToRoofSteps;
-        else if (from == Tile.Type.Roof && to == Tile.Type.Floor)  clips = roofToFloorSteps;
-        else                                                       clips = roofToRoofSteps;
-
-        if (stepSource == null || clips == null || clips.Length == 0) return;
-
-        stepSource.pitch = Random.Range(minPitch, maxPitch);
-        stepSource.PlayOneShot(clips[Random.Range(0, clips.Length)]);
-    }
 
     protected override float EvaluateHopProgress(float t)
     {

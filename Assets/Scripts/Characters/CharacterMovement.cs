@@ -17,12 +17,15 @@ public abstract class CharacterMovement : MonoBehaviour
     [HideInInspector] public int DeadHash;
     [HideInInspector] public int AttackHash;
     
+    protected CharacterAudio sfx;
+    
     public virtual void Initialize()
     {
         anim = GetComponent<Animator>();
         WalkHash = Animator.StringToHash("walk");
         DeadHash = Animator.StringToHash("isDead");
         AttackHash = Animator.StringToHash("attack");
+        sfx = GetComponent<CharacterAudio>();
         
         transform = GetComponent<Transform>();
     }
@@ -50,7 +53,10 @@ public abstract class CharacterMovement : MonoBehaviour
     {
     }
     
-    protected virtual void OnStep(Tile.Type from, Tile.Type to) { }
+    protected virtual void OnStep(Tile.Type from, Tile.Type to)
+    {
+        if (sfx != null) sfx.PlayStep(from, to);
+    }
 
    
     protected virtual float EvaluateHopProgress(float t)
