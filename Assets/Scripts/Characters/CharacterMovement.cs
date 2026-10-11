@@ -21,7 +21,7 @@ public abstract class CharacterMovement : MonoBehaviour
     
     public virtual void Initialize()
     {
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         WalkHash = Animator.StringToHash("walk");
         DeadHash = Animator.StringToHash("isDead");
         AttackHash = Animator.StringToHash("attack");
@@ -453,21 +453,24 @@ public abstract class CharacterMovement : MonoBehaviour
     }
 
     public IEnumerator RotateTowardsTarget(Vector3 targetPosition)
-    {   
-        Vector3 direction = (targetPosition - transform.position).normalized;
+    {
+        Vector3 direction = targetPosition - transform.position;
         direction.y = 0f;
+        if (direction.sqrMagnitude < 0.0001f) yield break;
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
 
-        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.01f)
+        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.5f)
         {
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
-                Time.deltaTime * rotationSpeed 
+                Time.deltaTime * rotationSpeed
             );
+            yield return null;   
         }
-        yield return null;
+
+        transform.rotation = targetRotation;
     }
     protected abstract void CheckTile(Tile tile);
 }
