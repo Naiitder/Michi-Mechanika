@@ -1,0 +1,451 @@
+fileFormatVersion: 2
+guid: 9b42219a33ccf8d43803b7fa426d1f4c
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Dog_Rig|AlertIdle
+      takeName: Dog_Rig|AlertIdle
+      internalID: 8843924292452591372
+      firstFrame: 0
+      lastFrame: 48
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Dog_Rig|Bark
+      takeName: Dog_Rig|Bark
+      internalID: -912943737142245397
+      firstFrame: 0
+      lastFrame: 33
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Dog_Rig|Death
+      takeName: Dog_Rig|Death
+      internalID: 2114852997209392129
+      firstFrame: 0
+      lastFrame: 59
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Dog_Rig|Idle
+      takeName: Dog_Rig|Idle
+      internalID: 9206414114875716403
+      firstFrame: 0
+      lastFrame: 96
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Dog_Rig|Jump
+      takeName: Dog_Rig|Jump
+      internalID: 3174040829792328343
+      firstFrame: 0
+      lastFrame: 21
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Dog_Rig|JumpBite
+      takeName: Dog_Rig|JumpBite
+      internalID: 6164168279044024343
+      firstFrame: 0
+      lastFrame: 25
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: DogAnims(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Dog_Rig
+      parentName: DogAnims(Clone)
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Root
+      parentName: Dog_Rig
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -6.123234e-17, y: 0.00000008940697, z: 1, w: -6.617445e-24}
+      scale: {x: 1.0000002, y: 1.0000001, z: 1.0000001}
+    - name: Hips
+      parentName: Root
+      position: {x: -9.926165e-24, y: 0.029999971, z: -0.3149999}
+      rotation: {x: -0.00000005853729, y: 0.7071068, z: -0.7071068, w: 0.000000058537292}
+      scale: {x: 0.99999976, y: 0.9999999, z: 0.9999999}
+    - name: Spine
+      parentName: Hips
+      position: {x: 0, y: 0.1, z: 0.000000017695129}
+      rotation: {x: 2.676551e-24, y: 3.553892e-16, z: -0.000000043711392, w: 1}
+      scale: {x: 1, y: 0.99999994, z: 0.99999994}
+    - name: Chest
+      parentName: Spine
+      position: {x: -1.5820678e-15, y: 0.12000002, z: -0.000000037900463}
+      rotation: {x: -0.08248056, y: 0.00000043164724, z: -0.000000035724238, w: 0.9965927}
+      scale: {x: 1, y: 0.9999995, z: 0.9999996}
+    - name: Neck
+      parentName: Chest
+      position: {x: -1.3322676e-15, y: 0.12165526, z: -0.000000012107175}
+      rotation: {x: -0.16540875, y: -0.0000003522027, z: -0.000000081568935, w: 0.9862251}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Head
+      parentName: Neck
+      position: {x: -2.3283064e-10, y: 0.13892445, z: 0.0000000038062353}
+      rotation: {x: 0.30087277, y: 0.00000034106077, z: 0.00000015303232, w: 0.9536643}
+      scale: {x: 1, y: 1.0000002, z: 1.0000002}
+    - name: Ear.L
+      parentName: Head
+      position: {x: -0.06999992, y: 0.012456825, z: -0.09135012}
+      rotation: {x: -0.5655264, y: -0.25786218, z: 0.3733912, w: 0.6886698}
+      scale: {x: 1, y: 0.99999976, z: 0.99999994}
+    - name: Ear.R
+      parentName: Head
+      position: {x: 0.07000009, y: 0.012456825, z: -0.09135003}
+      rotation: {x: -0.5655261, y: 0.2578617, z: -0.37339175, w: 0.68866986}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: Jaw
+      parentName: Head
+      position: {x: -0.000000045169145, y: 0.029481126, z: 0.052733887}
+      rotation: {x: 0.080830365, y: -0.00000023764224, z: 0.0000000507484, w: 0.99672794}
+      scale: {x: 0.99999994, y: 1, z: 1}
+    - name: FrontUpperLeg.L
+      parentName: Chest
+      position: {x: -0.100000076, y: 0.11014734, z: 0.06904742}
+      rotation: {x: 0.32867408, y: -0.3190709, z: 0.62579054, w: 0.6313108}
+      scale: {x: 0.9999995, y: 1, z: 1.0000001}
+    - name: FrontLowerLeg.L
+      parentName: FrontUpperLeg.L
+      position: {x: -9.313226e-10, y: 0.14456835, z: 0.000000033527613}
+      rotation: {x: -0.022196928, y: -0.3479152, z: -0.020771364, w: 0.93703306}
+      scale: {x: 0.99999976, y: 1.0000002, z: 0.99999976}
+    - name: FrontFoot.L
+      parentName: FrontLowerLeg.L
+      position: {x: 0.0000000016298145, y: 0.1345363, z: -9.313226e-10}
+      rotation: {x: -0.2252621, y: 0.2888473, z: 0.25102517, w: 0.8959969}
+      scale: {x: 1.0000006, y: 1.0000006, z: 0.9999996}
+    - name: FrontUpperLeg.R
+      parentName: Chest
+      position: {x: 0.09999993, y: 0.11014731, z: 0.069047585}
+      rotation: {x: 0.3286747, y: 0.3190702, z: -0.6257902, w: 0.63131106}
+      scale: {x: 1.0000001, y: 1.0000004, z: 1.0000001}
+    - name: FrontLowerLeg.R
+      parentName: FrontUpperLeg.R
+      position: {x: -0.0000000027939677, y: 0.14456837, z: -0.000000020489097}
+      rotation: {x: -0.022197021, y: 0.34791532, z: 0.020771382, w: 0.93703306}
+      scale: {x: 0.9999996, y: 1.0000007, z: 1.0000008}
+    - name: FrontFoot.R
+      parentName: FrontLowerLeg.R
+      position: {x: 0.000000011874363, y: 0.13453622, z: -0.0000000018626451}
+      rotation: {x: -0.22526222, y: -0.28884748, z: -0.25102532, w: 0.89599687}
+      scale: {x: 0.99999976, y: 1.0000001, z: 1.0000005}
+    - name: HindUpperLeg.L
+      parentName: Hips
+      position: {x: -0.09000001, y: 0.030000044, z: 0.030000012}
+      rotation: {x: 0.055986293, y: 0.10227312, z: 0.9922383, w: 0.043232683}
+      scale: {x: 1.0000004, y: 0.9999999, z: 0.999999}
+    - name: HindLowerLeg.L
+      parentName: HindUpperLeg.L
+      position: {x: -0.000000018626451, y: 0.15394805, z: 0.000000011175871}
+      rotation: {x: -0.079991885, y: 0.097565934, z: 0.07354993, w: 0.98927885}
+      scale: {x: 1.0000004, y: 0.99999976, z: 1.0000001}
+    - name: HindFoot.L
+      parentName: HindLowerLeg.L
+      position: {x: -0.000000013038516, y: 0.12041603, z: -0.000000019557774}
+      rotation: {x: 0.15527678, y: -0.41943806, z: -0.8499219, w: 0.2785567}
+      scale: {x: 1.0000008, y: 1, z: 1.0000004}
+    - name: HindUpperLeg.R
+      parentName: Hips
+      position: {x: 0.089999996, y: 0.030000014, z: 0.030000014}
+      rotation: {x: -0.05598628, y: 0.10227335, z: 0.99223816, w: -0.0432327}
+      scale: {x: 1.0000004, y: 0.99999964, z: 0.99999887}
+    - name: HindLowerLeg.R
+      parentName: HindUpperLeg.R
+      position: {x: 0.0000000037252903, y: 0.15394801, z: 0.000000007450581}
+      rotation: {x: -0.079991885, y: -0.09756599, z: -0.07354992, w: 0.98927885}
+      scale: {x: 0.99999964, y: 1.0000005, z: 1.0000002}
+    - name: HindFoot.R
+      parentName: HindLowerLeg.R
+      position: {x: 0.000000013038516, y: 0.120416, z: 0.000000029802322}
+      rotation: {x: -0.1552766, y: -0.4194383, z: -0.84992164, w: -0.27855697}
+      scale: {x: 1.0000004, y: 0.9999993, z: 1}
+    - name: Tail_01
+      parentName: Hips
+      position: {x: -0.0000000113649605, y: -0.02999999, z: 0.000000016763806}
+      rotation: {x: 0.00000004031978, y: 0.25666752, z: -0.9664998, w: -0.000000049975167}
+      scale: {x: 0.99999964, y: 0.9999993, z: 0.9999982}
+    - name: Tail_02
+      parentName: Tail_01
+      position: {x: 2.3283064e-10, y: 0.08062258, z: -0.000000009487849}
+      rotation: {x: 0.19611615, y: -0.000000071059965, z: -0.0000000024023394, w: 0.9805807}
+      scale: {x: 0.9999998, y: 0.9999999, z: 0.9999998}
+    - name: Tail_03
+      parentName: Tail_02
+      position: {x: -0.000000004656613, y: 0.08062265, z: -0.000000024636392}
+      rotation: {x: -0.24541467, y: -0.000000010500691, z: 0.000000023449035, w: 0.96941817}
+      scale: {x: 1, y: 0.9999996, z: 1.0000005}
+    - name: Tail_04
+      parentName: Tail_03
+      position: {x: -0.000000015832484, y: 0.08602323, z: -0.00000005820766}
+      rotation: {x: -0.18028127, y: -0.000000050536585, z: 0.00000002844105, w: 0.98361516}
+      scale: {x: 1.0000001, y: 1.0000002, z: 1.0000001}
+    - name: Tail_05
+      parentName: Tail_04
+      position: {x: 0.000000011175871, y: 0.10816652, z: -0.0000000023283064}
+      rotation: {x: 0.18750815, y: 0.000000064011125, z: -0.000000026995682, w: 0.9822631}
+      scale: {x: 1.0000002, y: 0.99999994, z: 1.0000004}
+    - name: Tail_06
+      parentName: Tail_05
+      position: {x: 0.000000005122274, y: 0.07905699, z: -0.000000017462298}
+      rotation: {x: 0.026941994, y: 0.00000002980528, z: -0.0000000013198062, w: 0.999637}
+      scale: {x: 1.0000005, y: 0.99999994, z: 1.0000006}
+    - name: IK_FrontFoot.L
+      parentName: Root
+      position: {x: 0.10999997, y: -0.26, z: -0.07000001}
+      rotation: {x: 0.09150269, y: -0.28553018, z: -0.9084819, w: 0.29113668}
+      scale: {x: 0.9999999, y: 1.0000002, z: 1.0000004}
+    - name: IK_HindFoot.L
+      parentName: Root
+      position: {x: 0.110000014, y: 0.33, z: -0.13}
+      rotation: {x: 0.14436002, y: -0.384207, z: -0.8536237, w: 0.32073632}
+      scale: {x: 0.99999976, y: 0.9999999, z: 0.99999964}
+    - name: IK_FrontFoot.R
+      parentName: Root
+      position: {x: -0.110000044, y: -0.26, z: -0.07000001}
+      rotation: {x: -0.09150273, y: -0.28553024, z: -0.90848184, w: -0.29113677}
+      scale: {x: 0.9999997, y: 0.9999999, z: 1}
+    - name: IK_HindFoot.R
+      parentName: Root
+      position: {x: -0.109999985, y: 0.33, z: -0.13}
+      rotation: {x: -0.14435993, y: -0.38420704, z: -0.8536236, w: -0.3207365}
+      scale: {x: 0.99999976, y: 0.99999964, z: 0.99999964}
+    - name: mesh_rep_0_ori_repair_quad
+      parentName: DogAnims(Clone)
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

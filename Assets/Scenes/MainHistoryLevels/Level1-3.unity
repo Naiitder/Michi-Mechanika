@@ -6264,6 +6264,10 @@ MonoBehaviour:
   vcamPlayer: {fileID: 0}
   vcamFree: {fileID: 0}
   dragSpeed: 1
+  zoomSpeed: 5
+  minFOV: 25
+  maxFOV: 90
+  rotationSpeed: 0.2
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8245,7 +8249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84169973470d03c47942f3ca6952b880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smoothSpeed: 5
 --- !u!1001 &822786264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10389,9 +10392,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: PursuerEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 2391097748052823560, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2391097748052823560, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2391097748052823560, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2391097748052823560, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2391097748052823560, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6595871398370589936, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8249927144860841696, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8249927144860841696, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8249927144860841696, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 8249927144860841696, guid: a53a122010ed83c47b768ee9149846b9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10834,9 +10869,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGamePaused: 0
   isLevelBuilding: 0
+  cursorWindows: {fileID: 0}
+  cursorMac: {fileID: 0}
   pauseCanvas: {fileID: 1741178978}
   normalTimeScale: 1
   fastForwardTimeScale: 2
+  timeScaleBlendTime: 0.25
 --- !u!114 &1553417779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13302,6 +13340,10 @@ PrefabInstance:
     - target: {fileID: 7428109264425074191, guid: e26c2be61f15b294cb3b85ca215ca39e, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8643997553014782158, guid: e26c2be61f15b294cb3b85ca215ca39e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.38050377
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
